@@ -1,0 +1,2380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Engineering Mastery - AI Learning Platform</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #fae8ff 50%, #fce7f3 100%);
+            min-height: 100vh;
+            color: #1f2937;
+            line-height: 1.5;
+        }
+        
+        /* Utility Classes */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+        }
+        
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #2563eb, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .stat-value {
+            color: #2563eb;
+        }
+        
+        /* Main Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            padding: 1.5rem 0;
+        }
+        
+        @media (min-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .card-padding {
+            padding: 1rem;
+        }
+        
+        .card-padding-lg {
+            padding: 1.5rem;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding: 1rem;
+        }
+        
+        .tab-btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .tab-btn.active {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .tab-btn:not(.active) {
+            background: #e5e7eb;
+            color: #374151;
+        }
+        
+        .tab-btn:not(.active):hover {
+            background: #d1d5db;
+        }
+        
+        /* Banner */
+        .banner {
+            background: linear-gradient(to right, #2563eb, #9333ea);
+            padding: 1rem;
+            color: white;
+        }
+        
+        .banner-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+        
+        .banner-subtitle {
+            font-size: 0.875rem;
+            color: #dbeafe;
+        }
+        
+        /* Chat Messages */
+        .chat-container {
+            padding: 1.5rem;
+            height: 20rem;
+            overflow-y: auto;
+            background: #f9fafb;
+        }
+        
+        .message-wrapper {
+            display: flex;
+            margin-bottom: 1rem;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .message-wrapper.user {
+            justify-content: flex-end;
+        }
+        
+        .message-bubble {
+            border-radius: 1rem;
+            padding: 0.75rem 1rem;
+            max-width: 28rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .message-bubble.user {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .message-bubble.ai {
+            background: white;
+            color: #1f2937;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .message-text {
+            font-size: 0.875rem;
+            white-space: pre-line;
+        }
+        
+        /* Input Area */
+        .input-container {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            border-radius: 9999px;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .btn-indigo {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+        
+        .btn-indigo:hover {
+            background: #c7d2fe;
+        }
+        
+        .btn-green {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .btn-green:hover {
+            background: #a7f3d0;
+        }
+        
+        .btn-pink {
+            background: #fce7f3;
+            color: #9d174d;
+        }
+        
+        .btn-pink:hover {
+            background: #fbcfe8;
+        }
+        
+        .btn-yellow {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .btn-yellow:hover {
+            background: #fde68a;
+        }
+        
+        .btn-purple {
+            background: #e9d5ff;
+            color: #6b21a8;
+        }
+        
+        .btn-purple:hover {
+            background: #d8b4fe;
+        }
+        
+        .btn-blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .btn-blue:hover {
+            background: #bfdbfe;
+        }
+        
+        .btn-red {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .input-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .text-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .text-input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        
+        .send-btn {
+            padding: 0.75rem 1.5rem;
+            background: #2563eb;
+            color: white;
+            border-radius: 0.5rem;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .send-btn:hover {
+            background: #1d4ed8;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .sidebar-card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 1rem;
+        }
+        
+        .sidebar-title {
+            font-size: 0.875rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+        
+        .current-lesson {
+            padding: 0.75rem;
+            background: linear-gradient(to right, #dbeafe, #e9d5ff);
+            border-radius: 0.5rem;
+        }
+        
+        .lesson-title {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.875rem;
+        }
+        
+        .lesson-concept {
+            font-size: 0.75rem;
+            color: #4b5563;
+            margin-top: 0.25rem;
+        }
+        
+        /* Resources */
+        .resources-list {
+            max-height: 12rem;
+            overflow-y: auto;
+        }
+        
+        .resource-item {
+            display: block;
+            padding: 0.5rem;
+            background: linear-gradient(to right, #eff6ff, #e0e7ff);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid #bfdbfe;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .resource-item:hover {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .resource-title {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.75rem;
+        }
+        
+        .resource-type {
+            display: inline-block;
+            padding: 0.125rem 0.5rem;
+            background: #dbeafe;
+            color: #1e40af;
+            font-size: 0.75rem;
+            border-radius: 9999px;
+            margin-top: 0.25rem;
+        }
+        
+        /* Learning Path */
+        .learning-path {
+            max-height: 20rem;
+            overflow-y: auto;
+        }
+        
+        .path-item {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            border: 2px solid;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .path-item.current {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+        
+        .path-item.completed {
+            border-color: #86efac;
+            background: #f0fdf4;
+        }
+        
+        .path-item.locked {
+            border-color: #e5e7eb;
+            background: #f9fafb;
+        }
+        
+        .path-item:hover {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .path-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .path-title {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.75rem;
+            line-height: 1.2;
+            flex: 1;
+            padding-right: 0.25rem;
+        }
+        
+        .path-icon {
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        .path-icon.completed {
+            color: #16a34a;
+        }
+        
+        .path-icon.current {
+            color: #2563eb;
+        }
+        
+        .path-icon.locked {
+            color: #9ca3af;
+        }
+        
+        /* Badges */
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .badge-item {
+            background: linear-gradient(to bottom right, #fce7f3, #fbcfe8);
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+        
+        .badge-icon {
+            font-size: 2rem;
+        }
+        
+        .badge-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-top: 0.25rem;
+        }
+        
+        .no-badges {
+            color: #6b7280;
+            font-size: 0.75rem;
+            grid-column: span 2;
+        }
+        
+        /* Flashcards */
+        .flashcard-section {
+            margin-top: 1.5rem;
+        }
+        
+        .flashcard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .flashcard-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+        
+        .close-btn {
+            color: #6b7280;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .close-btn:hover {
+            color: #374151;
+        }
+        
+        .flashcard-container {
+            perspective: 1000px;
+            height: 200px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+        
+        .flashcard {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .flashcard-flipped .flashcard {
+            transform: rotateY(180deg);
+        }
+        
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+        
+        .flashcard-front {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .flashcard-back {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            transform: rotateY(180deg);
+        }
+        
+        .flashcard-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .flashcard-text-back {
+            font-size: 1.125rem;
+            text-align: center;
+        }
+        
+        .flashcard-hint {
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.75rem;
+        }
+        
+        .flashcard-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .flashcard-btn {
+            padding: 0.5rem 1rem;
+            background: #e5e7eb;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .flashcard-btn:hover {
+            background: #d1d5db;
+        }
+        
+        .card-counter {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #4b5563;
+        }
+        
+        /* LLM Cards */
+        .llm-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .llm-card {
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .llm-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .llm-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .llm-name {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .llm-description {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+        
+        .llm-context {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            background: rgba(255,255,255,0.2);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            display: inline-block;
+        }
+        
+        /* LLM Detail Modal */
+        .llm-modal {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(to bottom right, #eff6ff, #e9d5ff);
+            border-radius: 0.75rem;
+            border: 2px solid #93c5fd;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-section {
+            margin-bottom: 1rem;
+        }
+        
+        .modal-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-title.green {
+            color: #15803d;
+        }
+        
+        .section-title.red {
+            color: #b91c1c;
+        }
+        
+        .section-title.blue {
+            color: #1e40af;
+        }
+        
+        .section-list {
+            list-style: disc;
+            list-style-position: inside;
+            font-size: 0.875rem;
+            color: #374151;
+        }
+        
+        .section-list li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .best-for-box {
+            background: #eff6ff;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .info-box {
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+        }
+        
+        .info-box.purple {
+            background: #f3e8ff;
+        }
+        
+        .info-box.pink {
+            background: #fce7f3;
+        }
+        
+        .info-label {
+            font-weight: 600;
+        }
+        
+        .info-label.purple {
+            color: #6b21a8;
+        }
+        
+        .info-label.pink {
+            color: #9d174d;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            color: white;
+            border-radius: 0.5rem;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .modal-btn.purple {
+            background: #9333ea;
+        }
+        
+        .modal-btn.purple:hover {
+            background: #7e22ce;
+        }
+        
+        .modal-btn.green {
+            background: #16a34a;
+        }
+        
+        .modal-btn.green:hover {
+            background: #15803d;
+        }
+        
+        /* Comparison */
+        .comparison-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .comparison-checkboxes {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: #f9fafb;
+            border-radius: 0.25rem;
+        }
+        
+        .checkbox-wrapper:hover {
+            background: #f3f4f6;
+        }
+        
+        .checkbox-input {
+            width: 1rem;
+            height: 1rem;
+        }
+        
+        .checkbox-label {
+            font-size: 0.875rem;
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .compare-btn {
+            margin-bottom: 1.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #2563eb;
+            color: white;
+            border-radius: 0.5rem;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .compare-btn:hover {
+            background: #1d4ed8;
+        }
+        
+        .comparison-table {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            border: 1px solid #d1d5db;
+            padding: 0.75rem;
+        }
+        
+        th {
+            background: #e5e7eb;
+            font-weight: bold;
+            text-align: left;
+        }
+        
+        td {
+            font-size: 0.875rem;
+        }
+        
+        td.center {
+            text-align: center;
+        }
+        
+        tr:nth-child(even) td {
+            background: #f9fafb;
+        }
+        
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .speak-active {
+            animation: pulse 1.5s infinite;
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 1.25rem;
+            }
+            
+            .tabs {
+                padding: 0.5rem;
+            }
+            
+            .tab-btn {
+                font-size: 0.875rem;
+                padding: 0.5rem 1rem;
+            }
+            
+            .chat-container {
+                height: 16rem;
+            }
+        }
+        
+        /* Utility Classes */
+        .opacity-50 {
+            opacity: 0.5;
+        }
+        
+        .cursor-not-allowed {
+            cursor: not-allowed !important;
+        }
+        
+        .text-gray-500 {
+            color: #6b7280;
+        }
+        
+        .text-gray-600 {
+            color: #4b5563;
+        }
+        
+        .text-gray-700 {
+            color: #374151;
+        }
+        
+        .text-gray-800 {
+            color: #1f2937;
+        }
+        
+        .mb-2 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+        
+        .mb-6 {
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1 class="header-title">
+                    🎓 Prompt Engineering Mastery
+                </h1>
+                <div class="header-stats">
+                    <div>
+                        <span id="totalPoints" class="stat-value">0</span> pts
+                    </div>
+                    <div>
+                        <span id="streakCounter">0 Day Streak! 🔥</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-grid">
+            
+            <!-- Main Learning Area -->
+            <div>
+                
+                <!-- Navigation Tabs -->
+                <div class="card">
+                    <div class="tabs">
+                        <button onclick="showTab('prompt-learning')" id="promptTab" class="tab-btn active">
+                            💬 Prompt Lessons
+                        </button>
+                        <button onclick="showTab('llm-explorer')" id="llmTab" class="tab-btn">
+                            🤖 LLM Explorer
+                        </button>
+                        <button onclick="showTab('comparison')" id="comparisonTab" class="tab-btn">
+                            ⚖️ Compare LLMs
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Prompt Engineering Learning Section -->
+                <div id="promptLearningSection" class="card" style="margin-top: 1.5rem;">
+                    <div class="banner">
+                        <h2 class="banner-title">Interactive Prompt Engineering</h2>
+                        <p class="banner-subtitle">Master the art of communicating with AI</p>
+                    </div>
+
+                    <div id="chatMessages" class="chat-container">
+                        <!-- Messages will be added here -->
+                    </div>
+
+                    <div class="input-container">
+                        <div class="action-buttons">
+                            <button onclick="toggleSpeech()" id="speakBtn" class="action-btn btn-indigo">
+                                🔊 Read Aloud
+                            </button>
+                            <button onclick="showExample()" class="action-btn btn-green">
+                                ✨ Show Example
+                            </button>
+                            <button onclick="showGuidedPrompt()" class="action-btn btn-pink">
+                                📝 Guided Practice
+                            </button>
+                            <button onclick="giveHint()" class="action-btn btn-yellow">
+                                💡 Hint
+                            </button>
+                            <button onclick="showFlashcards()" class="action-btn btn-purple">
+                                🃏 Flashcards
+                            </button>
+                            <button onclick="nextLesson()" class="action-btn btn-blue">
+                                ⏭️ Next Lesson
+                            </button>
+                        </div>
+                        <div class="input-row">
+                            <input type="text" id="userInput" placeholder="Type your prompt or answer..." 
+                                class="text-input"
+                                onkeypress="if(event.key==='Enter') sendMessage()">
+                            <button onclick="sendMessage()" class="send-btn">
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LLM Explorer Section -->
+                <div id="llmExplorerSection" class="card card-padding hidden" style="margin-top: 1.5rem;">
+                    <h2 class="banner-title mb-4" style="background: linear-gradient(to right, #2563eb, #9333ea); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        🤖 Explore AI Language Models
+                    </h2>
+                    <p class="text-gray-600 mb-6">Discover the unique capabilities of different AI models. Click on each to learn more!</p>
+                    
+                    <div class="llm-grid" id="llmCardsContainer">
+                        <!-- LLM cards will be generated here -->
+                    </div>
+
+                    <!-- LLM Detail Modal -->
+                    <div id="llmDetailModal" class="llm-modal hidden">
+                        <div class="modal-header">
+                            <h3 id="modalLLMName" class="modal-title"></h3>
+                            <button onclick="closeLLMDetail()" class="close-btn">&times;</button>
+                        </div>
+                        <div id="modalLLMContent">
+                            <!-- Detail content will be populated here -->
+                        </div>
+                        <div class="modal-actions">
+                            <button onclick="tryLLMQuiz()" class="modal-btn purple">
+                                🎯 Take Quiz
+                            </button>
+                            <button onclick="earnLLMBadge()" class="modal-btn green">
+                                🏆 Earn Badge
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparison Section -->
+                <div id="comparisonSection" class="card card-padding hidden" style="margin-top: 1.5rem;">
+                    <h2 class="banner-title mb-4" style="background: linear-gradient(to right, #2563eb, #9333ea); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        ⚖️ Compare AI Models
+                    </h2>
+                    <p class="text-gray-600 mb-6">See how different LLMs stack up against each other</p>
+                    
+                    <div class="mb-6">
+                        <label class="sidebar-title mb-2" style="display: block;">Select LLMs to Compare:</label>
+                        <div class="comparison-checkboxes" id="llmCheckboxes">
+                            <!-- Checkboxes will be generated here -->
+                        </div>
+                    </div>
+
+                    <button onclick="generateComparison()" class="compare-btn">
+                        Compare Selected Models
+                    </button>
+
+                    <div id="comparisonResults" class="comparison-table">
+                        <!-- Comparison table will be generated here -->
+                    </div>
+                </div>
+
+                <!-- Flashcard Section -->
+                <div id="flashcardSection" class="flashcard-section hidden">
+                    <div class="card card-padding">
+                        <div class="flashcard-header">
+                            <h3 class="flashcard-title">📚 Study Flashcards</h3>
+                            <button onclick="closeFlashcards()" class="close-btn">&times;</button>
+                        </div>
+                        
+                        <p class="flashcard-hint">💡 Click the card to flip it!</p>
+                        
+                        <div id="flashcardContainer" class="flashcard-container" onclick="flipCard()">
+                            <div class="flashcard">
+                                <div class="flashcard-front">
+                                    <p id="flashcardFront" class="flashcard-text"></p>
+                                </div>
+                                <div class="flashcard-back">
+                                    <p id="flashcardBack" class="flashcard-text-back"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flashcard-controls">
+                            <button onclick="previousCard()" class="flashcard-btn">
+                                ← Previous
+                            </button>
+                            <span id="cardCounter" class="card-counter">1 / 1</span>
+                            <button onclick="nextCard()" class="flashcard-btn">
+                                Next →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                
+                <!-- Current Lesson -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">📖 Current Lesson</h3>
+                    <div class="current-lesson">
+                        <p class="lesson-title" id="currentLessonTitle">Prompting Basics</p>
+                        <p class="lesson-concept" id="currentLessonConcept">Foundation of AI communication</p>
+                    </div>
+                </div>
+
+                <!-- Resources -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">🔗 Resources</h3>
+                    <p class="lesson-concept mb-2" id="referencesDescription">Curated learning materials</p>
+                    <div id="referencesContainer" class="resources-list">
+                        <!-- References will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Learning Path -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">🗺️ Learning Path</h3>
+                    <div id="learningPath" class="learning-path">
+                        <!-- Learning path will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Badges & Achievements -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">🏆 Your Badges</h3>
+                    <div id="badgesContainer" class="badges-grid">
+                        <p class="no-badges">Keep learning to earn badges!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global Variables
+        let points = 0;
+        let streak = 1;
+        let userProgress = 0;
+        let currentLesson = 0;
+        let badges = [];
+        let messages = [];
+        let currentFlashcardIndex = 0;
+        let flashcardFlipped = false;
+        let currentLLMSelected = null;
+        let selectedLLMsForComparison = [];
+        let lessonStep = 0;
+        let speechSynthesis = window.speechSynthesis;
+        let currentUtterance = null;
+        let isSpeaking = false;
+        let speechAvailable = false;
+        let voicesLoaded = false;
+
+        // LLM Data
+        const llmData = [
+            {
+                id: 'claude',
+                name: 'Claude (Anthropic)',
+                icon: '🤖',
+                color: 'linear-gradient(to bottom right, #fb923c, #ef4444)',
+                description: 'Thoughtful, nuanced responses with strong reasoning capabilities',
+                strengths: ['Long context windows (200K)', 'Strong reasoning', 'Detailed explanations', 'Constitutional AI safety'],
+                weaknesses: ['No image generation', 'Knowledge cutoff'],
+                bestFor: 'Complex analysis, research, detailed writing, coding assistance',
+                contextWindow: '200K tokens',
+                released: '2023',
+                quiz: [
+                    { q: 'What company created Claude?', a: 'Anthropic' },
+                    { q: 'What is Claude\'s key safety approach called?', a: 'Constitutional AI' }
+                ]
+            },
+            {
+                id: 'gpt4',
+                name: 'GPT-4 (OpenAI)',
+                icon: '🌟',
+                color: 'linear-gradient(to bottom right, #34d399, #14b8a6)',
+                description: 'Versatile model with strong general capabilities',
+                strengths: ['Multimodal (text & images)', 'Wide knowledge base', 'Plugin ecosystem', 'Code interpreter'],
+                weaknesses: ['Can be verbose', 'Knowledge cutoff limitations'],
+                bestFor: 'General tasks, creative writing, multimodal analysis, plugin integration',
+                contextWindow: '128K tokens',
+                released: '2023',
+                quiz: [
+                    { q: 'Which company developed GPT-4?', a: 'OpenAI' },
+                    { q: 'Can GPT-4 process images?', a: 'Yes' }
+                ]
+            },
+            {
+                id: 'gemini',
+                name: 'Gemini (Google)',
+                icon: '💎',
+                color: 'linear-gradient(to bottom right, #60a5fa, #a78bfa)',
+                description: 'Google\'s multimodal AI with strong search integration',
+                strengths: ['Real-time search integration', 'Multimodal', 'Google ecosystem', 'Fast responses'],
+                weaknesses: ['Newer model', 'Less creative in some tasks'],
+                bestFor: 'Research with current info, factual queries, Google Workspace integration',
+                contextWindow: '1M tokens (Pro 1.5)',
+                released: '2023',
+                quiz: [
+                    { q: 'What company makes Gemini?', a: 'Google' },
+                    { q: 'What\'s unique about Gemini\'s context window?', a: 'Very large (1M tokens)' }
+                ]
+            },
+            {
+                id: 'llama',
+                name: 'Llama (Meta)',
+                icon: '🦙',
+                color: 'linear-gradient(to bottom right, #c084fc, #ec4899)',
+                description: 'Open-source model that can run locally',
+                strengths: ['Open-source', 'Can run locally', 'Privacy-friendly', 'Customizable'],
+                weaknesses: ['Requires technical setup', 'Smaller versions less capable'],
+                bestFor: 'Privacy-sensitive tasks, custom applications, local deployment',
+                contextWindow: '8K-128K tokens',
+                released: '2023',
+                quiz: [
+                    { q: 'Is Llama open-source?', a: 'Yes' },
+                    { q: 'Which company developed Llama?', a: 'Meta' }
+                ]
+            },
+            {
+                id: 'mistral',
+                name: 'Mistral AI',
+                icon: '🌊',
+                color: 'linear-gradient(to bottom right, #22d3ee, #3b82f6)',
+                description: 'European open-source models with strong performance',
+                strengths: ['Open-source options', 'Efficient', 'European data privacy', 'Good reasoning'],
+                weaknesses: ['Smaller ecosystem', 'Less well-known'],
+                bestFor: 'European deployments, cost-effective solutions, specialized tasks',
+                contextWindow: '32K tokens',
+                released: '2023',
+                quiz: [
+                    { q: 'Where is Mistral AI based?', a: 'Europe (France)' },
+                    { q: 'Does Mistral offer open-source models?', a: 'Yes' }
+                ]
+            },
+            {
+                id: 'cohere',
+                name: 'Cohere',
+                icon: '🔗',
+                color: 'linear-gradient(to bottom right, #f472b6, #fb7185)',
+                description: 'Enterprise-focused AI with strong retrieval capabilities',
+                strengths: ['RAG capabilities', 'Enterprise features', 'Semantic search', 'Embeddings'],
+                weaknesses: ['Less known for chat', 'Smaller public presence'],
+                bestFor: 'Enterprise search, retrieval augmented generation, embeddings',
+                contextWindow: '128K tokens',
+                released: '2021',
+                quiz: [
+                    { q: 'What is Cohere best known for?', a: 'Enterprise AI and RAG' },
+                    { q: 'What does RAG stand for?', a: 'Retrieval Augmented Generation' }
+                ]
+            }
+        ];
+
+        // 10 Prompt Engineering Lessons
+        const lessons = [
+            {
+                title: '1. Prompting Basics',
+                description: 'Foundation of AI communication',
+                concept: 'Clear communication is the key to effective AI interactions',
+                content: {
+                    intro: "Welcome to Prompt Engineering! A prompt is how you communicate with AI. The better your prompt, the better the response.",
+                    question: "What do you think makes a prompt effective?",
+                    goodAnswers: ['clear', 'specific', 'detailed', 'context'],
+                    example: {
+                        bad: '❌ "Tell me about dogs"',
+                        good: '✅ "Explain the key differences between Golden Retrievers and Labrador Retrievers in terms of temperament and care requirements"',
+                        why: 'The second prompt is specific, clear, and includes what aspects to focus on.'
+                    }
+                },
+                flashcards: [
+                    { front: 'What is a prompt?', back: 'Instructions or questions you give to an AI to get a specific response' },
+                    { front: 'Why is clarity important in prompts?', back: 'Clear prompts help AI understand exactly what you want, leading to better responses' }
+                ],
+                references: [
+                    { title: 'Prompt Engineering Guide', type: 'Guide', url: 'https://www.promptingguide.ai/' },
+                    { title: 'OpenAI Best Practices', type: 'Documentation', url: 'https://platform.openai.com/docs/guides/prompt-engineering' },
+                    { title: 'Learn Prompting - Free Course', type: 'Course', url: 'https://learnprompting.org/' }
+                ]
+            },
+            {
+                title: '2. Be Clear & Specific',
+                description: 'Precision in your requests',
+                concept: 'Specific prompts yield specific results',
+                content: {
+                    intro: "Vague prompts get vague responses. Being specific helps AI understand exactly what you need.",
+                    question: "Try improving this prompt: 'Write something about climate'",
+                    goodAnswers: ['climate change', 'impact', 'specific region', 'solutions', 'effects'],
+                    example: {
+                        bad: '❌ "Write something about climate"',
+                        good: '✅ "Write a 300-word explanation of how climate change is affecting coral reefs in the Caribbean, including 3 specific conservation strategies"',
+                        why: 'This specifies the topic, length, geographic focus, and what to include.'
+                    }
+                },
+                flashcards: [
+                    { front: 'How does being specific improve prompts?', back: 'It narrows the scope and helps AI focus on exactly what you need' },
+                    { front: 'Give an example of making a vague prompt specific', back: '"Help me cook" → "Give me a 30-minute vegetarian pasta recipe for 4 people"' }
+                ],
+                references: [
+                    { title: 'Writing Clear Prompts - Anthropic', type: 'Guide', url: 'https://docs.anthropic.com/claude/docs/introduction-to-prompt-design' },
+                    { title: 'Specificity in Prompting', type: 'Article', url: 'https://www.promptingguide.ai/introduction/basics' },
+                    { title: 'Prompt Engineering Tutorial', type: 'Video', url: 'https://www.youtube.com/results?search_query=prompt+engineering+tutorial' }
+                ]
+            },
+            {
+                title: '3. Provide Context',
+                description: 'Background information matters',
+                concept: 'Context helps AI understand your situation and needs',
+                content: {
+                    intro: "Context is the background information that helps AI give relevant, tailored responses. Always explain WHO you are, WHAT you need, and WHY.",
+                    question: "What context would help if asking for business advice?",
+                    goodAnswers: ['industry', 'company size', 'budget', 'goals', 'audience', 'experience'],
+                    example: {
+                        bad: '❌ "How do I market my product?"',
+                        good: '✅ "I\'m a founder of a B2B SaaS startup with a $5K monthly marketing budget. My target audience is small business owners aged 35-50. How should I prioritize my marketing channels?"',
+                        why: 'Provides business type, budget constraints, audience details - all crucial context.'
+                    }
+                },
+                flashcards: [
+                    { front: 'Why is context important in prompts?', back: 'It helps AI tailor responses to your specific situation, making answers more relevant and useful' },
+                    { front: 'What types of context should you include?', back: 'Your role, goals, constraints, audience, industry, and relevant background information' }
+                ],
+                references: [
+                    { title: 'Providing Context - OpenAI Guide', type: 'Guide', url: 'https://platform.openai.com/docs/guides/prompt-engineering/strategy-write-clear-instructions' },
+                    { title: 'Context in Prompting - Learn Prompting', type: 'Tutorial', url: 'https://learnprompting.org/docs/basics/instructions' },
+                    { title: 'Writing Effective Prompts', type: 'Article', url: 'https://help.openai.com/en/articles/6654000-best-practices-for-prompt-engineering-with-openai-api' }
+                ]
+            },
+            {
+                title: '4. Use Examples (Few-Shot)',
+                description: 'Show, don\'t just tell',
+                concept: 'Examples teach AI exactly what format you want',
+                content: {
+                    intro: "Few-shot learning means giving AI examples of what you want. This is incredibly powerful for formatting and style.",
+                    question: "When would examples be most helpful?",
+                    goodAnswers: ['formatting', 'style', 'tone', 'structure', 'pattern'],
+                    example: {
+                        bad: '❌ "Write product descriptions"',
+                        good: '✅ "Write product descriptions in this style:\n\nExample 1: Wireless Mouse - Click into comfort with our ergonomic wireless mouse. 2400 DPI precision meets all-day battery life. Your wrist will thank you.\n\nNow write one for: Mechanical Keyboard"',
+                        why: 'The example shows exact style, length, and tone expected.'
+                    }
+                },
+                flashcards: [
+                    { front: 'What is few-shot learning?', back: 'Providing AI with examples to demonstrate the desired output format or style' },
+                    { front: 'When should you use examples in prompts?', back: 'When you need specific formatting, consistent style, or want to demonstrate a pattern' }
+                ],
+                references: [
+                    { title: 'Few-Shot Prompting Guide', type: 'Guide', url: 'https://www.promptingguide.ai/techniques/fewshot' },
+                    { title: 'OpenAI Few-Shot Examples', type: 'Documentation', url: 'https://platform.openai.com/docs/guides/prompt-engineering/tactic-provide-examples' },
+                    { title: 'In-Context Learning', type: 'Research', url: 'https://arxiv.org/abs/2005.14165' }
+                ]
+            },
+            {
+                title: '5. Chain of Thought',
+                description: 'Breaking down complex reasoning',
+                concept: 'Asking AI to "think step-by-step" improves accuracy',
+                content: {
+                    intro: "Chain of Thought prompting asks AI to show its reasoning process. This dramatically improves accuracy on complex problems.",
+                    question: "What phrase encourages step-by-step thinking?",
+                    goodAnswers: ['step-by-step', 'think through', 'explain', 'reasoning', 'process'],
+                    example: {
+                        bad: '❌ "What\'s 15% of 340?"',
+                        good: '✅ "What\'s 15% of 340? Think through this step-by-step and show your work."',
+                        why: 'Requesting step-by-step reasoning reduces errors and makes the process transparent.'
+                    }
+                },
+                flashcards: [
+                    { front: 'What is Chain of Thought prompting?', back: 'Asking AI to explain its reasoning step-by-step, which improves accuracy on complex tasks' },
+                    { front: 'When should you use Chain of Thought?', back: 'For math problems, logical reasoning, complex analysis, or when you need to understand the process' }
+                ],
+                references: [
+                    { title: 'Chain of Thought Paper', type: 'Research', url: 'https://arxiv.org/abs/2201.11903' },
+                    { title: 'Chain of Thought Prompting', type: 'Guide', url: 'https://www.promptingguide.ai/techniques/cot' },
+                    { title: 'Step-by-Step Reasoning', type: 'Tutorial', url: 'https://learnprompting.org/docs/intermediate/chain_of_thought' }
+                ]
+            },
+            {
+                title: '6. Role-Based Prompting',
+                description: 'Assign AI a specific role',
+                concept: 'Roles help AI adopt appropriate expertise and tone',
+                content: {
+                    intro: "Assigning a role to AI helps it understand what perspective and expertise to use. This shapes both tone and content quality.",
+                    question: "What role would you assign for career advice?",
+                    goodAnswers: ['career coach', 'hr expert', 'mentor', 'recruiter', 'counselor'],
+                    example: {
+                        bad: '❌ "Give me resume tips"',
+                        good: '✅ "You are an experienced tech recruiter who has reviewed 10,000+ resumes. Review my software engineer resume and suggest 5 specific improvements that would make it stand out."',
+                        why: 'The role provides expertise context and shapes the quality of feedback.'
+                    }
+                },
+                flashcards: [
+                    { front: 'What is role-based prompting?', back: 'Assigning AI a specific role or persona to shape its expertise, tone, and perspective' },
+                    { front: 'How do roles improve AI responses?', back: 'Roles help AI adopt appropriate expertise, adjust tone, and provide more specialized insights' }
+                ],
+                references: [
+                    { title: 'Role Prompting Techniques', type: 'Guide', url: 'https://www.promptingguide.ai/techniques/role' },
+                    { title: 'Persona Patterns', type: 'Article', url: 'https://arxiv.org/abs/2302.11382' },
+                    { title: 'System Messages & Roles', type: 'Documentation', url: 'https://platform.openai.com/docs/guides/prompt-engineering/tactic-ask-the-model-to-adopt-a-persona' }
+                ]
+            },
+            {
+                title: '7. Format Your Output',
+                description: 'Structure the response you want',
+                concept: 'Specify exactly how you want information organized',
+                content: {
+                    intro: "Don't just ask for information - specify how you want it formatted. Markdown, JSON, tables, bullet points - whatever works for your use case.",
+                    question: "What format works best for comparison data?",
+                    goodAnswers: ['table', 'list', 'comparison', 'chart', 'grid'],
+                    example: {
+                        bad: '❌ "Compare iPhone and Android"',
+                        good: '✅ "Compare iPhone vs Android in a markdown table with columns: Feature, iPhone, Android, Winner. Include rows for: Price Range, App Ecosystem, Customization, Privacy, Hardware Options"',
+                        why: 'Specifies exact format (table), structure (columns/rows), and what to compare.'
+                    }
+                },
+                flashcards: [
+                    { front: 'Why specify output format in prompts?', back: 'It ensures you get information in a usable structure that fits your needs' },
+                    { front: 'Name 4 common output formats', back: 'Markdown, JSON, tables, bullet points, numbered lists, code blocks' }
+                ],
+                references: [
+                    { title: 'Structured Output Guide', type: 'Documentation', url: 'https://platform.openai.com/docs/guides/structured-outputs' },
+                    { title: 'Formatting Prompts', type: 'Guide', url: 'https://www.promptingguide.ai/techniques/formatting' },
+                    { title: 'JSON Mode & Formatting', type: 'Tutorial', url: 'https://cookbook.openai.com/examples/how_to_format_inputs_to_chatgpt_models' }
+                ]
+            },
+            {
+                title: '8. Constraints & Boundaries',
+                description: 'Set clear limitations',
+                concept: 'Constraints guide AI and prevent unwanted results',
+                content: {
+                    intro: "Constraints tell AI what NOT to do or what limits to respect. Word count, tone restrictions, content boundaries - all help focus the output.",
+                    question: "What constraints might you set for a blog post?",
+                    goodAnswers: ['word count', 'tone', 'audience', 'length', 'format', 'avoid'],
+                    example: {
+                        bad: '❌ "Write a blog post about productivity"',
+                        good: '✅ "Write a 500-word blog post about productivity for busy parents. Use a warm, empathetic tone. Avoid jargon. Don\'t mention apps or tools that cost money. Include 3 actionable tips."',
+                        why: 'Multiple clear constraints: length, audience, tone, restrictions, and structure.'
+                    }
+                },
+                flashcards: [
+                    { front: 'What are constraints in prompting?', back: 'Limitations and boundaries you set to guide AI output (word count, tone, what to avoid, etc.)' },
+                    { front: 'Why use constraints in prompts?', back: 'To keep responses focused, appropriate, and within desired parameters' }
+                ],
+                references: [
+                    { title: 'Setting Constraints', type: 'Guide', url: 'https://www.promptingguide.ai/techniques/constraints' },
+                    { title: 'Prompt Engineering Best Practices', type: 'Article', url: 'https://help.openai.com/en/articles/6654000-best-practices-for-prompt-engineering-with-openai-api' },
+                    { title: 'Control & Constraints', type: 'Tutorial', url: 'https://learnprompting.org/docs/basics/configuration_hyperparameters' }
+                ]
+            },
+            {
+                title: '9. Iterative Refinement',
+                description: 'Improve through conversation',
+                concept: 'Great prompts often come from refining initial attempts',
+                content: {
+                    intro: "Don't expect perfection on the first try. Iterate! Refine your prompt based on the response. This is how experts work with AI.",
+                    question: "What would you do if the first response wasn't quite right?",
+                    goodAnswers: ['refine', 'clarify', 'add details', 'iterate', 'be more specific', 'give feedback'],
+                    example: {
+                        iteration1: 'First: "Write about coffee" → Too vague',
+                        iteration2: 'Better: "Write about health benefits of coffee" → Missing structure',
+                        iteration3: 'Best: "Write a 400-word article about 3 scientifically-proven health benefits of coffee, citing recent studies, for health-conscious millennials"',
+                        why: 'Each iteration adds specificity, structure, and context.'
+                    }
+                },
+                flashcards: [
+                    { front: 'What is iterative refinement?', back: 'The process of improving prompts through multiple attempts based on AI responses' },
+                    { front: 'How do you refine a prompt?', back: 'Add specificity, clarify intent, provide more context, adjust constraints, or give examples based on previous responses' }
+                ],
+                references: [
+                    { title: 'Iterative Prompt Design', type: 'Guide', url: 'https://platform.openai.com/docs/guides/prompt-engineering/strategy-test-changes-systematically' },
+                    { title: 'Refining Prompts', type: 'Tutorial', url: 'https://learnprompting.org/docs/basics/iterative_prompting' },
+                    { title: 'Prompt Iteration Strategies', type: 'Article', url: 'https://www.promptingguide.ai/introduction/iterative' }
+                ]
+            },
+            {
+                title: '10. Advanced Techniques',
+                description: 'Power-user strategies',
+                concept: 'Combine techniques for professional-grade results',
+                content: {
+                    intro: "Master prompt engineers combine multiple techniques: role + examples + constraints + chain of thought. This creates professional-quality outputs.",
+                    question: "Which techniques would you combine for a business report?",
+                    goodAnswers: ['role', 'format', 'examples', 'constraints', 'context', 'structure'],
+                    example: {
+                        basic: '❌ "Write a business report"',
+                        advanced: '✅ "You are a senior business analyst. Create a quarterly performance report following this structure:\n\nExample format:\n[Executive Summary - 2 paragraphs]\n[Key Metrics - bullet points]\n[Analysis - 3 sections]\n[Recommendations - numbered list]\n\nUse data: Q3 revenue $2.1M (↑15%), customer churn 3.2% (↓0.8%), NPS score 67 (↑5). Length: 800 words. Tone: professional but accessible. Think step-by-step through the analysis section."',
+                        why: 'Combines: role, format, examples, data context, constraints, and chain of thought.'
+                    }
+                },
+                flashcards: [
+                    { front: 'What makes an advanced prompt?', back: 'Combining multiple techniques: role, context, examples, constraints, formatting, and reasoning instructions' },
+                    { front: 'Name 3 techniques to combine', back: 'Any combination of: role-based, few-shot examples, chain of thought, constraints, formatting, context' }
+                ],
+                references: [
+                    { title: 'Advanced Prompting Techniques', type: 'Guide', url: 'https://www.promptingguide.ai/techniques' },
+                    { title: 'Prompt Engineering for GPT-4', type: 'Course', url: 'https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/' },
+                    { title: 'Master Class in Prompting', type: 'Article', url: 'https://docs.anthropic.com/claude/docs/prompt-engineering' },
+                    { title: 'Advanced Patterns & Techniques', type: 'Research', url: 'https://arxiv.org/abs/2302.11382' },
+                    { title: 'Prompt Engineering Workshop', type: 'Video Series', url: 'https://www.youtube.com/results?search_query=advanced+prompt+engineering' }
+                ]
+            }
+        ];
+
+        // Badge System
+        const badgesList = [
+            { id: 1, name: 'First Prompt', icon: '🌱', points: 10 },
+            { id: 2, name: 'Prompt Novice', icon: '📝', points: 50 },
+            { id: 3, name: 'Context Master', icon: '🎯', points: 100 },
+            { id: 4, name: 'Few-Shot Expert', icon: '🎓', points: 200 },
+            { id: 5, name: 'Prompt Engineer', icon: '⚡', points: 350 },
+            { id: 6, name: 'AI Whisperer', icon: '🧙', points: 500 }
+        ];
+
+        // Tab Navigation
+        function showTab(tabName) {
+            // Hide all tabs
+            document.getElementById('promptLearningSection').classList.add('hidden');
+            document.getElementById('llmExplorerSection').classList.add('hidden');
+            document.getElementById('comparisonSection').classList.add('hidden');
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            if (tabName === 'prompt-learning') {
+                document.getElementById('promptLearningSection').classList.remove('hidden');
+                document.getElementById('promptTab').classList.add('active');
+            } else if (tabName === 'llm-explorer') {
+                document.getElementById('llmExplorerSection').classList.remove('hidden');
+                document.getElementById('llmTab').classList.add('active');
+                loadLLMCards();
+            } else if (tabName === 'comparison') {
+                document.getElementById('comparisonSection').classList.remove('hidden');
+                document.getElementById('comparisonTab').classList.add('active');
+                loadComparisonCheckboxes();
+            }
+        }
+
+        // LLM Explorer Functions
+        function loadLLMCards() {
+            const container = document.getElementById('llmCardsContainer');
+            container.innerHTML = '';
+            
+            llmData.forEach(llm => {
+                const card = document.createElement('div');
+                card.className = 'llm-card';
+                card.style.background = llm.color;
+                card.onclick = () => showLLMDetail(llm.id);
+                card.innerHTML = `
+                    <div class="llm-icon">${llm.icon}</div>
+                    <h3 class="llm-name">${llm.name}</h3>
+                    <p class="llm-description">${llm.description}</p>
+                    <div class="llm-context">Context: ${llm.contextWindow}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function showLLMDetail(llmId) {
+            const llm = llmData.find(l => l.id === llmId);
+            currentLLMSelected = llm;
+            
+            document.getElementById('llmDetailModal').classList.remove('hidden');
+            document.getElementById('modalLLMName').textContent = `${llm.icon} ${llm.name}`;
+            
+            const content = `
+                <div class="modal-content">
+                    <p class="text-gray-700 mb-4">${llm.description}</p>
+                    
+                    <div class="modal-section">
+                        <h4 class="section-title green">✅ Strengths:</h4>
+                        <ul class="section-list">
+                            ${llm.strengths.map(s => `<li>${s}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="modal-section">
+                        <h4 class="section-title red">⚠️ Limitations:</h4>
+                        <ul class="section-list">
+                            ${llm.weaknesses.map(w => `<li>${w}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="best-for-box">
+                        <h4 class="section-title blue">🎯 Best For:</h4>
+                        <p class="text-gray-700" style="font-size: 0.875rem;">${llm.bestFor}</p>
+                    </div>
+                    
+                    <div class="info-grid">
+                        <div class="info-box purple">
+                            <span class="info-label purple">Context Window:</span>
+                            <p class="text-gray-700">${llm.contextWindow}</p>
+                        </div>
+                        <div class="info-box pink">
+                            <span class="info-label pink">Released:</span>
+                            <p class="text-gray-700">${llm.released}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modalLLMContent').innerHTML = content;
+            earnPoints(20);
+        }
+
+        function closeLLMDetail() {
+            document.getElementById('llmDetailModal').classList.add('hidden');
+        }
+
+        function tryLLMQuiz() {
+            if (!currentLLMSelected) return;
+            
+            const quiz = currentLLMSelected.quiz;
+            const question = quiz[Math.floor(Math.random() * quiz.length)];
+            
+            const answer = prompt(`🎯 Quick Quiz!\n\n${question.q}`);
+            
+            if (answer && answer.toLowerCase().includes(question.a.toLowerCase())) {
+                alert('🎉 Correct! +50 points!');
+                earnPoints(50);
+            } else {
+                alert(`🤔 Not quite! The answer is: ${question.a}\n\nYou still earn +10 points for trying!`);
+                earnPoints(10);
+            }
+        }
+
+        function earnLLMBadge() {
+            if (!currentLLMSelected) return;
+            
+            const newBadge = {
+                id: `llm-${currentLLMSelected.id}`,
+                name: `${currentLLMSelected.name} Expert`,
+                icon: currentLLMSelected.icon
+            };
+            
+            if (!badges.find(b => b.id === newBadge.id)) {
+                badges.push(newBadge);
+                updateBadges();
+                earnPoints(100);
+                alert(`🏆 Congratulations! You've earned the "${newBadge.name}" badge!`);
+            } else {
+                alert('You already have this badge! Keep exploring other LLMs.');
+            }
+        }
+
+        // Comparison Functions
+        function loadComparisonCheckboxes() {
+            const container = document.getElementById('llmCheckboxes');
+            container.innerHTML = '';
+            
+            llmData.forEach(llm => {
+                const div = document.createElement('div');
+                div.className = 'checkbox-wrapper';
+                div.innerHTML = `
+                    <input type="checkbox" id="compare-${llm.id}" value="${llm.id}" 
+                        class="checkbox-input" onchange="updateComparisonSelection()">
+                    <label for="compare-${llm.id}" class="checkbox-label">
+                        ${llm.icon} ${llm.name}
+                    </label>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function updateComparisonSelection() {
+            selectedLLMsForComparison = [];
+            document.querySelectorAll('#llmCheckboxes input:checked').forEach(cb => {
+                selectedLLMsForComparison.push(cb.value);
+            });
+        }
+
+        function generateComparison() {
+            if (selectedLLMsForComparison.length < 2) {
+                alert('Please select at least 2 LLMs to compare!');
+                return;
+            }
+
+            const selectedLLMs = llmData.filter(llm => selectedLLMsForComparison.includes(llm.id));
+            
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            ${selectedLLMs.map(llm => `<th>${llm.icon} ${llm.name}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Context Window</strong></td>
+                            ${selectedLLMs.map(llm => `<td class="center">${llm.contextWindow}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td><strong>Released</strong></td>
+                            ${selectedLLMs.map(llm => `<td class="center">${llm.released}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td><strong>Best For</strong></td>
+                            ${selectedLLMs.map(llm => `<td>${llm.bestFor}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td><strong>Key Strengths</strong></td>
+                            ${selectedLLMs.map(llm => `<td><ul style="list-style: disc; list-style-position: inside;">${llm.strengths.slice(0, 3).map(s => `<li>${s}</li>`).join('')}</ul></td>`).join('')}
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('comparisonResults').innerHTML = tableHTML;
+            earnPoints(30);
+        }
+
+        // Prompt Learning Functions
+        function addMessage(type, text, animate = false) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message-wrapper ${type}`;
+            
+            const bubbleClass = type === 'user' ? 'message-bubble user' : 'message-bubble ai';
+            
+            messageDiv.innerHTML = `
+                <div class="${bubbleClass}">
+                    <p class="message-text">${text}</p>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            messages.push({ type, text });
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            addMessage('user', text, true);
+            input.value = '';
+            
+            processUserInput(text);
+        }
+
+        function earnPoints(amount) {
+            points += amount;
+            updatePoints();
+        }
+
+        function processUserInput(text) {
+            const lowerText = text.toLowerCase();
+            const lesson = lessons[currentLesson];
+            let earnedPoints = Math.floor(Math.random() * 10) + 15;
+
+            setTimeout(() => {
+                let response = '';
+                let progressIncrease = 0;
+
+                const hasGoodAnswer = lesson.content.goodAnswers.some(keyword => 
+                    lowerText.includes(keyword)
+                );
+
+                // Handle 'practice' command to launch guided practice
+                if (lowerText.includes('practice') || lowerText === 'start practice') {
+                    launchGuidedPractice();
+                    return;
+                }
+
+                if (text.length > 20 && (lowerText.includes('i am') || lowerText.includes('i\'m') || lowerText.includes('my'))) {
+                    response = `Excellent! 🎯 I can see you've included personal context: "${text.substring(0, 50)}..."\n\nThis is great because:\n✓ You've specified WHO you are\n✓ This helps AI understand your perspective\n✓ Responses will be more relevant to YOU\n\n+${earnedPoints + 10} points for personalization!\n\nNow, what specific outcome do you want? (Type your goal or desired result)`;
+                    earnPoints(earnedPoints + 10);
+                    progressIncrease = 25;
+                    if (speechAvailable) speakText(response);
+                } else if (text.length > 30 && text.includes('?')) {
+                    const wordCount = text.split(' ').length;
+                    if (wordCount > 10) {
+                        response = `Great work! 🌟 Your prompt has ${wordCount} words and includes:\n${text.includes('who') || text.includes('what') || text.includes('how') ? '✓ Question words (who/what/how)' : ''}\n${text.includes(',') || text.includes('and') ? '✓ Multiple details' : ''}\n${text.match(/[0-9]/) ? '✓ Specific numbers' : ''}\n\n+${earnedPoints + 5} points!\n\nThis is shaping up well! Want to see how to make it even better? Type 'improve' or continue practicing!`;
+                        earnPoints(earnedPoints + 5);
+                        progressIncrease = 20;
+                        if (speechAvailable) speakText(response);
+                    } else {
+                        response = `Good start! Your prompt could be stronger with more details. Try adding:\n• WHO you are (context)\n• WHAT exactly you need\n• WHY you need it\n• Any constraints (time, budget, etc.)\n\n+${earnedPoints} points! Try again with more details:`;
+                        earnPoints(earnedPoints);
+                        progressIncrease = 10;
+                        if (speechAvailable) speakText(response);
+                    }
+                } else if (lessonStep === 0) {
+                    if (hasGoodAnswer) {
+                        response = `Excellent thinking! 🎯 ${lesson.content.goodAnswers.filter(kw => lowerText.includes(kw)).map(kw => `"${kw}"`).join(', ')} - those are exactly the kind of elements we're looking for!\n\n+${earnedPoints} points!\n\nWant to try the guided practice? Click "📝 Guided Practice" or type 'practice' to build a real prompt together!`;
+                        earnPoints(earnedPoints);
+                        progressIncrease = 30;
+                        lessonStep = 1;
+                        if (speechAvailable) speakText(response);
+                    } else {
+                        response = `Good effort! 💪 Let me give you a hint: ${lesson.content.intro}\n\n+${Math.floor(earnedPoints/2)} points for participating!\n\nTry answering again, or click "📝 Guided Practice" for step-by-step help!`;
+                        earnPoints(Math.floor(earnedPoints/2));
+                        progressIncrease = 10;
+                        if (speechAvailable) speakText(response);
+                    }
+                } else if (lessonStep === 1) {
+                    if (lowerText.includes('yes') || lowerText.includes('example') || lowerText.includes('show') || lowerText.includes('practice')) {
+                        const ex = lesson.content.example;
+                        response = `Here's an example:\n\n${ex.bad}\n\n${ex.good}\n\n💡 Why is the second better? ${ex.why}\n\n+${earnedPoints} points!\n\nReady to practice? Click "📝 Guided Practice" or type 'next' for the next lesson!`;
+                        earnPoints(earnedPoints);
+                        progressIncrease = 50;
+                        lessonStep = 2;
+                        streak++;
+                        updateStreak();
+                        if (speechAvailable) speakText(response);
+                    } else {
+                        response = `I see you wrote: "${text}"\n\nLet me analyze this:\n${text.length > 50 ? '✓ Good length' : '⚠️ Try adding more detail'}\n${text.includes('?') ? '✓ Clear question' : '⚠️ Consider phrasing as a question'}\n\n+${earnedPoints} points!\n\nWant guided help? Click "📝 Guided Practice"!`;
+                        earnPoints(earnedPoints);
+                        progressIncrease = 15;
+                        if (speechAvailable) speakText(response);
+                    }
+                } else {
+                    response = `Great! You're making progress. Your response shows effort!\n\n+${earnedPoints} points!\n\nType 'practice' for guided exercises, 'next' for the next lesson, or 'flashcards' to review!`;
+                    earnPoints(earnedPoints);
+                    progressIncrease = 10;
+                    if (speechAvailable) speakText(response);
+                }
+
+                userProgress = Math.min(100, userProgress + progressIncrease);
+                updateProgress();
+                addMessage('ai', response, true);
+
+                if (userProgress >= 100) {
+                    userProgress = 100;
+                    updateProgress();
+                }
+            }, 800);
+        }
+
+        function showExample() {
+            const lesson = lessons[currentLesson];
+            const ex = lesson.content.example;
+            
+            let exampleText = '';
+            if (ex.iteration1) {
+                exampleText = `📚 Iterative Example:\n\n${ex.iteration1}\n\n${ex.iteration2}\n\n${ex.iteration3}\n\n💡 ${ex.why}`;
+            } else if (ex.basic) {
+                exampleText = `📚 Basic vs Advanced:\n\n${ex.basic}\n\n${ex.advanced}\n\n💡 ${ex.why}`;
+            } else {
+                exampleText = `📚 Example:\n\n${ex.bad}\n\n${ex.good}\n\n💡 ${ex.why}`;
+            }
+            
+            addMessage('ai', exampleText, true);
+            if (speechAvailable) speakText(exampleText);
+            earnPoints(10);
+        }
+
+        function giveHint() {
+            const lesson = lessons[currentLesson];
+            const hint = `💡 Hint: Think about ${lesson.content.goodAnswers.slice(0, 2).join(' and ')}. ${lesson.content.intro}`;
+            addMessage('ai', hint, true);
+            if (speechAvailable) speakText(hint);
+        }
+
+        // Text-to-Speech Functions
+        function initializeSpeech() {
+            if (!('speechSynthesis' in window)) {
+                speechAvailable = false;
+                console.log('Speech synthesis not supported in this browser');
+                updateSpeechButton(false);
+                return;
+            }
+
+            function loadVoices() {
+                const voices = speechSynthesis.getVoices();
+                if (voices.length > 0) {
+                    voicesLoaded = true;
+                    speechAvailable = true;
+                    console.log(`Speech synthesis ready! ${voices.length} voices available`);
+                    updateSpeechButton(true);
+                }
+            }
+
+            loadVoices();
+
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = loadVoices;
+            }
+
+            setTimeout(() => {
+                if (!voicesLoaded) {
+                    loadVoices();
+                    if (!voicesLoaded) {
+                        console.warn('Voices not loaded after timeout');
+                        showSpeechSetupInstructions();
+                    }
+                }
+            }, 1000);
+        }
+
+        function updateSpeechButton(enabled) {
+            const speakBtn = document.getElementById('speakBtn');
+            if (!enabled) {
+                speakBtn.textContent = '🔇 Audio Unavailable';
+                speakBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                speakBtn.onclick = showSpeechSetupInstructions;
+            } else {
+                speakBtn.textContent = '🔊 Read Aloud';
+                speakBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        function showSpeechSetupInstructions() {
+            const browserInfo = getBrowserInfo();
+            let instructions = `🔊 Audio Setup Instructions for ${browserInfo.name}\n\n`;
+
+            if (browserInfo.isWindows) {
+                instructions += `Windows 11 Setup:\n\n`;
+                
+                if (browserInfo.isChrome || browserInfo.isEdge) {
+                    instructions += `✅ Good news! Chrome/Edge supports text-to-speech.\n\n`;
+                    instructions += `If audio isn't working:\n\n`;
+                    instructions += `1. Check Windows Sound Settings:\n`;
+                    instructions += `   - Press Windows + I for Settings\n`;
+                    instructions += `   - Go to System > Sound\n`;
+                    instructions += `   - Ensure your speakers/headphones are enabled\n\n`;
+                    instructions += `2. Enable Windows Speech:\n`;
+                    instructions += `   - Settings > Time & Language > Speech\n`;
+                    instructions += `   - Download a speech voice if needed\n\n`;
+                    instructions += `3. Browser Settings:\n`;
+                    instructions += `   - Click the 🔒 or ⓘ icon in address bar\n`;
+                    instructions += `   - Ensure "Sound" permission is allowed\n`;
+                    instructions += `   - Reload the page\n\n`;
+                    instructions += `4. Try clicking "Read Aloud" again!`;
+                } else if (browserInfo.isFirefox) {
+                    instructions += `⚠️ Firefox has limited text-to-speech support.\n\n`;
+                    instructions += `Recommendation:\n`;
+                    instructions += `- Use Chrome or Microsoft Edge for best results\n`;
+                    instructions += `- Or continue without audio (visual learning still available!)`;
+                } else {
+                    instructions += `For best audio experience:\n`;
+                    instructions += `- Use Chrome or Microsoft Edge\n`;
+                    instructions += `- Ensure Windows speech is enabled in Settings\n`;
+                    instructions += `- Check browser sound permissions`;
+                }
+            } else if (browserInfo.isMac) {
+                instructions += `macOS Setup:\n\n`;
+                instructions += `1. System Settings > Accessibility > Spoken Content\n`;
+                instructions += `2. Enable "Speak selection"\n`;
+                instructions += `3. Download additional voices if needed\n`;
+                instructions += `4. Reload the page and try again`;
+            } else {
+                instructions += `General Setup:\n\n`;
+                instructions += `1. Ensure your device has speakers/headphones connected\n`;
+                instructions += `2. Check system sound settings\n`;
+                instructions += `3. Try Chrome or Edge browser for best compatibility\n`;
+                instructions += `4. Reload the page`;
+            }
+
+            instructions += `\n\n💡 Note: You can continue learning without audio - all content is text-based too!`;
+
+            addMessage('ai', instructions, true);
+        }
+
+        function getBrowserInfo() {
+            const ua = navigator.userAgent;
+            const info = {
+                isWindows: /Windows/.test(ua),
+                isMac: /Macintosh/.test(ua),
+                isChrome: /Chrome/.test(ua) && !/Edge/.test(ua),
+                isEdge: /Edge|Edg/.test(ua),
+                isFirefox: /Firefox/.test(ua),
+                isSafari: /Safari/.test(ua) && !/Chrome/.test(ua),
+                name: 'your browser'
+            };
+
+            if (info.isEdge) info.name = 'Microsoft Edge';
+            else if (info.isChrome) info.name = 'Chrome';
+            else if (info.isFirefox) info.name = 'Firefox';
+            else if (info.isSafari) info.name = 'Safari';
+
+            return info;
+        }
+
+        function speakText(text) {
+            if (!speechAvailable || !voicesLoaded) {
+                console.log('Speech not available, showing setup instructions');
+                showSpeechSetupInstructions();
+                return;
+            }
+
+            if (isSpeaking) {
+                speechSynthesis.cancel();
+            }
+
+            const cleanText = text.replace(/[🎓💬📚🎯✨💡🔥⚡🌟📖🏆🗺️🔗✅❌→✓🔒💪🎉🎊📝🤖💎🦙🌊👥📝⚖️🔊🔇⏸️💎🌊🦙]/g, '').replace(/\n/g, '. ');
+
+            currentUtterance = new SpeechSynthesisUtterance(cleanText);
+            
+            const voices = speechSynthesis.getVoices();
+            const englishVoice = voices.find(v => v.lang.startsWith('en'));
+            if (englishVoice) {
+                currentUtterance.voice = englishVoice;
+            }
+            
+            currentUtterance.rate = 0.9;
+            currentUtterance.pitch = 1;
+            currentUtterance.volume = 1;
+
+            currentUtterance.onstart = () => {
+                isSpeaking = true;
+                const speakBtn = document.getElementById('speakBtn');
+                speakBtn.textContent = '⏸️ Pause';
+                speakBtn.classList.add('btn-red', 'speak-active');
+                speakBtn.classList.remove('btn-indigo');
+            };
+
+            currentUtterance.onend = () => {
+                isSpeaking = false;
+                const speakBtn = document.getElementById('speakBtn');
+                speakBtn.textContent = '🔊 Read Aloud';
+                speakBtn.classList.remove('btn-red', 'speak-active');
+                speakBtn.classList.add('btn-indigo');
+            };
+
+            currentUtterance.onerror = (event) => {
+                console.error('Speech synthesis error:', event);
+                isSpeaking = false;
+                const speakBtn = document.getElementById('speakBtn');
+                speakBtn.textContent = '🔊 Read Aloud';
+                speakBtn.classList.remove('btn-red', 'speak-active');
+                speakBtn.classList.add('btn-indigo');
+                
+                if (event.error === 'not-allowed') {
+                    addMessage('ai', '🔇 Audio permission needed! Please allow audio in your browser settings and try again.', true);
+                }
+            };
+
+            try {
+                speechSynthesis.speak(currentUtterance);
+            } catch (error) {
+                console.error('Error speaking:', error);
+                addMessage('ai', '🔇 Unable to play audio. Please check your browser settings and try the setup instructions.', true);
+            }
+        }
+
+        function toggleSpeech() {
+            if (!speechAvailable) {
+                showSpeechSetupInstructions();
+                return;
+            }
+
+            if (isSpeaking) {
+                speechSynthesis.cancel();
+                isSpeaking = false;
+                const speakBtn = document.getElementById('speakBtn');
+                speakBtn.textContent = '🔊 Read Aloud';
+                speakBtn.classList.remove('btn-red', 'speak-active');
+                speakBtn.classList.add('btn-indigo');
+            } else {
+                const lastAI = messages.filter(m => m.type === 'ai').slice(-1)[0];
+                if (lastAI) {
+                    speakText(lastAI.text);
+                } else {
+                    speakText("Welcome to Prompt Engineering Mastery! I'm here to help you learn how to write effective prompts.");
+                }
+            }
+        }
+
+        // Guided Prompt Practice
+        function showGuidedPrompt() {
+            const lesson = lessons[currentLesson];
+            
+            // Reminder message for all lessons
+            const reminderMsg = `📚 Before we start Guided Practice...\n\n✨ Have you explored all learning materials?\n\n👉 Check the RIGHT PANEL:\n• 🔗 Resources - External guides and tutorials\n• 🃏 Flashcards - Review key concepts\n\n💡 These will help reinforce what you're learning!\n\nReady to continue?\n• Type 'practice' to start guided exercises\n• Click "⏭️ Next Lesson" to move forward\n• Or ask me any questions about ${lesson.title}`;
+            
+            addMessage('ai', reminderMsg, true);
+            if (speechAvailable) speakText(reminderMsg);
+            earnPoints(5);
+        }
+
+        function launchGuidedPractice() {
+            const lesson = lessons[currentLesson];
+            
+            if (currentLesson === 0) {
+                addMessage('ai', `📝 Let's practice together!\n\nStep 1: Pick a topic you want to ask about.\nFor example: "cooking", "travel", "coding", or "fitness"\n\nType your topic:`, true);
+                if (speechAvailable) speakText("Let's practice together! Step 1: Pick a topic you want to ask about. For example: cooking, travel, coding, or fitness. Type your topic:");
+            } else if (currentLesson === 1) {
+                addMessage('ai', `📝 Guided Practice: Making Prompts Specific\n\nLet's improve: "Tell me about exercise"\n\nStep 1: What TYPE of exercise? (running, yoga, weightlifting, etc.)\nStep 2: What do you want to know? (benefits, how-to, schedule, etc.)\nStep 3: For whom? (beginners, seniors, athletes, etc.)\n\nTry writing a specific version:`, true);
+                if (speechAvailable) speakText("Guided Practice: Making Prompts Specific. Let's improve: Tell me about exercise. Step 1: What TYPE of exercise? Step 2: What do you want to know? Step 3: For whom? Try writing a specific version:");
+            } else if (currentLesson === 2) {
+                addMessage('ai', `📝 Let's Build a Context-Rich Prompt!\n\nScenario: You want meal planning advice.\n\nStep 1: Who are you?\n- Example: "I'm a busy parent" or "I'm a college student"\nType your role:`, true);
+                if (speechAvailable) speakText("Let's Build a Context-Rich Prompt! Scenario: You want meal planning advice. Step 1: Who are you? For example: I'm a busy parent or I'm a college student. Type your role:");
+            } else if (currentLesson === 3) {
+                addMessage('ai', `📝 Few-Shot Learning Practice\n\nTask: Write product descriptions in a consistent style.\n\nI'll give you 2 examples, then you create one:\n\nExample 1: "Wireless Earbuds - Sound that moves with you. 20-hour battery. Crystal-clear calls. Your music, untethered."\n\nExample 2: "Smart Watch - Time reimagined. Track health. Stay connected. Live smarter."\n\nNow create one for: "Laptop Stand"\n\nWrite your description:`, true);
+                if (speechAvailable) speakText("Few-Shot Learning Practice. Task: Write product descriptions in a consistent style. I'll give you 2 examples, then you create one. Now create one for: Laptop Stand. Write your description:");
+            } else if (currentLesson === 4) {
+                addMessage('ai', `📝 Chain of Thought Practice\n\nProblem: "If I save $50 per week, how long until I have $3,000?"\n\nStep 1: Write a prompt asking AI to solve this step-by-step.\nTip: Use phrases like "think step-by-step" or "show your work"\n\nTry it:`, true);
+                if (speechAvailable) speakText("Chain of Thought Practice. Problem: If I save 50 dollars per week, how long until I have 3000 dollars? Step 1: Write a prompt asking AI to solve this step-by-step. Tip: Use phrases like think step-by-step or show your work. Try it:");
+            } else if (currentLesson === 5) {
+                addMessage('ai', `📝 Role Assignment Practice\n\nYou need advice on starting a small business.\n\nStep 1: Choose an expert role:\n- Business consultant\n- Startup advisor\n- Small business owner with 10 years experience\n- Financial planner\n\nStep 2: Write a prompt that:\na) Assigns the role\nb) Asks your specific question\n\nTry it:`, true);
+                if (speechAvailable) speakText("Role Assignment Practice. You need advice on starting a small business. Step 1: Choose an expert role. Step 2: Write a prompt that assigns the role and asks your specific question. Try it:");
+            } else if (currentLesson === 6) {
+                addMessage('ai', `📝 Output Formatting Practice\n\nTask: Compare 3 smartphones\n\nStep 1: Decide on format (table, bullet points, pros/cons list)\nStep 2: Specify what to compare (price, camera, battery, etc.)\n\nWrite a prompt with clear formatting instructions:`, true);
+                if (speechAvailable) speakText("Output Formatting Practice. Task: Compare 3 smartphones. Step 1: Decide on format. Step 2: Specify what to compare. Write a prompt with clear formatting instructions:");
+            } else if (currentLesson === 7) {
+                addMessage('ai', `📝 Setting Constraints Practice\n\nScenario: Write a blog post about productivity\n\nAdd these constraints:\n1. Length (word count)\n2. Tone (professional, casual, etc.)\n3. Audience (who's reading?)\n4. What to avoid\n5. How many main points\n\nWrite your constrained prompt:`, true);
+                if (speechAvailable) speakText("Setting Constraints Practice. Scenario: Write a blog post about productivity. Add constraints like: Length, Tone, Audience, What to avoid, and How many main points. Write your constrained prompt:");
+            } else if (currentLesson === 8) {
+                addMessage('ai', `📝 Iteration Practice\n\nStart with: "Write about healthy eating"\n\nNow improve it 3 times:\n\nIteration 1: Add specificity\nIteration 2: Add context (who you are)\nIteration 3: Add format and constraints\n\nShow me your 3 versions:`, true);
+                if (speechAvailable) speakText("Iteration Practice. Start with: Write about healthy eating. Now improve it 3 times. Iteration 1: Add specificity. Iteration 2: Add context. Iteration 3: Add format and constraints. Show me your 3 versions:");
+            } else {
+                addMessage('ai', `📝 Advanced Prompt Challenge!\n\nCreate a COMPLETE professional prompt combining:\n✓ Role assignment\n✓ Clear context\n✓ Specific task\n✓ Examples (if needed)\n✓ Output format\n✓ Constraints\n\nTopic: Create a social media strategy\n\nWrite your advanced prompt:`, true);
+                if (speechAvailable) speakText("Advanced Prompt Challenge! Create a complete professional prompt combining: Role assignment, Clear context, Specific task, Examples, Output format, and Constraints. Topic: Create a social media strategy. Write your advanced prompt:");
+            }
+            earnPoints(10);
+        }
+
+        function nextLesson() {
+            if (currentLesson < lessons.length - 1) {
+                currentLesson++;
+                lessonStep = 0;
+                userProgress = 0;
+                updateLessonDisplay();
+                updateReferences();
+                updateProgress();
+                
+                const lesson = lessons[currentLesson];
+                const lessonMsg = `🎓 Starting: ${lesson.title}\n\n${lesson.content.intro}\n\n${lesson.content.question}`;
+                addMessage('ai', lessonMsg, true);
+                if (speechAvailable) speakText(lessonMsg);
+            } else {
+                const finalMsg = "🎉 Congratulations! You've completed all 10 lessons! You're now a Prompt Engineering expert!\n\nExplore the LLM Explorer to practice your skills with different AI models! 🤖";
+                addMessage('ai', finalMsg, true);
+                if (speechAvailable) speakText(finalMsg);
+                earnPoints(100);
+            }
+        }
+
+        // Flashcard Functions
+        function showFlashcards() {
+            document.getElementById('flashcardSection').classList.remove('hidden');
+            currentFlashcardIndex = 0;
+            flashcardFlipped = false;
+            updateFlashcard();
+            
+            setTimeout(() => {
+                document.getElementById('flashcardSection').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'nearest' 
+                });
+            }, 100);
+        }
+
+        function closeFlashcards() {
+            document.getElementById('flashcardSection').classList.add('hidden');
+        }
+
+        function flipCard() {
+            flashcardFlipped = !flashcardFlipped;
+            const container = document.getElementById('flashcardContainer');
+            if (flashcardFlipped) {
+                container.classList.add('flashcard-flipped');
+            } else {
+                container.classList.remove('flashcard-flipped');
+            }
+        }
+
+        function nextCard() {
+            const cards = lessons[currentLesson].flashcards;
+            currentFlashcardIndex = (currentFlashcardIndex + 1) % cards.length;
+            flashcardFlipped = false;
+            document.getElementById('flashcardContainer').classList.remove('flashcard-flipped');
+            updateFlashcard();
+        }
+
+        function previousCard() {
+            const cards = lessons[currentLesson].flashcards;
+            currentFlashcardIndex = (currentFlashcardIndex - 1 + cards.length) % cards.length;
+            flashcardFlipped = false;
+            document.getElementById('flashcardContainer').classList.remove('flashcard-flipped');
+            updateFlashcard();
+        }
+
+        function updateFlashcard() {
+            const cards = lessons[currentLesson].flashcards;
+            const card = cards[currentFlashcardIndex];
+            document.getElementById('flashcardFront').textContent = card.front;
+            document.getElementById('flashcardBack').textContent = card.back;
+            document.getElementById('cardCounter').textContent = `${currentFlashcardIndex + 1} / ${cards.length}`;
+        }
+
+        // UI Update Functions
+        function updateLessonDisplay() {
+            const lesson = lessons[currentLesson];
+            document.getElementById('currentLessonTitle').textContent = lesson.title;
+            document.getElementById('currentLessonConcept').textContent = lesson.concept;
+            updateLearningPath();
+        }
+
+        function updateReferences() {
+            const lesson = lessons[currentLesson];
+            document.getElementById('referencesDescription').textContent = `Resources for ${lesson.title}`;
+            
+            const container = document.getElementById('referencesContainer');
+            container.innerHTML = '';
+            
+            lesson.references.forEach(ref => {
+                const refDiv = document.createElement('a');
+                refDiv.href = ref.url;
+                refDiv.target = '_blank';
+                refDiv.className = 'resource-item';
+                refDiv.innerHTML = `
+                    <h4 class="resource-title">${ref.title}</h4>
+                    <span class="resource-type">${ref.type}</span>
+                `;
+                container.appendChild(refDiv);
+            });
+        }
+
+        function updateProgress() {
+            // Progress tracking maintained internally
+        }
+
+        function updateStreak() {
+            document.getElementById('streakCounter').textContent = `${streak} Day Streak! 🔥`;
+        }
+
+        function updatePoints() {
+            document.getElementById('totalPoints').textContent = points;
+            checkBadges();
+        }
+
+        function checkBadges() {
+            badgesList.forEach(badge => {
+                if (points >= badge.points && !badges.find(b => b.id === badge.id)) {
+                    badges.push(badge);
+                    updateBadges();
+                    addMessage('ai', `🎉 Congratulations! You've earned the ${badge.icon} ${badge.name} badge!`, true);
+                }
+            });
+        }
+
+        function updateBadges() {
+            const container = document.getElementById('badgesContainer');
+            
+            if (badges.length > 0) {
+                container.innerHTML = '';
+                badges.forEach(badge => {
+                    const badgeDiv = document.createElement('div');
+                    badgeDiv.className = 'badge-item';
+                    badgeDiv.innerHTML = `
+                        <span class="badge-icon">${badge.icon}</span>
+                        <p class="badge-name">${badge.name}</p>
+                    `;
+                    container.appendChild(badgeDiv);
+                });
+            } else {
+                container.innerHTML = '<p class="no-badges">Keep learning to earn badges!</p>';
+            }
+        }
+
+        function updateLearningPath() {
+            const container = document.getElementById('learningPath');
+            container.innerHTML = '';
+            
+            lessons.forEach((lesson, idx) => {
+                const lessonDiv = document.createElement('div');
+                let stateClass = 'locked';
+                if (idx === currentLesson) stateClass = 'current';
+                else if (idx < currentLesson) stateClass = 'completed';
+                
+                lessonDiv.className = `path-item ${stateClass}`;
+                
+                lessonDiv.onclick = () => {
+                    if (idx <= currentLesson) {
+                        currentLesson = idx;
+                        lessonStep = 0;
+                        userProgress = 0;
+                        updateLessonDisplay();
+                        updateReferences();
+                        updateProgress();
+                        messages = [];
+                        document.getElementById('chatMessages').innerHTML = '';
+                        const lessonMsg = `🎓 ${lesson.title}\n\n${lesson.content.intro}\n\n${lesson.content.question}`;
+                        addMessage('ai', lessonMsg, true);
+                        if (speechAvailable) speakText(lessonMsg);
+                    }
+                };
+                
+                let icon = '🔒';
+                let iconClass = 'locked';
+                if (idx < currentLesson) {
+                    icon = '✓';
+                    iconClass = 'completed';
+                } else if (idx === currentLesson) {
+                    icon = '→';
+                    iconClass = 'current';
+                }
+                
+                lessonDiv.innerHTML = `
+                    <div class="path-content">
+                        <div class="path-title">${lesson.title}</div>
+                        <span class="path-icon ${iconClass}">${icon}</span>
+                    </div>
+                `;
+                container.appendChild(lessonDiv);
+            });
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            initializeSpeech();
+            
+            updateLessonDisplay();
+            updateReferences();
+            updateProgress();
+            updateStreak();
+            updatePoints();
+            
+            const lesson = lessons[0];
+            const welcomeMsg = `Welcome to Prompt Engineering Mastery! 🎓
+
+I'll teach you how to write effective prompts through 10 interactive lessons.
+
+✨ NEW FEATURES:
+🔊 Click "Read Aloud" to hear lessons
+📝 Click "Guided Practice" for step-by-step exercises
+💡 Get hints anytime you're stuck
+
+Let's start with: ${lesson.title}
+
+${lesson.content.intro}
+
+${lesson.content.question}`;
+            
+            addMessage('ai', welcomeMsg, true);
+            
+            setTimeout(() => {
+                if (speechAvailable && voicesLoaded) {
+                    speakText(welcomeMsg);
+                } else {
+                    console.log('Speech not ready yet, click "Read Aloud" when ready');
+                }
+            }, 1500);
+        };
+    </script>
+</body>
+</html>
