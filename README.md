@@ -4,7 +4,7 @@ KN Learning Ecosystem
 Empowering lifelong learning from foundational English to advanced technologies.
 
 🌟 Project Overview
-KN Learning Ecosystem is a public initiative to support continuous learning for all — from elementary-level English to cutting-edge skills in cloud computing and artificial intelligence. As the founder, I created this project to share my personal journey as a non-native English speaker. Learning to read and write in English opened doors to deeper understanding, global knowledge, and advanced studies in technology.
+KN Learning Ecosystem is a public initiative to support continuous learning for all — from Prompt Engineering Mastery (learning AI), elementary-level English to cutting-edge skills in cloud computing and artificial intelligence. As the founder, I created this project to share my personal journey as a non-native English speaker in learning to read and write in English opened doors to deeper understanding, information technology, global knowledge, and advanced studies in AI and cloud technology.
 
 This project is built to help others overcome similar challenges and unlock their full potential.
 
