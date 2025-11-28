@@ -41,10 +41,7 @@ Submit a pull request
 Join the discussion tab to share ideas or seek help  
 ## 🚀 Run Online
 
-- [Open the KN Learning Ecosystem in your browser](https://kneo99.github.io/KN-Learning-Ecosystem/)
-
 - [Run Prompt Engineering Mastery](https://kneo99.github.io/KN-Learning-Ecosystem/prompt-engineering-mastery-standalone_v1.html)
-
 
 📬 Support  
 Check our FAQ or post questions in the GitHub Discussions tab. We’re here to help!
