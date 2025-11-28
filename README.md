@@ -40,9 +40,20 @@ Submit a pull request
 
 Join the discussion tab to share ideas or seek help  
 
+## 📥 Downloads
+
+You can access the KN Learning Ecosystem in several ways:
+
+- 📖 [View the README on GitHub](https://github.com/kneo99/KN-Learning-Ecosystem/blob/main/README.md)  
+  Read the full project documentation directly on GitHub.
+
+- 💾 [Download Source Code (ZIP)](https://github.com/kneo99/KN-Learning-Ecosystem/archive/refs/heads/main.zip)  
+  Get the latest version of the repository as a ZIP file.
+
+- 🚀 [Download Latest Release](https://github.com/kneo99/KN-Learning-Ecosystem/releases/latest)  
+  Access packaged releases, binaries, or installers (if available).
 📬 Support  
 Check our FAQ or post questions in the GitHub Discussions tab. We’re here to help!
-
 
 Fork the repository  
 
