@@ -1,4 +1,4 @@
-# KN-Learning-Ecosystem  
+# KN Learning Ecosystem  
 KN Learning strives to enable continuous education from elementary levels to advanced skill acquisition. Goals: To promote lifelong learning, covering everything from basic English to advanced Information Technologies, including software, hardware infrastructure, Cloud computing, and Artificial Intelligence.  
 
 🌟 Project Overview  
