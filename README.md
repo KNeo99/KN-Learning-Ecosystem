@@ -10,9 +10,9 @@ Share practical learning experiences and obstacles encountered by non-English sp
 
 Provide accessible lessons in fundamental English literacy — reading, writing, and comprehension.  
 
-Offer free, browser-based courses on advanced subjects like Cloud Computing, AI, and more.  
+Offer free, browser-based courses on cloud computing, AI, and other advanced topics.
 
-Build a supportive learning community through FAQs and GitHub discussions.  
+Build a learning ecosystem that uses empathy, user-centric design, and light gamification to keep learners engaged.  
 
 Promote global collaboration — anyone can contribute ideas, lessons, or enhancements.  
 
