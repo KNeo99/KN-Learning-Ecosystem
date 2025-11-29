@@ -42,6 +42,12 @@ Join the discussion tab to share ideas or seek help
 
 - [Run Prompt Engineering Mastery](https://kneo99.github.io/KN-Learning-Ecosystem/prompt-engineering-mastery-standalone_v1.html)
 
+Reading Practice Lessons:
+
+- [Beginner Reading Practice](https://kneo99.github.io/KN-Learning-Ecosystem/reading-practice-app_beginner_g.html)
+- 
+- [Advanced Reading Practice](https://kneo99.github.io/KN-Learning-Ecosystem/read-it-practice_g - compact.html)
+
 📬 Support  
 Check our FAQ or post questions in the GitHub Discussions tab. We’re here to help!
 
