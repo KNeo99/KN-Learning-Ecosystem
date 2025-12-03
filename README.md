@@ -1,62 +1,62 @@
-KN Learning strives to enable continuous education from beginner levels to advanced skill acquisition. Goals: To promote lifelong learning, covering everything from basic English to advanced Information Technologies, including software, hardware infrastructure, Cloud computing, and Artificial Intelligence.  
+KN Learning is a public, browser-based learning ecosystem designed to support continuous education from basic English literacy to advanced topics in information technology, cloud computing, and artificial intelligence.
 
 🌟 Project Overview  
-The KN Learning Ecosystem is a public initiative created to encourage lifelong learning for all — spanning topics from basic English skills, mastering Prompt Engineering (learning AI), to advanced knowledge in cloud computing and artificial intelligence. As the founder, I started this project to share my personal journey as a non-native English speaker, where acquiring English reading and writing skills opened doors to deeper understanding, IT knowledge, global information, and advanced studies in AI and cloud computing.  
+The KN Learning Ecosystem is a free, open initiative that encourages lifelong learning for all, with a special focus on non-native English speakers and beginners in technology.
+It grew out of a personal journey where improving English reading and writing unlocked access to global knowledge, IT skills, and advanced studies in AI and cloud computing.
 
-This project aims to help others overcome similar challenges and achieve their full potential.  
+This project exists to help others overcome similar barriers and build confidence step by step.
 
 🎯 Objectives  
-Share practical learning experiences and obstacles encountered by non-English speakers.  
+- Promote lifelong learning, from foundational English to advanced IT skills.
 
-Provide accessible lessons in fundamental English literacy — reading, writing, and comprehension.  
+- Support learners in English reading, writing, grammar, and comprehension.
 
-Offer free, browser-based courses on cloud computing, AI, and other advanced topics.
+- Provide free, browser-based courses in cloud computing, AI, and related technologies.
 
-Build a learning ecosystem that uses empathy, user-centric design, and light gamification to keep learners engaged.  
+- Use empathy, user-centric design, and light gamification to keep learners engaged and returning.
 
-Promote global collaboration — anyone can contribute ideas, lessons, or enhancements.  
-
-Build a learning ecosystem that uses user-centric, empathy, and gamification concepts to encourage learners wanting to take training and come back for more.
-
+- Enable global collaboration by inviting ideas, lessons, and enhancements from anyone.
+  
 📚 What You’ll Find:  
-English Practice Modules: Exercises in reading, writing, grammar, and vocabulary.  
+- English Practice Modules: Activities for reading, writing, grammar, and vocabulary.
 
-Technology Courses: Fundamentals of Cloud, AI concepts, and hands-on tutorials.  
+- Technology Courses: Introductory materials on cloud computing, AI concepts, and hands-on tutorials.
 
-Learning Paths: Organized courses from beginner to advanced stages.  
+- Learning Paths: Organized sequences from beginner to more advanced levels.
 
-Community Support: Ask questions, give feedback, and interact with others.  
+- Community Support: Spaces to ask questions, share feedback, and interact with other learners and contributors.
 
 💻 Getting Started  
-All you need is a computer and a web browser. No registration, no fees — just interest and commitment.  
+All you need is a computer and a web browser.
+There is no registration or payment required—only curiosity and commitment.
 
-🤝 Contributing  
-We welcome contributions from educators, tech specialists, learners, and supporters. Whether it’s a new lesson, clearer explanations, or helpful resources — your input can help others succeed.  
-
-Fork the repository  
-
-Submit a pull request  
-
-Join the discussion tab to share ideas or seek help  
 ## 🚀 Run Online
+- Prompt Engineering Mastery (learn how to work effectively with AI tools):
+  [Run Prompt Engineering Mastery](https://kneo99.github.io/KN-Learning-Ecosystem/prompt-engineering-mastery-standalone_v1.html)
 
-- [Run Prompt Engineering Mastery](https://kneo99.github.io/KN-Learning-Ecosystem/prompt-engineering-mastery-standalone_v1.html)
-
-Reading Practice Lessons:
-As part of my journey in learning and building training with Claude, the reading practice lessons below were my starting point for creating a basic learning tool.  I hope this will help anyone check and improve their reading accuracy.
-
+Reading Practice Lessons
+These exercises were created as part of building KN Learning and are intended to help learners check and improve reading accuracy.
 - [Beginner Reading Practice](https://kneo99.github.io/KN-Learning-Ecosystem/reading-practice-app_beginner_g.html)
 - [Advanced Reading Practice](https://kneo99.github.io/KN-Learning-Ecosystem/read-it-practice_g-compact.html)
 
 
+🤝 Contributing  
+Contributions from educators, technologists, learners, and supporters are welcome.
+You can help by adding new lessons, improving explanations, or sharing useful resources.
+Bsic contribution flow:
+
+- Fork this repository.
+
+- Create a branch for your changes.
+
+- Submit a pull request describing what you added or improved.
+
+- Use the Discussions tab to share ideas, ask questions, or request guidance.
+
 📬 Support  
-Check our FAQ or post questions in the GitHub Discussions tab. We’re here to help!
+- Use the Discussions tab in this repository to ask questions or share feedback.
 
-Fork the repository  
+- Check the FAQ (if available) for common questions.
 
-Submit a pull request  
+- If you find issues or bugs, please open an issue or start a discussion so they can be addressed.
 
-Participate in the discussion tab to exchange ideas or request assistance  
-
-📬 Support  
-Visit our FAQ or post your inquiries in the GitHub Discussions tab. We’re ready to assist!
