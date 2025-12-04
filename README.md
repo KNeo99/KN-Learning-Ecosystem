@@ -39,7 +39,7 @@ There is no registration or payment required—only curiosity and commitment.
 - 75+ interactive questions
 - AI instructor with voice guidance
 - Flashcards & curated resources
-🌐 Try it: kneo99.github.io  [KN Cloud Learning][https://kneo99.github.io/KN-Learning-Ecosystem/cloud-learning-ecosystem.html](https://kneo99.github.io/KN-Learning-Ecosystem/cloud-learning-ecosystem.html)
+🌐 Try it: kneo99.github.io  [KN Cloud Learning](https://kneo99.github.io/KN-Learning-Ecosystem/cloud-learning-ecosystem.html)
 
 - Reading Practice Lessons: These exercises were created to help learners check and improve reading accuracy.
 -- [Beginner Reading Practice](https://kneo99.github.io/KN-Learning-Ecosystem/reading-practice-app_beginner_g.html)
