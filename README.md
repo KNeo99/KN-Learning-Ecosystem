@@ -33,11 +33,17 @@ There is no registration or payment required—only curiosity and commitment.
 ## 🚀 Run Online
 - Prompt Engineering Mastery (learn how to work effectively with AI tools):
   [Run Prompt Engineering Mastery](https://kneo99.github.io/KN-Learning-Ecosystem/prompt-engineering-mastery-standalone_v1.html)
+- 🚀 Excited to launch KN Cloud Learning!
+✨ Features:
+- 10 lessons covering AWS, GCP & Azure
+- 75+ interactive questions
+- AI instructor with voice guidance
+- Flashcards & curated resources
+🌐 Try it: kneo99.github.io  [KN Cloud Learning]https://kneo99.github.io/KN-Learning-Ecosystem/cloud-learning-ecosystem.html
 
-Reading Practice Lessons
-These exercises were created as part of building KN Learning and are intended to help learners check and improve reading accuracy.
-- [Beginner Reading Practice](https://kneo99.github.io/KN-Learning-Ecosystem/reading-practice-app_beginner_g.html)
-- [Advanced Reading Practice](https://kneo99.github.io/KN-Learning-Ecosystem/read-it-practice_g-compact.html)
+- Reading Practice Lessons: These exercises were created to help learners check and improve reading accuracy.
+-- [Beginner Reading Practice](https://kneo99.github.io/KN-Learning-Ecosystem/reading-practice-app_beginner_g.html)
+-- [Advanced Reading Practice](https://kneo99.github.io/KN-Learning-Ecosystem/read-it-practice_g-compact.html)
 
 
 🤝 Contributing  
