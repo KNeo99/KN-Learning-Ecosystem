@@ -42,9 +42,9 @@ There is no registration or payment required—only curiosity and commitment.
 🌐 Try it: [KN Cloud Learning](https://kneo99.github.io/KN-Learning-Ecosystem/cloud-learning-ecosystem.html)
 
 - Reading Practice Lessons: These exercises were created to help learners check and improve reading accuracy.
--- [Beginner Reading Practice](https://kneo99.github.io/KN-Learning-Ecosystem/reading-practice-app_beginner_g.html)
--- [Intermediate Reading Practice](https://kneo99.github.io/KN-Learning-Ecosystem/intermediate-reading-practice.html)
--- [Advanced Reading Practice](https://kneo99.github.io/KN-Learning-Ecosystem/read-it-practice_g-compact.html)
+-  [Beginner Reading Practice](https://kneo99.github.io/KN-Learning-Ecosystem/reading-practice-app_beginner_g.html)
+-  [Intermediate Reading Practice](https://kneo99.github.io/KN-Learning-Ecosystem/intermediate-reading-practice.html)
+-  [Advanced Reading Practice](https://kneo99.github.io/KN-Learning-Ecosystem/read-it-practice_g-compact.html)
 
 
 🤝 Contributing  
