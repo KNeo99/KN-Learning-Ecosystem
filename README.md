@@ -31,9 +31,10 @@ All you need is a computer and a web browser.
 There is no registration or payment required—only curiosity and commitment.
 
 ## 🚀 Run Online
-- Prompt Engineering Mastery (learn how to work effectively with AI tools):
+🎓Prompt Engineering Mastery (learn how to work effectively with AI tools):
   [Run Prompt Engineering Mastery](https://kneo99.github.io/KN-Learning-Ecosystem/prompt-engineering-mastery-standalone_v1.html)
-- 🚀 Excited to launch KN Cloud Learning!
+
+🚀 Excited to launch KN Cloud Learning!
 ✨ Features:
 - 10 lessons covering AWS, GCP & Azure
 - 75+ interactive questions
