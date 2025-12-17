@@ -31,8 +31,18 @@ All you need is a computer and a web browser.
 There is no registration or payment required—only curiosity and commitment.
 
 ## 🚀 Run Online
-🎓Prompt Engineering Mastery (learn how to work effectively with AI tools):
-  [Run Prompt Engineering Mastery](https://kneo99.github.io/KN-Learning-Ecosystem/prompt-engineering-mastery-standalone_v1.html)
+🎓The Art of Asking AI: Context-Driven Prompt Engineering (learn how to work effectively with AI tools):
+[Prompt Engineering Mastery](https://kneo99.github.io/KN-Learning-Ecosystem/prompt-engineering-mastery-standalone_v1.html)
+
+- Learn to shape smarter AI responses through better questions.
+
+- Unlock the full power of AI by mastering context.
+
+- From vague prompts to precise results — elevate your AI skills.
+
+- Effective AI use starts with the right question.
+
+- Turn curiosity into clarity: guiding AI with context.
 
 🚀 Excited to launch KN Cloud Learning!
 ✨ Features:
