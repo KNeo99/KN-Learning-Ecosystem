@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intermediate Reading Practice</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 10px; }
+.container { background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 1000px; width: 100%; padding: 20px; max-height: 95vh; overflow-y: auto; }
+.header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 15px; }
+.header h1 { font-size: 2em; margin-bottom: 5px; }
+.header p { font-size: 1em; opacity: 0.9; }
+.level-badge { background: #ffd700; color: #333; padding: 5px 15px; border-radius: 20px; font-weight: bold; display: inline-block; margin-top: 5px; font-size: 0.9em; }
+.consent-screen { display: block; }
+.setup-screen { display: none; }
+.practice-screen { display: none; }
+.section { background: #f8f9fa; border-radius: 15px; padding: 15px; margin: 10px 0; }
+.section h2 { font-size: 1.5em; color: #4c51bf; margin-bottom: 10px; }
+.info-box { background: white; border-radius: 12px; padding: 20px; margin: 15px 0; }
+.info-box h3 { color: #667eea; margin-bottom: 15px; }
+.info-box ul { list-style: none; padding: 0; }
+.info-box li { margin: 12px 0; padding-left: 25px; position: relative; }
+.info-box li span { position: absolute; left: 0; }
+.warning-box { background: #fff9e6; border: 3px solid #ffc107; border-radius: 12px; padding: 15px; margin: 15px 0; }
+.lesson-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 10px 0; }
+.lesson-card { background: white; border: 3px solid #e0e0e0; border-radius: 12px; padding: 15px; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+.lesson-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+.lesson-card.selected { border-color: #667eea; background: #ebf4ff; box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+.lesson-card.completed::after { content: '✓'; position: absolute; top: 10px; right: 10px; background: #4caf50; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2em; }
+.lesson-icon { font-size: 2.5em; margin-bottom: 8px; }
+.lesson-title { font-size: 1.05em; font-weight: bold; color: #333; margin-bottom: 5px; line-height: 1.3; }
+.lesson-level { color: #667eea; font-size: 0.85em; font-weight: bold; margin-bottom: 5px; }
+.lesson-duration { color: #666; font-size: 0.85em; }
+.btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 30px; font-size: 1.2em; font-weight: bold; border-radius: 12px; cursor: pointer; width: 100%; margin: 10px 0; transition: transform 0.2s; }
+.btn-primary:hover:not(:disabled) { transform: scale(1.05); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.story-display { background: #fff9e6; border: 3px solid #ffc107; border-radius: 12px; padding: 15px; margin: 10px 0; font-size: 1.1em; line-height: 1.8; }
+.story-display h3 { color: #f57c00; margin-bottom: 10px; font-size: 1.3em; }
+#storyContent { white-space: pre-wrap; word-wrap: break-word; }
+.controls { display: flex; gap: 10px; margin: 15px 0; }
+.btn-control { flex: 1; padding: 15px; font-size: 1.2em; font-weight: bold; border-radius: 12px; border: none; cursor: pointer; transition: all 0.3s; }
+.btn-start { background: linear-gradient(135deg, #4caf50 0%, #2196f3 100%); color: white; }
+.btn-stop { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); color: white; }
+.btn-control:hover:not(:disabled) { transform: scale(1.05); }
+.btn-control:disabled { opacity: 0.6; cursor: not-allowed; }
+.recording-indicator { background: #fee; border: 3px solid #e74c3c; border-radius: 12px; padding: 12px; text-align: center; margin: 10px 0; display: none; font-size: 0.95em; }
+.recording-indicator.active { display: block; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+.recording-dot { display: inline-block; width: 15px; height: 15px; background: #e74c3c; border-radius: 50%; margin-right: 10px; animation: blink 1s infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.results { background: #e8f5e9; border: 3px solid #4caf50; border-radius: 12px; padding: 15px; margin: 10px 0; display: none; }
+.results.show { display: block; }
+.comparison-section { background: white; border-radius: 12px; padding: 15px; margin: 15px 0; }
+.comparison-section h3 { color: #333; margin-bottom: 10px; font-size: 1.2em; }
+.text-box { background: #f8f9fa; border-radius: 10px; padding: 20px; }
+.text-box-content { font-size: 0.95em; line-height: 1.6; color: #333; max-height: 200px; overflow-y: auto; }
+.score-circle { width: 140px; height: 140px; border-radius: 50%; background: white; border: 8px solid #4caf50; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 15px auto; }
+.score-value { font-size: 2.2em; font-weight: bold; color: #4caf50; }
+.score-label { font-size: 1em; color: #666; }
+.progress-section { background: white; border-radius: 12px; padding: 15px; margin: 15px 0; }
+.progress-bar { background: #e0e0e0; height: 30px; border-radius: 15px; overflow: hidden; margin: 10px 0; }
+.progress-fill { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 100%; transition: width 0.5s; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+.messages { background: #f8f9fa; border-radius: 12px; padding: 12px; margin: 10px 0; max-height: 120px; overflow-y: auto; }
+.message { margin: 6px 0; padding: 10px; border-radius: 8px; font-size: 0.95em; }
+.message.bot { background: #e3f2fd; color: #1976d2; }
+.hidden { display: none; }
+.error-box { background: #ffebee; border: 3px solid #f44336; border-radius: 12px; padding: 12px; margin: 10px 0; color: #c62828; font-size: 0.95em; }
+.achievement-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); z-index: 1000; text-align: center; transition: transform 0.3s; max-width: 400px; }
+.achievement-popup.show { transform: translate(-50%, -50%) scale(1); }
+.achievement-icon { font-size: 5em; margin-bottom: 15px; }
+.achievement-title { font-size: 1.8em; color: #667eea; font-weight: bold; margin-bottom: 10px; }
+.achievement-text { font-size: 1.1em; color: #666; }
+.overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999; display: none; }
+.overlay.show { display: block; }
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeAchievement()"></div>
+<div class="achievement-popup" id="achievementPopup">
+<div class="achievement-icon" id="achievementIcon"></div>
+<div class="achievement-title" id="achievementTitle"></div>
+<div class="achievement-text" id="achievementText"></div>
+<button class="btn-primary" onclick="closeAchievement()" style="margin-top: 20px;">🎉 Awesome!</button>
+</div>
+
+<div class="container">
+<div class="header">
+<h1>📚 Intermediate Reading Practice</h1>
+<p>Build your reading skills with fun passages!</p>
+<div class="level-badge">⭐ Grade 3-4 Level</div>
+</div>
+
+<!-- CONSENT SCREEN -->
+<div id="consentScreen" class="consent-screen">
+<div class="section">
+<h2>🎙️ Microphone Access Required</h2>
+<div class="info-box">
+<h3>📋 How This Works:</h3>
+<ul>
+<li><span>✓</span> <strong>Your voice will be recorded</strong> to assess your reading accuracy</li>
+<li><span>✓</span> <strong>Recordings are NOT saved</strong> - processed in real-time only</li>
+<li><span>✓</span> <strong>Privacy protected</strong> - no data is stored or shared</li>
+<li><span>✓</span> <strong>Permission required</strong> - your browser will ask for microphone access</li>
+</ul>
+</div>
+<div class="warning-box">
+<strong>⚠️ Important:</strong> By clicking "I Agree" below, you consent to microphone use for this practice session only.
+</div>
+<div id="errorBox" class="error-box hidden"></div>
+<button class="btn-primary" onclick="requestMicrophoneAccess()" id="agreeBtn">
+🎤 I Agree - Allow Microphone Access
+</button>
+</div>
+</div>
+
+<!-- SETUP SCREEN -->
+<div id="setupScreen" class="setup-screen">
+<div class="section">
+<h2>📖 Choose Your Reading Lesson</h2>
+<p style="color: #666; margin-bottom: 15px;">Select a passage to practice reading. Complete all 8 to become a reading champion! 🏆</p>
+
+<div class="progress-section">
+<h3 style="color: #667eea; margin-bottom: 10px;">Your Progress</h3>
+<div class="progress-bar">
+<div class="progress-fill" id="progressFill">0/8 Complete</div>
+</div>
+</div>
+
+<div class="lesson-grid" id="lessonGrid">
+<!-- Lessons will be populated here -->
+</div>
+</div>
+
+<div id="errorBox2" class="error-box hidden"></div>
+<button class="btn-primary" onclick="startPractice()">🚀 Start Reading Practice</button>
+</div>
+
+<!-- PRACTICE SCREEN -->
+<div id="practiceScreen" class="practice-screen">
+<div class="messages" id="messages"></div>
+<div class="story-display" id="storyDisplay">
+<h3 id="storyTitle">Reading Passage</h3>
+<div id="storyContent"></div>
+</div>
+<div class="recording-indicator" id="recordingIndicator">
+<span class="recording-dot"></span>
+<strong>🎤 Recording in progress... Speak clearly!</strong>
+</div>
+<div class="controls">
+<button id="startBtn" class="btn-control btn-start" onclick="startRecording()">🎤 Start Reading</button>
+<button id="stopBtn" class="btn-control btn-stop hidden" onclick="stopRecording()">⏹️ Stop Reading</button>
+</div>
+
+<div id="results" class="results">
+<h2 style="text-align: center; color: #4caf50; margin-bottom: 20px;">🎉 Reading Results</h2>
+<div class="score-circle">
+<div class="score-value" id="scoreValue">0%</div>
+<div class="score-label">Accuracy</div>
+</div>
+<div style="text-align: center; margin: 20px 0; padding: 20px; background: white; border-radius: 15px;">
+<p style="font-size: 1.2em; color: #666; line-height: 1.8;">
+<strong>📊 What is Accuracy?</strong><br>
+Accuracy shows how closely your reading matched the original text. 
+It compares each word you spoke with the correct words in the passage. 
+A higher percentage means you read more words correctly!
+</p>
+</div>
+<div class="comparison-section">
+<h3>🎤 What You Read</h3>
+<div class="text-box">
+<div class="text-box-content" id="userRecordedText">
+Your recorded text will appear here...
+</div>
+</div>
+</div>
+<button class="btn-primary" onclick="nextLesson()">➡️ Next Lesson</button>
+<button class="btn-primary" onclick="resetPractice()" style="background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);">🔄 Choose Different Lesson</button>
+</div>
+</div>
+</div>
+
+<script>
+let selectedVoice = 'female';
+let selectedContent = null;
+let selectedLessonIndex = -1;
+let recognition = null;
+let isRecording = false;
+let recordedTranscript = '';
+let microphoneGranted = false;
+let instructionsGiven = false;
+let completedLessons = new Set();
+
+const lessons = [
+{
+title: "The Busy Bee",
+icon: "🐝",
+level: "Grade 3",
+text: "Bees are amazing insects that work very hard every day. They fly from flower to flower collecting sweet nectar. When a bee lands on a flower, pollen sticks to its fuzzy body. As the bee visits more flowers, it spreads the pollen around, which helps plants grow new flowers and fruits."
+},
+{
+title: "A Rainy Day Adventure",
+icon: "🌧️",
+level: "Grade 3",
+text: "Maya loved rainy days because she could jump in puddles. She put on her yellow raincoat and red boots. Outside, she found the biggest puddle on her street. She jumped high and splashed water everywhere. Her dog, Buddy, barked and jumped in too!"
+},
+{
+title: "The Solar System",
+icon: "🪐",
+level: "Grade 4",
+text: "Our solar system has eight planets that orbit around the sun. Mercury is the closest planet to the sun and is very hot. Earth is the third planet and the only one with life. Jupiter is the largest planet and has a giant red spot that is actually a huge storm."
+},
+{
+title: "The Pizza Party",
+icon: "🍕",
+level: "Grade 3",
+text: "Carlos was excited because his class earned a pizza party. Everyone worked together to read 100 books in one month. When the pizzas arrived, the classroom smelled delicious. Carlos chose a slice with pepperoni and cheese. His friend Emma picked one with vegetables."
+},
+{
+title: "How Butterflies Grow",
+icon: "🦋",
+level: "Grade 4",
+text: "Butterflies go through an amazing change called metamorphosis. First, a butterfly lays tiny eggs on a leaf. The eggs hatch into caterpillars that eat lots of leaves. Then the caterpillar makes a chrysalis around itself. After a few weeks, a beautiful butterfly comes out with colorful wings."
+},
+{
+title: "The School Play",
+icon: "🎭",
+level: "Grade 3",
+text: "Liam was nervous about the school play. He had to remember all his lines and speak loudly. When the curtain opened, he saw his family in the audience. They were smiling at him. Liam took a deep breath and said his first line perfectly. Everyone clapped at the end!"
+},
+{
+title: "Volcanoes",
+icon: "🌋",
+level: "Grade 4",
+text: "A volcano is a mountain that can explode with hot melted rock called lava. Deep underground, the rock gets so hot it melts. The melted rock, called magma, pushes up through cracks in the earth. When it reaches the top, it erupts out of the volcano and flows down the sides."
+},
+{
+title: "The Lost Kitten",
+icon: "🐱",
+level: "Grade 3",
+text: "Sophia found a small kitten hiding under a bush in her backyard. The kitten was gray and white with big green eyes. It looked hungry and scared. Sophia gave it some milk and tuna. Her mom helped her find the kitten's owner by posting pictures around the neighborhood."
+}
+];
+
+function populateLessons() {
+const lessonGrid = document.getElementById('lessonGrid');
+lessonGrid.innerHTML = '';
+
+lessons.forEach((lesson, index) => {
+const card = document.createElement('div');
+card.className = 'lesson-card';
+if (completedLessons.has(index)) {
+card.classList.add('completed');
+}
+card.onclick = () => selectLesson(index);
+card.innerHTML = `
+<div class="lesson-icon">${lesson.icon}</div>
+<div class="lesson-level">${lesson.level}</div>
+<div class="lesson-title">${lesson.title}</div>
+<div class="lesson-duration">⏱️ 1-2 minutes</div>
+`;
+lessonGrid.appendChild(card);
+});
+
+updateProgress();
+}
+
+function updateProgress() {
+const completed = completedLessons.size;
+const total = lessons.length;
+const percentage = (completed / total) * 100;
+const progressFill = document.getElementById('progressFill');
+progressFill.style.width = percentage + '%';
+progressFill.textContent = `${completed}/${total} Complete`;
+
+if (completed === total && completed > 0) {
+showAchievement('🏆', 'Reading Champion!', 'You completed all 8 lessons! Amazing job!');
+}
+}
+
+function showAchievement(icon, title, text) {
+document.getElementById('achievementIcon').textContent = icon;
+document.getElementById('achievementTitle').textContent = title;
+document.getElementById('achievementText').textContent = text;
+document.getElementById('overlay').classList.add('show');
+document.getElementById('achievementPopup').classList.add('show');
+}
+
+function closeAchievement() {
+document.getElementById('overlay').classList.remove('show');
+document.getElementById('achievementPopup').classList.remove('show');
+}
+
+async function requestMicrophoneAccess() {
+const errorBox = document.getElementById('errorBox');
+const agreeBtn = document.getElementById('agreeBtn');
+errorBox.classList.add('hidden');
+agreeBtn.disabled = true;
+agreeBtn.textContent = '⏳ Requesting permission...';
+
+if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+errorBox.textContent = '❌ Speech recognition not supported. Please use Chrome, Edge, or Safari.';
+errorBox.classList.remove('hidden');
+agreeBtn.disabled = false;
+agreeBtn.textContent = '🎤 I Agree - Allow Microphone Access';
+return;
+}
+
+try {
+const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+stream.getTracks().forEach(track => track.stop());
+microphoneGranted = true;
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+recognition = new SpeechRecognition();
+recognition.continuous = true;
+recognition.interimResults = true;
+recognition.lang = 'en-US';
+
+recognition.onresult = (event) => {
+for (let i = event.resultIndex; i < event.results.length; i++) {
+if (event.results[i].isFinal) {
+recordedTranscript += event.results[i][0].transcript + ' ';
+}
+}
+};
+
+recognition.onerror = (event) => {
+if (event.error !== 'no-speech' && event.error !== 'aborted') {
+console.error('Recognition error:', event.error);
+}
+};
+
+document.getElementById('consentScreen').style.display = 'none';
+document.getElementById('setupScreen').style.display = 'block';
+populateLessons();
+
+if (!instructionsGiven) {
+instructionsGiven = true;
+setTimeout(() => {
+if ('speechSynthesis' in window) {
+window.speechSynthesis.getVoices();
+}
+}, 200);
+
+setTimeout(() => {
+const instructions = "Welcome to Intermediate Reading Practice! Choose one of the 8 fun reading lessons. I'll read the passage to you first, then you'll read it back to me. Try to complete all 8 lessons to become a reading champion!";
+speakTextIOS(instructions);
+}, 1000);
+}
+
+} catch (error) {
+errorBox.innerHTML = `<strong>❌ Microphone Access Denied</strong><br><br>Please allow microphone access:<br><br><strong>iOS Safari:</strong> Settings → Safari → Microphone → Allow<br><strong>Chrome/Edge:</strong> Click 🔒 → Site Settings → Microphone → Allow<br><strong>Firefox:</strong> Click 🔒 → Permissions → Microphone → Allow<br><br>Refresh after allowing.`;
+errorBox.classList.remove('hidden');
+agreeBtn.disabled = false;
+agreeBtn.textContent = '🎤 I Agree - Allow Microphone Access';
+}
+}
+
+function selectLesson(index) {
+selectedContent = lessons[index];
+selectedLessonIndex = index;
+document.querySelectorAll('.lesson-card').forEach(card => card.classList.remove('selected'));
+document.querySelectorAll('.lesson-card')[index].classList.add('selected');
+}
+
+async function startPractice() {
+const errorBox2 = document.getElementById('errorBox2');
+errorBox2.classList.add('hidden');
+
+if (!microphoneGranted || !recognition) {
+errorBox2.textContent = '⚠️ Please allow microphone access first by clicking "I Agree"';
+errorBox2.classList.remove('hidden');
+return;
+}
+
+if (!selectedContent) {
+errorBox2.textContent = '⚠️ Please select a lesson to practice';
+errorBox2.classList.remove('hidden');
+return;
+}
+
+document.getElementById('setupScreen').style.display = 'none';
+document.getElementById('practiceScreen').style.display = 'block';
+
+document.getElementById('storyTitle').textContent = selectedContent.title;
+document.getElementById('storyContent').textContent = selectedContent.text;
+
+addMessage(`🎯 Practicing: "${selectedContent.title}"`);
+addMessage('🔊 Listen as I read the passage...');
+
+speakTextIOS(selectedContent.text);
+
+setTimeout(() => {
+addMessage('✅ Your turn! Click "Start Reading" when ready.');
+}, calculateReadTime(selectedContent.text) + 1000);
+}
+
+function speakTextIOS(text) {
+if ('speechSynthesis' in window) {
+window.speechSynthesis.cancel();
+const voices = window.speechSynthesis.getVoices();
+
+setTimeout(() => {
+const utterance = new SpeechSynthesisUtterance(text);
+const voicesList = window.speechSynthesis.getVoices();
+
+if (selectedVoice === 'female') {
+const femaleVoice = voicesList.find(v => 
+v.lang.includes('en-US') && (
+v.name.includes('Samantha') || 
+v.name.includes('Victoria') || 
+v.name.includes('Karen') || 
+v.name.includes('Moira') || 
+v.name.includes('Female') || 
+v.name.includes('Fiona') ||
+v.name.includes('Susan')
+)
+);
+if (femaleVoice) {
+utterance.voice = femaleVoice;
+}
+}
+
+utterance.rate = 0.85;
+utterance.pitch = 1;
+utterance.volume = 1;
+utterance.lang = 'en-US';
+
+window.speechSynthesis.speak(utterance);
+}, 150);
+}
+}
+
+function calculateReadTime(text) {
+const words = text.split(/\s+/).length;
+return (words / 150) * 60 * 1000;
+}
+
+function addMessage(text) {
+const messages = document.getElementById('messages');
+const messageDiv = document.createElement('div');
+messageDiv.className = 'message bot';
+messageDiv.textContent = text;
+messages.appendChild(messageDiv);
+messages.scrollTop = messages.scrollHeight;
+}
+
+function startRecording() {
+if (recognition && !isRecording) {
+recordedTranscript = '';
+isRecording = true;
+recognition.start();
+document.getElementById('startBtn').classList.add('hidden');
+document.getElementById('stopBtn').classList.remove('hidden');
+document.getElementById('recordingIndicator').classList.add('active');
+addMessage('🎤 Recording started! Read the passage above.');
+}
+}
+
+function stopRecording() {
+if (recognition && isRecording) {
+isRecording = false;
+recognition.stop();
+document.getElementById('startBtn').classList.remove('hidden');
+document.getElementById('stopBtn').classList.add('hidden');
+document.getElementById('recordingIndicator').classList.remove('active');
+addMessage('⏹️ Recording stopped. Analyzing...');
+setTimeout(() => analyzeReading(), 1000);
+}
+}
+
+function analyzeReading() {
+const userText = recordedTranscript.trim();
+const originalText = selectedContent.text;
+
+if (!userText) {
+addMessage('❌ No speech detected. Please try again and speak louder.');
+return;
+}
+
+document.getElementById('userRecordedText').textContent = userText;
+
+const originalWords = originalText.toLowerCase().split(/\s+/);
+const userWords = userText.toLowerCase().split(/\s+/);
+const minLength = Math.min(originalWords.length, userWords.length);
+
+let correctWords = 0;
+for (let i = 0; i < minLength; i++) {
+const origWord = originalWords[i].replace(/[.,!?;:]/g, '');
+const userWord = userWords[i].replace(/[.,!?;:]/g, '');
+if (origWord === userWord) correctWords++;
+}
+
+const accuracy = Math.round((correctWords / originalWords.length) * 100);
+
+document.getElementById('scoreValue').textContent = accuracy + '%';
+document.getElementById('results').classList.add('show');
+
+const circle = document.querySelector('.score-circle');
+const scoreValue = document.querySelector('.score-value');
+if (accuracy >= 90) {
+circle.style.borderColor = '#4caf50';
+scoreValue.style.color = '#4caf50';
+addMessage('🌟 Excellent! Outstanding reading accuracy!');
+speakTextIOS(`Excellent job! You scored ${accuracy} percent accuracy!`);
+completedLessons.add(selectedLessonIndex);
+if (completedLessons.size === 3) {
+setTimeout(() => showAchievement('🌟', 'Great Progress!', 'You completed 3 lessons! Keep going!'), 2000);
+} else if (completedLessons.size === 5) {
+setTimeout(() => showAchievement('⭐', 'Halfway There!', 'You completed 5 lessons! You\'re doing great!'), 2000);
+}
+} else if (accuracy >= 70) {
+circle.style.borderColor = '#ff9800';
+scoreValue.style.color = '#ff9800';
+addMessage('👍 Good job! Keep practicing!');
+speakTextIOS(`Good job! You scored ${accuracy} percent accuracy!`);
+completedLessons.add(selectedLessonIndex);
+} else {
+circle.style.borderColor = '#f44336';
+scoreValue.style.color = '#f44336';
+addMessage('💪 Keep practicing! You can do better!');
+speakTextIOS(`You scored ${accuracy} percent accuracy. Keep practicing!`);
+}
+}
+
+function nextLesson() {
+document.getElementById('practiceScreen').style.display = 'none';
+document.getElementById('results').classList.remove('show');
+selectedContent = null;
+document.getElementById('setupScreen').style.display = 'block';
+populateLessons();
+document.getElementById('messages').innerHTML = '';
+recordedTranscript = '';
+isRecording = false;
+
+const nextIndex = (selectedLessonIndex + 1) % lessons.length;
+if (!completedLessons.has(nextIndex)) {
+selectLesson(nextIndex);
+}
+}
+
+function resetPractice() {
+document.getElementById('practiceScreen').style.display = 'none';
+document.getElementById('results').classList.remove('show');
+selectedContent = null;
+document.querySelectorAll('.lesson-card').forEach(card => card.classList.remove('selected'));
+document.getElementById('setupScreen').style.display = 'block';
+populateLessons();
+document.getElementById('messages').innerHTML = '';
+recordedTranscript = '';
+isRecording = false;
+}
+
+if ('speechSynthesis' in window) {
+let voicesLoaded = false;
+const loadVoices = () => {
+const voices = window.speechSynthesis.getVoices();
+if (voices.length > 0) {
+voicesLoaded = true;
+}
+};
+loadVoices();
+if (window.speechSynthesis.onvoiceschanged !== undefined) {
+window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+document.addEventListener('click', () => {
+if (!voicesLoaded) loadVoices();
+}, { once: true });
+}
+</script>
+
+</body>
+</html>
