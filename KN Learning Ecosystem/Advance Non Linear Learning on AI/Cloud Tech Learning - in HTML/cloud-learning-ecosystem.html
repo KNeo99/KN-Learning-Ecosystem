@@ -1,0 +1,1921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KN Cloud Learning Ecosystem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f0f9ff 0%, #dbeafe 100%);
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Panel 1: Chat */
+        .chat-panel {
+            width: 66.666%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
+            color: white;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .chat-header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chat-icon {
+            font-size: 2rem;
+        }
+
+        .chat-title h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .chat-subtitle {
+            font-size: 0.875rem;
+            color: #dbeafe;
+        }
+
+        .platform-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .platform-badge.active {
+            display: block;
+        }
+
+        .platform-badge.aws {
+            background: linear-gradient(135deg, #f97316 0%, #eab308 100%);
+        }
+
+        .platform-badge.gcp {
+            background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+        }
+
+        .platform-badge.azure {
+            background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+        }
+
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.ai {
+            justify-content: flex-start;
+        }
+
+        .message-content {
+            max-width: 75%;
+            padding: 1rem 1.25rem;
+            border-radius: 1rem;
+            line-height: 1.6;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+            color: white;
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        .message.ai .message-content {
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            color: #1f2937;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        .quick-actions {
+            padding: 0.75rem 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            background: linear-gradient(135deg, #f9fafb 0%, #dbeafe 100%);
+        }
+
+        .quick-actions-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-btn:hover {
+            background: #dbeafe;
+            border-color: #93c5fd;
+        }
+
+        .quick-btn.example {
+            background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+            color: white;
+            border: none;
+        }
+
+        .quick-btn.example:hover {
+            opacity: 0.9;
+        }
+
+        .input-area {
+            padding: 1.5rem;
+            border-top: 2px solid #e5e7eb;
+            background: white;
+        }
+
+        .recording-indicator {
+            margin-bottom: 0.75rem;
+            padding: 0.75rem;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 0.5rem;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        .recording-indicator.active {
+            display: flex;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .recording-dot {
+            width: 0.75rem;
+            height: 0.75rem;
+            background: #ef4444;
+            border-radius: 50%;
+        }
+
+        .recording-text {
+            color: #991b1b;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .speaking-indicator {
+            margin-bottom: 0.75rem;
+            padding: 0.75rem;
+            background: #eff6ff;
+            border: 1px solid #93c5fd;
+            border-radius: 0.5rem;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        .speaking-indicator.active {
+            display: flex;
+        }
+
+        .speaking-dot {
+            width: 0.75rem;
+            height: 0.75rem;
+            background: #3b82f6;
+            border-radius: 50%;
+        }
+
+        .speaking-text {
+            color: #1e40af;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .voice-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-radius: 0.5rem;
+            border: 1px solid #86efac;
+        }
+
+        .voice-toggle {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border: 1px solid #22c55e;
+            border-radius: 0.5rem;
+            background: white;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .voice-toggle:hover {
+            background: #f0fdf4;
+        }
+
+        .voice-toggle.active {
+            background: #22c55e;
+            color: white;
+            border-color: #16a34a;
+        }
+
+        .voice-status {
+            font-size: 0.75rem;
+            color: #15803d;
+            text-align: center;
+        }
+
+        .input-controls {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .mic-button {
+            padding: 1rem;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+        }
+
+        .mic-button:hover {
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .mic-button.recording {
+            background: #ef4444;
+            animation: pulse 2s infinite;
+        }
+
+        .input-group {
+            flex: 1;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .text-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid #d1d5db;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .send-button {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .send-button:hover {
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Panel 2: Dashboard */
+        .dashboard-panel {
+            width: 33.333%;
+            background: linear-gradient(180deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%);
+            color: white;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .dashboard-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .dashboard-header h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dashboard-subtitle {
+            font-size: 0.875rem;
+            color: #e0d5f7;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-icon {
+            font-size: 1.25rem;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 1.125rem;
+        }
+
+        .current-lesson-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #fde047;
+            margin-bottom: 0.5rem;
+        }
+
+        .current-lesson-concept {
+            font-size: 0.875rem;
+            color: #e0d5f7;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .current-lesson-desc {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .platform-display {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .platform-icon {
+            font-size: 2.5rem;
+        }
+
+        .platform-name {
+            font-weight: bold;
+            font-size: 1.125rem;
+        }
+
+        .platform-subtitle {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .progress-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .progress-percentage {
+            font-size: 0.875rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: bold;
+        }
+
+        .progress-bar-container {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 9999px;
+            height: 0.75rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #4ade80 0%, #10b981 50%, #14b8a6 100%);
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+        }
+
+        .streak-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .streak-badge {
+            background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: bold;
+            font-size: 0.875rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .flashcard-container {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            position: relative;
+            min-height: 200px;
+        }
+
+        .flashcard-container:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .flashcard-label {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #6366f1;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .flashcard-front, .flashcard-back {
+            min-height: 140px;
+        }
+
+        .flashcard-question {
+            color: #1f2937;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .flashcard-answer {
+            color: #4b5563;
+            font-size: 0.9375rem;
+            line-height: 1.6;
+        }
+
+        .flashcard-flip-hint {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.75rem;
+            margin-top: 1rem;
+            font-style: italic;
+        }
+
+        .flashcard-back {
+            display: none;
+        }
+
+        .flashcard-container.flipped .flashcard-front {
+            display: none;
+        }
+
+        .flashcard-container.flipped .flashcard-back {
+            display: block;
+        }
+
+        .resources-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .resource-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+        }
+
+        .resource-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateX(4px);
+        }
+
+        .resource-title {
+            font-weight: 600;
+            color: #67e8f9;
+            margin-bottom: 0.25rem;
+            font-size: 0.9375rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .resource-link {
+            color: #67e8f9;
+            text-decoration: none;
+        }
+
+        .resource-link:hover {
+            text-decoration: underline;
+        }
+
+        .resource-desc {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.4;
+        }
+
+        .resource-type {
+            display: inline-block;
+            background: rgba(103, 232, 249, 0.2);
+            color: #67e8f9;
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.625rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .tools-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .tool-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tool-name {
+            font-weight: 600;
+            color: #67e8f9;
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .tool-desc {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .course-map {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .lesson-item {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .lesson-item.current {
+            background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+            border: 2px solid white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        .lesson-item.completed {
+            background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+            border: 1px solid #6ee7b7;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .lesson-item.locked {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .lesson-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .lesson-number {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.875rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .lesson-item.current .lesson-number {
+            background: white;
+            color: #2563eb;
+        }
+
+        .lesson-item.completed .lesson-number {
+            background: white;
+            color: #10b981;
+        }
+
+        .lesson-item.locked .lesson-number {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .lesson-info {
+            flex: 1;
+        }
+
+        .lesson-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.125rem;
+        }
+
+        .lesson-concept {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        /* Scrollbar Styling */
+        .chat-history::-webkit-scrollbar,
+        .dashboard-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-history::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .chat-history::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .dashboard-panel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .dashboard-panel::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .chat-panel, .dashboard-panel {
+                width: 100%;
+            }
+            .chat-panel {
+                height: 60vh;
+            }
+            .dashboard-panel {
+                height: 40vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Panel 1: Chat -->
+        <div class="chat-panel">
+            <div class="chat-header">
+                <div class="chat-header-content">
+                    <div class="chat-header-left">
+                        <div class="chat-icon">☁️</div>
+                        <div class="chat-title">
+                            <h1>Cloud Technology Instructor</h1>
+                            <div class="chat-subtitle">Master AWS, GCP, Azure & more</div>
+                        </div>
+                    </div>
+                    <div id="platformBadge" class="platform-badge"></div>
+                </div>
+            </div>
+
+            <div id="chatHistory" class="chat-history"></div>
+
+            <div class="quick-actions">
+                <div class="quick-actions-buttons">
+                    <button class="quick-btn" onclick="handleQuickAction('repeat')">🔄 Repeat Question</button>
+                    <button class="quick-btn" onclick="handleQuickAction('hint')">💡 Give Me a Hint</button>
+                    <button id="exampleBtn" class="quick-btn example" onclick="handleQuickAction('example')" style="display: none;">✨ Show Example</button>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <div class="voice-controls">
+                    <button id="ttsToggle" class="voice-toggle active" onclick="toggleTTS()">
+                        <span>🔊</span>
+                        <span>Instructor Voice: ON</span>
+                    </button>
+                    <button id="sttToggle" class="voice-toggle active" onclick="toggleSTT()">
+                        <span>🎤</span>
+                        <span>Voice Input: ON</span>
+                    </button>
+                </div>
+                <div class="voice-status" id="voiceStatus">Voice features enabled - Click microphone to speak</div>
+                
+                <div id="speakingIndicator" class="speaking-indicator">
+                    <div class="speaking-dot"></div>
+                    <span class="speaking-text">🔊 Instructor speaking...</span>
+                </div>
+                
+                <div id="recordingIndicator" class="recording-indicator">
+                    <div class="recording-dot"></div>
+                    <span class="recording-text">🎤 Listening... (speak now)</span>
+                </div>
+                
+                <div class="input-controls">
+                    <button id="micButton" class="mic-button" onclick="handleMicClick()">🎤</button>
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="textInput" 
+                            class="text-input" 
+                            placeholder="Type your answer here..."
+                            onkeypress="handleKeyPress(event)"
+                        >
+                        <button class="send-button" onclick="handleSend()">
+                            <span>Send</span>
+                            <span>📤</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel 2: Dashboard -->
+        <div class="dashboard-panel">
+            <div class="dashboard-header">
+                <h2>🎯 Learning Dashboard</h2>
+                <div class="dashboard-subtitle">Track your cloud mastery journey</div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <span class="card-icon">📚</span>
+                    <span class="card-title">Current Module</span>
+                </div>
+                <div id="currentLessonDisplay">
+                    <div class="current-lesson-title">Welcome to Cloud Learning</div>
+                    <div class="current-lesson-concept">Getting Started</div>
+                    <div class="current-lesson-desc">Choose your cloud platform journey</div>
+                </div>
+            </div>
+
+            <div id="platformCard" class="dashboard-card" style="display: none;">
+                <div class="card-header">
+                    <span class="card-icon">🌐</span>
+                    <span class="card-title">Your Platform</span>
+                </div>
+                <div id="platformDisplay" class="platform-display"></div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <span class="card-icon">🎴</span>
+                    <span class="card-title">Concept Flashcard</span>
+                </div>
+                <div id="flashcardContainer" class="flashcard-container" onclick="flipFlashcard()">
+                    <span class="flashcard-label">Click to flip</span>
+                    <div class="flashcard-front">
+                        <div class="flashcard-question" id="flashcardQuestion">
+                            What is Cloud Computing?
+                        </div>
+                        <div class="flashcard-flip-hint">💡 Click card to see answer</div>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="flashcard-answer" id="flashcardAnswer">
+                            Cloud computing is the delivery of computing services over the internet, allowing on-demand access to resources without owning physical infrastructure.
+                        </div>
+                        <div class="flashcard-flip-hint">💡 Click to see question</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <span class="card-icon">📚</span>
+                    <span class="card-title">Learning Resources</span>
+                </div>
+                <div id="resourcesList" class="resources-list">
+                    <div class="resource-item">
+                        <div class="resource-title">
+                            <span>🌐</span>
+                            <a href="#" class="resource-link" target="_blank">Getting Started with Cloud</a>
+                        </div>
+                        <div class="resource-desc">Introduction to cloud computing concepts and benefits</div>
+                        <span class="resource-type">BEGINNER</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="progress-header">
+                    <div class="card-header" style="margin: 0;">
+                        <span class="card-icon">📈</span>
+                        <span class="card-title">Progress</span>
+                    </div>
+                    <span id="progressPercentage" class="progress-percentage">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar-fill" style="width: 0%"></div>
+                </div>
+                <div class="streak-container">
+                    <span class="card-icon">⚡</span>
+                    <span style="font-weight: bold;">Daily Streak:</span>
+                    <span id="streakBadge" class="streak-badge">🔥 1 Day</span>
+                </div>
+            </div>
+
+            <div id="toolsCard" class="dashboard-card" style="display: none;">
+                <div class="card-header">
+                    <span class="card-icon">🛠️</span>
+                    <span class="card-title">Quick Tools Reference</span>
+                </div>
+                <div id="toolsGrid" class="tools-grid"></div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <span class="card-icon">⭐</span>
+                    <span class="card-title">Course Roadmap</span>
+                </div>
+                <div id="courseMap" class="course-map"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let state = {
+            currentLesson: 0,
+            chatHistory: [],
+            points: 0,
+            streak: 1,
+            badges: [],
+            completedLessons: [],
+            selectedPlatform: null,
+            platformSelectionMade: false,
+            isRecording: false,
+            ttsEnabled: true,
+            sttEnabled: true,
+            isSpeaking: false
+        };
+
+        // Voice Recognition and Synthesis
+        let recognition = null;
+        let synthesis = window.speechSynthesis;
+        let currentUtterance = null;
+
+        // Initialize Speech Recognition
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+                recognition.maxAlternatives = 1;
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById('textInput').value = transcript;
+                    state.isRecording = false;
+                    updateRecordingUI();
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    if (event.error === 'no-speech') {
+                        addMessage('ai', "I didn't hear anything. Please click the microphone and try again.");
+                    } else if (event.error === 'not-allowed') {
+                        state.sttEnabled = false;
+                        updateVoiceToggles();
+                        updateVoiceStatus('Microphone access denied. Please enable in browser settings.');
+                    }
+                    state.isRecording = false;
+                    updateRecordingUI();
+                };
+
+                recognition.onend = function() {
+                    state.isRecording = false;
+                    updateRecordingUI();
+                };
+
+                return true;
+            }
+            return false;
+        }
+
+        // Text-to-Speech Function
+        function speak(text) {
+            if (!state.ttsEnabled || !synthesis || state.isSpeaking) return;
+
+            // Cancel any ongoing speech
+            synthesis.cancel();
+
+            // Clean text for speech
+            let cleanText = text.replace(/[🎉💡🔥⭐☁️🔵🔷🚀💰📈⚡🏗️🎊📚🔑💻⚙️🎯✨🔒🛡️📦📝🌐💬🎤🔊]/g, '');
+            cleanText = cleanText.replace(/\n\n/g, '. ');
+            cleanText = cleanText.replace(/\n/g, ' ');
+
+            currentUtterance = new SpeechSynthesisUtterance(cleanText);
+            currentUtterance.rate = 1.0;
+            currentUtterance.pitch = 1.0;
+            currentUtterance.volume = 1.0;
+            currentUtterance.lang = 'en-US';
+
+            currentUtterance.onstart = function() {
+                state.isSpeaking = true;
+                document.getElementById('speakingIndicator').classList.add('active');
+            };
+
+            currentUtterance.onend = function() {
+                state.isSpeaking = false;
+                document.getElementById('speakingIndicator').classList.remove('active');
+            };
+
+            currentUtterance.onerror = function(event) {
+                console.error('Speech synthesis error:', event);
+                state.isSpeaking = false;
+                document.getElementById('speakingIndicator').classList.remove('active');
+            };
+
+            synthesis.speak(currentUtterance);
+        }
+
+        // Toggle Functions
+        function toggleTTS() {
+            state.ttsEnabled = !state.ttsEnabled;
+            if (!state.ttsEnabled && synthesis) {
+                synthesis.cancel();
+                state.isSpeaking = false;
+                document.getElementById('speakingIndicator').classList.remove('active');
+            }
+            updateVoiceToggles();
+            updateVoiceStatus();
+        }
+
+        function toggleSTT() {
+            state.sttEnabled = !state.sttEnabled;
+            if (!state.sttEnabled && recognition && state.isRecording) {
+                recognition.stop();
+                state.isRecording = false;
+                updateRecordingUI();
+            }
+            updateVoiceToggles();
+            updateVoiceStatus();
+        }
+
+        function updateVoiceToggles() {
+            const ttsToggle = document.getElementById('ttsToggle');
+            const sttToggle = document.getElementById('sttToggle');
+
+            if (state.ttsEnabled) {
+                ttsToggle.classList.add('active');
+                ttsToggle.innerHTML = '<span>🔊</span><span>Instructor Voice: ON</span>';
+            } else {
+                ttsToggle.classList.remove('active');
+                ttsToggle.innerHTML = '<span>🔇</span><span>Instructor Voice: OFF</span>';
+            }
+
+            if (state.sttEnabled) {
+                sttToggle.classList.add('active');
+                sttToggle.innerHTML = '<span>🎤</span><span>Voice Input: ON</span>';
+            } else {
+                sttToggle.classList.remove('active');
+                sttToggle.innerHTML = '<span>🎤</span><span>Voice Input: OFF</span>';
+            }
+        }
+
+        function updateVoiceStatus(customMessage) {
+            const statusEl = document.getElementById('voiceStatus');
+            if (customMessage) {
+                statusEl.textContent = customMessage;
+                statusEl.style.color = '#dc2626';
+            } else if (state.ttsEnabled && state.sttEnabled) {
+                statusEl.textContent = 'Voice features enabled - Click microphone to speak';
+                statusEl.style.color = '#15803d';
+            } else if (state.ttsEnabled) {
+                statusEl.textContent = 'Instructor voice enabled - Voice input OFF';
+                statusEl.style.color = '#ca8a04';
+            } else if (state.sttEnabled) {
+                statusEl.textContent = 'Voice input enabled - Instructor voice OFF';
+                statusEl.style.color = '#ca8a04';
+            } else {
+                statusEl.textContent = 'Voice features disabled - Type to interact';
+                statusEl.style.color = '#6b7280';
+            }
+        }
+
+        function updateRecordingUI() {
+            const micButton = document.getElementById('micButton');
+            const recordingIndicator = document.getElementById('recordingIndicator');
+
+            if (state.isRecording) {
+                micButton.classList.add('recording');
+                recordingIndicator.classList.add('active');
+            } else {
+                micButton.classList.remove('recording');
+                recordingIndicator.classList.remove('active');
+            }
+        }
+
+        // Data
+        const platforms = {
+            aws: {
+                name: 'Amazon Web Services (AWS)',
+                icon: '☁️',
+                color: 'aws',
+                tools: {
+                    compute: { name: 'EC2 (Elastic Compute Cloud)', desc: 'Virtual servers in the cloud' },
+                    storage: { name: 'S3 (Simple Storage Service)', desc: 'Scalable object storage' },
+                    database: { name: 'RDS (Relational Database Service)', desc: 'Managed relational databases' },
+                    serverless: { name: 'Lambda', desc: 'Run code without servers' },
+                    networking: { name: 'VPC (Virtual Private Cloud)', desc: 'Isolated cloud resources' }
+                }
+            },
+            gcp: {
+                name: 'Google Cloud Platform (GCP)',
+                icon: '🔵',
+                color: 'gcp',
+                tools: {
+                    compute: { name: 'Compute Engine', desc: 'Virtual machines on Google infrastructure' },
+                    storage: { name: 'Cloud Storage', desc: 'Object storage for any data' },
+                    database: { name: 'Cloud SQL', desc: 'Fully managed relational databases' },
+                    serverless: { name: 'Cloud Functions', desc: 'Event-driven serverless compute' },
+                    networking: { name: 'Cloud VPC', desc: 'Global virtual network' }
+                }
+            },
+            azure: {
+                name: 'Microsoft Azure',
+                icon: '🔷',
+                color: 'azure',
+                tools: {
+                    compute: { name: 'Virtual Machines', desc: 'On-demand scalable computing' },
+                    storage: { name: 'Blob Storage', desc: 'Massively scalable object storage' },
+                    database: { name: 'Azure SQL Database', desc: 'Intelligent managed database' },
+                    serverless: { name: 'Azure Functions', desc: 'Serverless compute service' },
+                    networking: { name: 'Virtual Network', desc: 'Private network in Azure' }
+                }
+            }
+        };
+
+        const lessons = [
+            { id: 0, title: "Welcome to Cloud Learning", concept: "Getting Started", description: "Choose your cloud platform journey" },
+            { id: 1, title: "What is Cloud Computing?", concept: "Cloud Fundamentals", description: "Understanding IaaS, PaaS, SaaS, and cloud benefits" },
+            { id: 2, title: "Cloud Storage Solutions", concept: "Data Storage in the Cloud", description: "Learn about object storage, block storage, and file systems" },
+            { id: 3, title: "Compute Services", concept: "Virtual Machines & Containers", description: "Deploy and manage compute resources" },
+            { id: 4, title: "Serverless Computing", concept: "Event-Driven Architecture", description: "Build applications without managing servers" },
+            { id: 5, title: "Cloud Security Basics", concept: "Protecting Your Resources", description: "Identity, access management, and encryption" }
+        ];
+
+        const flashcards = {
+            0: {
+                question: "Why choose a specific cloud platform?",
+                answer: "Different platforms have unique strengths: AWS for breadth, GCP for data/ML, Azure for enterprise. Your choice depends on your use case, existing tools, and team expertise."
+            },
+            1: {
+                question: "What is Cloud Computing?",
+                answer: "Cloud computing is the delivery of computing services (servers, storage, databases, networking, software) over the internet, providing faster innovation, flexible resources, and economies of scale."
+            },
+            2: {
+                question: "What is Object Storage?",
+                answer: "Object storage manages data as objects (files with metadata) rather than in file hierarchies. It's highly scalable, durable, and perfect for unstructured data like images, videos, and backups."
+            },
+            3: {
+                question: "What is Auto Scaling?",
+                answer: "Auto Scaling automatically adjusts compute capacity based on demand. It adds instances during traffic spikes and removes them during quiet times, optimizing both performance and costs."
+            },
+            4: {
+                question: "What is Serverless Computing?",
+                answer: "Serverless lets you run code without provisioning servers. You write functions, the platform handles scaling and infrastructure, and you pay only for actual execution time."
+            },
+            5: {
+                question: "What is the Principle of Least Privilege?",
+                answer: "Least privilege means granting users only the minimum permissions necessary to perform their job. This security practice reduces the risk of unauthorized access or accidental damage."
+            }
+        };
+
+        const learningResources = {
+            0: [
+                {
+                    title: "Cloud Platform Comparison Guide",
+                    url: "https://cloud.google.com/docs/compare/aws",
+                    description: "Compare AWS, GCP, and Azure services side-by-side",
+                    type: "COMPARISON"
+                },
+                {
+                    title: "Choosing a Cloud Provider",
+                    url: "https://www.coursera.org/articles/cloud-computing",
+                    description: "Factors to consider when selecting your cloud platform",
+                    type: "ARTICLE"
+                }
+            ],
+            1: {
+                aws: [
+                    {
+                        title: "AWS Cloud Essentials",
+                        url: "https://aws.amazon.com/getting-started/cloud-essentials/",
+                        description: "Official AWS guide to cloud fundamentals",
+                        type: "GUIDE"
+                    },
+                    {
+                        title: "What is IaaS, PaaS, and SaaS?",
+                        url: "https://aws.amazon.com/types-of-cloud-computing/",
+                        description: "AWS explanation of cloud service models",
+                        type: "ARTICLE"
+                    }
+                ],
+                gcp: [
+                    {
+                        title: "Google Cloud Fundamentals",
+                        url: "https://cloud.google.com/docs/overview",
+                        description: "Official GCP overview and core concepts",
+                        type: "GUIDE"
+                    },
+                    {
+                        title: "Cloud Computing Concepts",
+                        url: "https://cloud.google.com/learn/what-is-cloud-computing",
+                        description: "GCP's guide to cloud computing basics",
+                        type: "ARTICLE"
+                    }
+                ],
+                azure: [
+                    {
+                        title: "Azure Fundamentals",
+                        url: "https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/",
+                        description: "Microsoft's cloud adoption framework",
+                        type: "GUIDE"
+                    },
+                    {
+                        title: "What is Cloud Computing?",
+                        url: "https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-cloud-computing",
+                        description: "Azure's introduction to cloud concepts",
+                        type: "ARTICLE"
+                    }
+                ]
+            },
+            2: {
+                aws: [
+                    {
+                        title: "Amazon S3 Getting Started",
+                        url: "https://aws.amazon.com/s3/getting-started/",
+                        description: "Learn S3 basics and storage classes",
+                        type: "TUTORIAL"
+                    },
+                    {
+                        title: "S3 Storage Classes Guide",
+                        url: "https://aws.amazon.com/s3/storage-classes/",
+                        description: "Choose the right storage class for your needs",
+                        type: "GUIDE"
+                    }
+                ],
+                gcp: [
+                    {
+                        title: "Cloud Storage Documentation",
+                        url: "https://cloud.google.com/storage/docs",
+                        description: "Official GCP storage documentation",
+                        type: "DOCS"
+                    },
+                    {
+                        title: "Storage Classes Overview",
+                        url: "https://cloud.google.com/storage/docs/storage-classes",
+                        description: "Understand GCP storage tiers and pricing",
+                        type: "GUIDE"
+                    }
+                ],
+                azure: [
+                    {
+                        title: "Azure Blob Storage Tutorial",
+                        url: "https://learn.microsoft.com/en-us/azure/storage/blobs/",
+                        description: "Get started with Azure Blob Storage",
+                        type: "TUTORIAL"
+                    },
+                    {
+                        title: "Storage Access Tiers",
+                        url: "https://learn.microsoft.com/en-us/azure/storage/blobs/access-tiers-overview",
+                        description: "Hot, Cool, and Archive storage explained",
+                        type: "GUIDE"
+                    }
+                ]
+            },
+            3: {
+                aws: [
+                    {
+                        title: "Amazon EC2 User Guide",
+                        url: "https://docs.aws.amazon.com/ec2/",
+                        description: "Complete EC2 documentation and tutorials",
+                        type: "DOCS"
+                    },
+                    {
+                        title: "Auto Scaling Guide",
+                        url: "https://aws.amazon.com/autoscaling/",
+                        description: "Learn to implement automatic scaling",
+                        type: "GUIDE"
+                    }
+                ],
+                gcp: [
+                    {
+                        title: "Compute Engine Quickstart",
+                        url: "https://cloud.google.com/compute/docs/quickstart",
+                        description: "Launch your first VM on GCP",
+                        type: "TUTORIAL"
+                    },
+                    {
+                        title: "Autoscaling VMs",
+                        url: "https://cloud.google.com/compute/docs/autoscaler",
+                        description: "Configure managed instance groups",
+                        type: "GUIDE"
+                    }
+                ],
+                azure: [
+                    {
+                        title: "Virtual Machines Documentation",
+                        url: "https://learn.microsoft.com/en-us/azure/virtual-machines/",
+                        description: "Azure VM guides and best practices",
+                        type: "DOCS"
+                    },
+                    {
+                        title: "VM Scale Sets Overview",
+                        url: "https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/",
+                        description: "Implement auto-scaling on Azure",
+                        type: "GUIDE"
+                    }
+                ]
+            },
+            4: {
+                aws: [
+                    {
+                        title: "AWS Lambda Getting Started",
+                        url: "https://aws.amazon.com/lambda/getting-started/",
+                        description: "Build your first serverless function",
+                        type: "TUTORIAL"
+                    },
+                    {
+                        title: "Serverless Architecture",
+                        url: "https://aws.amazon.com/serverless/",
+                        description: "Learn serverless patterns and best practices",
+                        type: "GUIDE"
+                    }
+                ],
+                gcp: [
+                    {
+                        title: "Cloud Functions Quickstart",
+                        url: "https://cloud.google.com/functions/docs/quickstart",
+                        description: "Deploy your first Cloud Function",
+                        type: "TUTORIAL"
+                    },
+                    {
+                        title: "Serverless on GCP",
+                        url: "https://cloud.google.com/serverless",
+                        description: "Overview of GCP serverless options",
+                        type: "GUIDE"
+                    }
+                ],
+                azure: [
+                    {
+                        title: "Azure Functions Documentation",
+                        url: "https://learn.microsoft.com/en-us/azure/azure-functions/",
+                        description: "Complete Azure Functions guide",
+                        type: "DOCS"
+                    },
+                    {
+                        title: "Serverless Computing",
+                        url: "https://azure.microsoft.com/en-us/solutions/serverless/",
+                        description: "Azure serverless architecture overview",
+                        type: "GUIDE"
+                    }
+                ]
+            },
+            5: {
+                aws: [
+                    {
+                        title: "AWS Security Best Practices",
+                        url: "https://aws.amazon.com/architecture/security-identity-compliance/",
+                        description: "Learn AWS security fundamentals",
+                        type: "GUIDE"
+                    },
+                    {
+                        title: "IAM Tutorial",
+                        url: "https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html",
+                        description: "Master AWS Identity and Access Management",
+                        type: "TUTORIAL"
+                    }
+                ],
+                gcp: [
+                    {
+                        title: "GCP Security Overview",
+                        url: "https://cloud.google.com/security",
+                        description: "Understanding GCP security model",
+                        type: "GUIDE"
+                    },
+                    {
+                        title: "IAM Best Practices",
+                        url: "https://cloud.google.com/iam/docs/best-practices",
+                        description: "Implement secure access controls",
+                        type: "GUIDE"
+                    }
+                ],
+                azure: [
+                    {
+                        title: "Azure Security Documentation",
+                        url: "https://learn.microsoft.com/en-us/azure/security/",
+                        description: "Comprehensive Azure security guide",
+                        type: "DOCS"
+                    },
+                    {
+                        title: "Azure AD and IAM",
+                        url: "https://learn.microsoft.com/en-us/azure/active-directory/",
+                        description: "Manage identities and access in Azure",
+                        type: "GUIDE"
+                    }
+                ]
+            }
+        };
+
+        const badgeDefinitions = [
+            { id: 'first-step', name: 'Cloud Explorer', icon: '🚀', condition: (p) => p >= 10 },
+            { id: 'cloud-novice', name: 'Cloud Novice', icon: '☁️', condition: (p) => p >= 50 },
+            { id: 'platform-master', name: 'Platform Master', icon: '🏆', condition: (p) => p >= 100 },
+            { id: 'architect', name: 'Cloud Architect', icon: '🏗️', condition: (p) => p >= 150 },
+            { id: 'streak-keeper', name: 'Consistent Learner', icon: '🔥', condition: (p) => state.streak >= 3 }
+        ];
+
+        const lessonContent = {
+            0: {
+                greeting: "Welcome to KN Cloud Learning! I'm your Cloud Technology Instructor, and I'm thrilled to guide you through the exciting world of cloud computing. Whether you're looking to build your first application, migrate existing systems, or become a certified cloud professional, you're in the right place!",
+                question: "First, let's personalize your learning journey. Which cloud platform are you most interested in exploring?\n\n☁️ AWS (Amazon Web Services)\n🔵 GCP (Google Cloud Platform)\n🔷 Azure (Microsoft Azure)\n\nOr type 'all' if you want to learn about multiple platforms!",
+                responses: {
+                    aws: "Excellent choice! AWS is the world's most comprehensive cloud platform. You'll learn about EC2, S3, Lambda, and more. Let's begin your AWS journey!",
+                    gcp: "Great pick! Google Cloud Platform excels in data analytics and machine learning. You'll master Compute Engine, Cloud Storage, BigQuery, and more. Let's get started!",
+                    azure: "Fantastic! Microsoft Azure is perfect for enterprise solutions and hybrid cloud. You'll explore Virtual Machines, Blob Storage, Azure Functions, and more. Let's dive in!",
+                    all: "Ambitious! Learning multiple platforms will make you incredibly versatile. I'll teach you concepts that apply across AWS, GCP, and Azure. This will be an exciting journey!",
+                    default: "I can see you're ready to explore the cloud! Let me know which platform interests you (AWS, GCP, Azure, or 'all'), and we'll customize your learning path."
+                }
+            },
+            1: {
+                greeting: "Lesson 1: What is Cloud Computing? Cloud computing delivers computing services over the internet, allowing you to access resources on-demand without owning physical infrastructure.",
+                info: "📚 Three Main Service Models:\n\n• IaaS (Infrastructure as a Service): Virtual machines, storage, networks\n  Example: Running your own server in the cloud\n\n• PaaS (Platform as a Service): Development platforms without managing infrastructure\n  Example: Hosting a web app without configuring servers\n\n• SaaS (Software as a Service): Ready-to-use applications\n  Example: Gmail, Office 365, Salesforce\n\n☁️ Key Benefits: Scalability, cost savings, global reach, and disaster recovery!",
+                question: "Here's your first challenge: If you want to deploy a web application but don't want to manage operating systems or servers, which service model would you use?",
+                correctAnswer: "paas",
+                responses: {
+                    correct: "Perfect! Platform as a Service (PaaS) is exactly right! It lets you focus on your application code while the cloud provider manages the infrastructure. You've earned 20 points! 🎉",
+                    hint: "Think about the model that provides a platform for development without worrying about the underlying infrastructure...",
+                    wrong: "Good thinking, but not quite. Remember, we're looking for the model where you can deploy apps without managing servers. Would you like a hint?"
+                }
+            },
+            5: {
+                greeting: "Lesson 5: Cloud Security Fundamentals. Security in the cloud is a shared responsibility between you and your cloud provider. Understanding this is crucial!",
+                info: "🔒 Core Security Concepts:\n\n• Identity & Access Management (IAM): Control who can access what\n• Encryption: Protect data at rest and in transit\n• Network Security: Firewalls, security groups, and private networks\n• Monitoring & Logging: Track activities and detect threats\n\n🛡️ Best Practices:\n- Use principle of least privilege\n- Enable multi-factor authentication (MFA)\n- Regularly audit permissions\n- Encrypt sensitive data",
+                question: "Security scenario: You're setting up access for a new team member. They only need to view logs, not modify anything. What security principle should you follow?",
+                correctAnswer: "least privilege",
+                responses: {
+                    correct: "Excellent! The principle of least privilege means giving users only the minimum permissions they need. This reduces security risks. You've earned 30 points and you're now a Cloud Architect! 🏗️🎉",
+                    hint: "Think about giving users the minimum access they need to do their job...",
+                    wrong: "Good attempt! The key is to give only the necessary permissions, nothing more. Want a hint?"
+                }
+            }
+        };
+
+        // Initialize
+        function init() {
+            // Initialize speech recognition
+            const hasSTT = initSpeechRecognition();
+            const hasTTS = 'speechSynthesis' in window;
+
+            if (!hasSTT) {
+                state.sttEnabled = false;
+            }
+
+            if (!hasTTS) {
+                state.ttsEnabled = false;
+            }
+
+            // Show appropriate status message
+            if (state.ttsEnabled && state.sttEnabled) {
+                updateVoiceStatus('✅ Voice features ready! I\'ll speak my responses, and you can use the microphone to answer.');
+            } else if (!hasSTT && !hasTTS) {
+                updateVoiceStatus('Voice features not supported in this browser. You can still type your responses.');
+            } else if (!hasSTT) {
+                updateVoiceStatus('Voice input not available, but I\'ll speak my responses to you!');
+            } else if (!hasTTS) {
+                updateVoiceStatus('I can\'t speak, but you can use voice input to answer!');
+            }
+
+            updateVoiceToggles();
+            updateFlashcard();
+            updateResources();
+            updateCourseMap();
+            addMessage('ai', lessonContent[0].greeting + '\n\n' + lessonContent[0].question);
+        }
+
+        // Flashcard Functions
+        function flipFlashcard() {
+            const container = document.getElementById('flashcardContainer');
+            container.classList.toggle('flipped');
+        }
+
+        function updateFlashcard() {
+            const flashcard = flashcards[state.currentLesson];
+            if (!flashcard) return;
+
+            document.getElementById('flashcardQuestion').textContent = flashcard.question;
+            document.getElementById('flashcardAnswer').textContent = flashcard.answer;
+            
+            // Reset to front
+            const container = document.getElementById('flashcardContainer');
+            container.classList.remove('flipped');
+        }
+
+        // Resources Functions
+        function updateResources() {
+            const resources = learningResources[state.currentLesson];
+            const resourcesList = document.getElementById('resourcesList');
+            
+            if (!resources) {
+                resourcesList.innerHTML = '<div class="resource-item"><div class="resource-desc" style="color: rgba(255,255,255,0.7);">Resources will appear as you progress through lessons.</div></div>';
+                return;
+            }
+
+            let resourcesToShow = resources;
+            
+            // If lesson has platform-specific resources and platform is selected
+            if (typeof resources === 'object' && !Array.isArray(resources) && state.selectedPlatform && state.selectedPlatform !== 'all') {
+                resourcesToShow = resources[state.selectedPlatform] || [];
+            }
+            
+            // If it's the welcome lesson or "all" platform, show general resources
+            if (Array.isArray(resources)) {
+                resourcesToShow = resources;
+            }
+
+            if (!resourcesToShow || resourcesToShow.length === 0) {
+                resourcesList.innerHTML = '<div class="resource-item"><div class="resource-desc" style="color: rgba(255,255,255,0.7);">Select a platform to see specific resources.</div></div>';
+                return;
+            }
+
+            resourcesList.innerHTML = resourcesToShow.map(resource => `
+                <div class="resource-item">
+                    <div class="resource-title">
+                        <span>🔗</span>
+                        <a href="${resource.url}" class="resource-link" target="_blank" rel="noopener noreferrer">${resource.title}</a>
+                    </div>
+                    <div class="resource-desc">${resource.description}</div>
+                    <span class="resource-type">${resource.type}</span>
+                </div>
+            `).join('');
+        }
+
+        // Message Functions
+        function addMessage(sender, message) {
+            const timestamp = new Date();
+            state.chatHistory.push({ sender, message, timestamp });
+            renderMessages();
+            scrollToBottom();
+
+            // Auto-speak AI messages
+            if (sender === 'ai' && state.ttsEnabled) {
+                setTimeout(() => speak(message), 300);
+            }
+        }
+
+        function renderMessages() {
+            const chatHistory = document.getElementById('chatHistory');
+            chatHistory.innerHTML = state.chatHistory.map(chat => `
+                <div class="message ${chat.sender}">
+                    <div class="message-content">
+                        ${chat.message.replace(/\n/g, '<br>')}
+                        <span class="message-time">
+                            ${chat.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function scrollToBottom() {
+            const chatHistory = document.getElementById('chatHistory');
+            setTimeout(() => {
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            }, 100);
+        }
+
+        // Input Handlers
+        function handleMicClick() {
+            if (!state.sttEnabled) {
+                updateVoiceStatus('Voice input is disabled. Click "Voice Input" toggle to enable.');
+                return;
+            }
+
+            if (!recognition) {
+                updateVoiceStatus('Speech recognition not available in this browser');
+                return;
+            }
+
+            if (state.isRecording) {
+                // Stop recording
+                recognition.stop();
+                state.isRecording = false;
+                updateRecordingUI();
+            } else {
+                // Start recording
+                try {
+                    state.isRecording = true;
+                    updateRecordingUI();
+                    recognition.start();
+                } catch (error) {
+                    console.error('Error starting recognition:', error);
+                    state.isRecording = false;
+                    updateRecordingUI();
+                    updateVoiceStatus('Error starting voice recognition. Please try again.');
+                }
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                handleSend();
+            }
+        }
+
+        function handleSend() {
+            const input = document.getElementById('textInput');
+            const userInput = input.value.trim();
+            
+            if (!userInput) return;
+
+            // Stop any ongoing speech
+            if (synthesis) {
+                synthesis.cancel();
+                state.isSpeaking = false;
+                document.getElementById('speakingIndicator').classList.remove('active');
+            }
+            
+            addMessage('user', userInput);
+            input.value = '';
+            
+            // Platform selection logic
+            if (state.currentLesson === 0 && !state.platformSelectionMade) {
+                const platform = handlePlatformSelection(userInput);
+                
+                if (platform) {
+                    state.selectedPlatform = platform;
+                    state.platformSelectionMade = true;
+                    
+                    setTimeout(() => {
+                        const responseKey = platform === 'all' ? 'all' : platform;
+                        addMessage('ai', lessonContent[0].responses[responseKey]);
+                        
+                        if (platform !== 'all') {
+                            updatePlatformDisplay();
+                        }
+                        
+                        setTimeout(() => {
+                            state.currentLesson = 1;
+                            addPoints(10);
+                            const nextLesson = lessonContent[1];
+                            addMessage('ai', `${nextLesson.greeting}\n\n${nextLesson.info}\n\n${nextLesson.question}`);
+                            updateCurrentLesson();
+                            updateCourseMap();
+                        }, 1500);
+                    }, 500);
+                } else {
+                    setTimeout(() => {
+                        addMessage('ai', lessonContent[0].responses.default);
+                    }, 500);
+                }
+                return;
+            }
+            
+            // Regular lesson flow
+            const lesson = generatePlatformSpecificContent(state.currentLesson, state.selectedPlatform);
+            const result = checkAnswer(userInput, state.currentLesson);
+            
+            if (result === 'correct') {
+                const pointsEarned = state.currentLesson === 1 ? 20 : state.currentLesson <= 3 ? 25 : 30;
+                
+                setTimeout(() => {
+                    addMessage('ai', lesson.responses.correct);
+                    addPoints(pointsEarned);
+                    
+                    if (state.currentLesson < lessons.length - 1) {
+                        setTimeout(() => {
+                            state.completedLessons.push(state.currentLesson);
+                            state.currentLesson++;
+                            const nextContent = generatePlatformSpecificContent(state.currentLesson, state.selectedPlatform);
+                            addMessage('ai', `${nextContent.greeting}\n\n${nextContent.info}\n\n${nextContent.question}`);
+                            updateCurrentLesson();
+                            updateCourseMap();
+                            showExampleButton();
+                        }, 2000);
+                    } else {
+                        setTimeout(() => {
+                            state.completedLessons.push(state.currentLesson);
+                            const platformName = state.selectedPlatform === 'all' ? 'multi-cloud' : 
+                                               platforms[state.selectedPlatform]?.name || 'cloud';
+                            addMessage('ai', `🎊 Congratulations! You've completed the Cloud Fundamentals course! You have a strong foundation in ${platformName} concepts. Keep building, deploying, and scaling in the cloud! Your journey has just begun! 🚀☁️`);
+                            updateCourseMap();
+                        }, 2000);
+                    }
+                }, 500);
+            } else {
+                setTimeout(() => {
+                    addMessage('ai', lesson.responses.wrong);
+                }, 500);
+            }
+        }
+
+        function handlePlatformSelection(input) {
+            const inputLower = input.toLowerCase();
+            
+            if (inputLower.includes('aws') || inputLower.includes('amazon')) {
+                return 'aws';
+            } else if (inputLower.includes('gcp') || inputLower.includes('google')) {
+                return 'gcp';
+            } else if (inputLower.includes('azure') || inputLower.includes('microsoft')) {
+                return 'azure';
+            } else if (inputLower.includes('all') || inputLower.includes('multiple')) {
+                return 'all';
+            }
+            
+            return null;
+        }
+
+        function checkAnswer(input, lessonId) {
+            const lesson = generatePlatformSpecificContent(lessonId, state.selectedPlatform);
+            if (!lesson || !lesson.correctAnswer) return 'wrong';
+            
+            const inputLower = input.toLowerCase();
+            
+            if (inputLower.includes(lesson.correctAnswer)) {
+                return 'correct';
+            }
+            
+            // Accept variations
+            if (lessonId === 3 && (inputLower.includes('autoscale') || inputLower.includes('auto scale'))) {
+                return 'correct';
+            }
+            
+            if (lessonId === 4 && (inputLower.includes('automatic') || inputLower.includes('scaling') || 
+                                  inputLower.includes('pay') || inputLower.includes('cost'))) {
+                return 'correct';
+            }
+            
+            if (lessonId === 5 && (inputLower.includes('least') || inputLower.includes('minimum'))) {
+                return 'correct';
+            }
+            
+            return 'wrong';
+        }
+
+        function generatePlatformSpecificContent(lessonId, platform) {
+            if (!platform || lessonId < 2) return lessonContent[lessonId];
+            
+            const platformData = platforms[platform];
+            if (!platformData) return lessonContent[lessonId];
+            
+            if (lessonId === 2) {
+                return {
+                    greeting: `Lesson 2: Cloud Storage with ${platformData.name}. Storage is fundamental to any cloud application. Let's explore how ${platform.toUpperCase()} handles data storage!`,
+                    info: `📦 ${platformData.tools.storage.name}:\n${platformData.tools.storage.desc}\n\n🔑 Key Features:\n• Unlimited scalability\n• 99.999999999% (11 nines) durability\n• Multiple storage classes for cost optimization\n• Built-in security and compliance\n\n💡 Common Use Cases:\n- Website hosting and static content\n- Backup and disaster recovery\n- Data lakes for analytics\n- Application data storage\n\n${platform === 'aws' ? '📝 Example: Creating an S3 bucket to host a static website' : platform === 'gcp' ? '📝 Example: Using Cloud Storage for video streaming' : '📝 Example: Storing user uploads in Blob Storage'}`,
+                    question: `Real-world scenario: Your company needs to store millions of user photos that are rarely accessed but must be kept for compliance. Which ${platform.toUpperCase()} storage approach would you recommend for cost optimization?`,
+                    correctAnswer: platform === 'aws' ? 'glacier' : platform === 'gcp' ? 'coldline' : 'cool',
+                    responses: {
+                        correct: `Brilliant! ${platform === 'aws' ? 'S3 Glacier' : platform === 'gcp' ? 'Coldline storage' : 'Cool Blob Storage'} is perfect for archival data - much cheaper than standard storage for rarely accessed files. That's 25 points for smart cost optimization! 💰`,
+                        hint: `Look for the storage class designed for archival or infrequently accessed data in ${platformData.name}...`,
+                        wrong: "Good thinking about storage! But for rarely accessed archival data, there's a more cost-effective option. Want a hint?"
+                    }
+                };
+            }
+            
+            if (lessonId === 3) {
+                return {
+                    greeting: `Lesson 3: Compute Services with ${platformData.name}. Compute power is the engine of the cloud. Let's learn how to deploy virtual machines and containers!`,
+                    info: `💻 ${platformData.tools.compute.name}:\n${platformData.tools.compute.desc}\n\n⚙️ What You Can Do:\n• Launch virtual machines in minutes\n• Choose from hundreds of instance types\n• Auto-scale based on demand\n• Pay only for what you use\n\n🎯 Instance Types:\n- General Purpose: Balanced compute, memory, networking\n- Compute Optimized: High-performance processors\n- Memory Optimized: Large datasets in memory\n- Storage Optimized: High disk throughput\n\n${platform === 'aws' ? '📝 Example: Launching an EC2 t3.micro for a web server' : platform === 'gcp' ? '📝 Example: Creating a Compute Engine e2-micro VM' : '📝 Example: Deploying a B1s Virtual Machine for development'}`,
+                    question: `You need to host a web application that typically handles 100 users but spikes to 10,000 during product launches. What ${platform.toUpperCase()} feature should you use?`,
+                    correctAnswer: 'auto scaling',
+                    responses: {
+                        correct: `Perfect! Auto Scaling (or Autoscaling) automatically adjusts capacity to maintain performance and minimize costs. During spikes, it adds instances; during quiet times, it scales down. That's 30 points! 📈`,
+                        hint: "Think about a feature that automatically adds or removes compute resources based on demand...",
+                        wrong: "Good thought! But there's a feature that automatically handles these traffic spikes. Would you like a hint?"
+                    }
+                };
+            }
+            
+            if (lessonId === 4) {
+                return {
+                    greeting: `Lesson 4: Serverless Computing with ${platformData.name}. Serverless doesn't mean "no servers" - it means you don't manage them! Let's explore this game-changing approach.`,
+                    info: `⚡ ${platformData.tools.serverless.name}:\n${platformData.tools.serverless.desc}\n\n✨ Serverless Benefits:\n• No server management\n• Automatic scaling from zero to thousands\n• Pay per execution (not per hour)\n• Built-in high availability\n\n🎯 Perfect For:\n- API backends\n- Data processing pipelines\n- Scheduled tasks (cron jobs)\n- Event-driven workflows\n- Image/video processing\n\n${platform === 'aws' ? '📝 Example: Lambda function triggered by S3 upload to resize images' : platform === 'gcp' ? '📝 Example: Cloud Function processing Pub/Sub messages' : '📝 Example: Azure Function triggered by blob storage'}`,
+                    question: `Your startup needs to process uploaded images (resize, compress) but uploads are unpredictable - sometimes 10/day, sometimes 1000/hour. Why is ${platformData.tools.serverless.name} ideal for this?`,
+                    correctAnswer: 'scale',
+                    responses: {
+                        correct: `Exactly! Serverless scales automatically from zero to thousands, and you only pay for actual executions - perfect for unpredictable workloads! That's 30 points! ⚡`,
+                        hint: "Think about how serverless handles variable workloads and what you pay for...",
+                        wrong: "You're on the right track! Consider the automatic scaling and pay-per-use nature of serverless. Want a hint?"
+                    }
+                };
+            }
+            
+            return lessonContent[lessonId];
+        }
+
+        function handleQuickAction(action) {
+            const lesson = generatePlatformSpecificContent(state.currentLesson, state.selectedPlatform);
+            
+            if (action === 'hint' && lesson?.responses?.hint) {
+                addMessage('ai', lesson.responses.hint);
+            } else if (action === 'repeat' && lesson?.question) {
+                addMessage('ai', lesson.question);
+            } else if (action === 'example' && state.currentLesson > 1 && state.selectedPlatform) {
+                const platformData = platforms[state.selectedPlatform];
+                if (state.currentLesson === 2) {
+                    addMessage('ai', `💡 Example Use Case: A photo-sharing app uses ${platformData.tools.storage.name} to store user uploads. When a user uploads a photo, it's automatically stored with encryption and can be accessed globally via CDN for fast loading.`);
+                } else if (state.currentLesson === 3) {
+                    addMessage('ai', `💡 Example Use Case: An e-commerce site runs on ${platformData.tools.compute.name}. During Black Friday, traffic increases 10x, and auto-scaling automatically adds more instances to handle the load.`);
+                }
+            }
+        }
+
+        // Points and Tracking
+        function addPoints(points) {
+            state.points += points;
+            // Points tracked but not displayed prominently
+        }
+
+        // UI Updates
+        function updateCurrentLesson() {
+            const lesson = lessons[state.currentLesson];
+            document.getElementById('currentLessonDisplay').innerHTML = `
+                <div class="current-lesson-title">${lesson.title}</div>
+                <div class="current-lesson-concept">${lesson.concept}</div>
+                <div class="current-lesson-desc">${lesson.description}</div>
+            `;
+            
+            const progress = ((state.currentLesson + 1) / lessons.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('progressPercentage').textContent = `${Math.round(progress)}%`;
+            
+            // Update flashcard and resources for new lesson
+            updateFlashcard();
+            updateResources();
+        }
+
+        function updatePlatformDisplay() {
+            const platformBadge = document.getElementById('platformBadge');
+            const platformCard = document.getElementById('platformCard');
+            const toolsCard = document.getElementById('toolsCard');
+            
+            if (state.selectedPlatform && state.selectedPlatform !== 'all') {
+                const platform = platforms[state.selectedPlatform];
+                
+                platformBadge.textContent = `${platform.icon} ${platform.name}`;
+                platformBadge.className = `platform-badge ${platform.color} active`;
+                
+                platformCard.style.display = 'block';
+                document.getElementById('platformDisplay').innerHTML = `
+                    <span class="platform-icon">${platform.icon}</span>
+                    <div>
+                        <div class="platform-name">${platform.name}</div>
+                        <div class="platform-subtitle">Customized learning path</div>
+                    </div>
+                `;
+                
+                toolsCard.style.display = 'block';
+                document.getElementById('toolsGrid').innerHTML = Object.values(platform.tools).map(tool => `
+                    <div class="tool-item">
+                        <div class="tool-name">${tool.name}</div>
+                        <div class="tool-desc">${tool.desc}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function showExampleButton() {
+            if (state.currentLesson > 1 && state.selectedPlatform) {
+                document.getElementById('exampleBtn').style.display = 'block';
+            }
+        }
+
+        function updateCourseMap() {
+            const courseMap = document.getElementById('courseMap');
+            courseMap.innerHTML = lessons.map((lesson, index) => {
+                let status = 'locked';
+                let number = index + 1;
+                
+                if (index === state.currentLesson) {
+                    status = 'current';
+                } else if (state.completedLessons.includes(index)) {
+                    status = 'completed';
+                    number = '✓';
+                }
+                
+                return `
+                    <div class="lesson-item ${status}">
+                        <div class="lesson-content">
+                            <div class="lesson-number">${number}</div>
+                            <div class="lesson-info">
+                                <div class="lesson-title">${lesson.title}</div>
+                                <div class="lesson-concept">${lesson.concept}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Initialize on load
+        window.onload = init;
+    </script>
+</body>
+</html>

@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KN Learning Dashboard - Your Personal Learning Journey</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --dark-bg: #0f0f23;
+            --card-bg: #1a1a2e;
+            --card-hover: #252542;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0c0;
+            --accent-blue: #4facfe;
+            --accent-pink: #f093fb;
+            --accent-purple: #667eea;
+            --accent-green: #00f2fe;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(240, 147, 251, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(79, 172, 254, 0.1) 0%, transparent 50%);
+            animation: backgroundShift 20s ease infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            padding: 30px 0;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-section h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(10deg); }
+        }
+
+        .logo-section p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .user-stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 15px 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-number {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--success-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Welcome Banner */
+        .welcome-banner {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.2;
+            animation: pulse 4s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+
+        .welcome-banner h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-banner p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-bar-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            height: 12px;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--success-gradient);
+            border-radius: 12px;
+            transition: width 1s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Category Tabs */
+        .category-tabs {
+            display: flex;
+            gap: 15px;
+            margin: 40px 0;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .category-tabs::-webkit-scrollbar-track {
+            background: var(--card-bg);
+            border-radius: 4px;
+        }
+
+        .category-tabs::-webkit-scrollbar-thumb {
+            background: var(--accent-purple);
+            border-radius: 4px;
+        }
+
+        .tab-button {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 15px 30px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .tab-button:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-purple);
+            color: var(--text-primary);
+        }
+
+        .tab-button.active {
+            background: var(--primary-gradient);
+            border-color: transparent;
+            color: var(--text-primary);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .tab-button.active::before {
+            left: 0;
+        }
+
+        /* Course Grid */
+        .category-section {
+            display: none;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .category-section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-header h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .view-all-btn {
+            background: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-all-btn:hover {
+            border-color: var(--accent-purple);
+            color: var(--text-primary);
+            transform: translateX(5px);
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .course-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .course-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-color: var(--accent-purple);
+        }
+
+        .course-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            position: relative;
+        }
+
+        .course-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+        }
+
+        .difficulty-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .course-content {
+            padding: 25px;
+        }
+
+        .course-category {
+            color: var(--accent-blue);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .course-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .course-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .course-lessons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .course-lessons::before {
+            content: '📚';
+            font-size: 1.2rem;
+        }
+
+        .start-btn {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Achievement Section */
+        .achievements {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 50px 0;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .achievements h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .achievement-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .achievement-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-5px) rotate(2deg);
+            border-color: var(--accent-purple);
+        }
+
+        .achievement-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .achievement-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .achievement-card:nth-child(1) .achievement-icon { animation-delay: 0s; }
+        .achievement-card:nth-child(2) .achievement-icon { animation-delay: 0.2s; }
+        .achievement-card:nth-child(3) .achievement-icon { animation-delay: 0.4s; }
+        .achievement-card:nth-child(4) .achievement-icon { animation-delay: 0.6s; }
+        .achievement-card:nth-child(5) .achievement-icon { animation-delay: 0.8s; }
+
+        .achievement-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .achievement-progress {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .locked {
+            opacity: 0.4;
+            filter: grayscale(100%);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            margin-top: 60px;
+        }
+
+        footer a {
+            color: var(--accent-purple);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--accent-pink);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .logo-section h1 {
+                font-size: 2rem;
+            }
+
+            .user-stats {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .welcome-banner {
+                padding: 30px 20px;
+            }
+
+            .welcome-banner h2 {
+                font-size: 1.5rem;
+            }
+
+            .category-tabs {
+                flex-wrap: nowrap;
+                overflow-x: scroll;
+            }
+
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .achievement-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+        }
+
+        /* Loading Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .course-card {
+            animation: fadeIn 0.6s ease;
+        }
+
+        .course-card:nth-child(1) { animation-delay: 0.1s; }
+        .course-card:nth-child(2) { animation-delay: 0.2s; }
+        .course-card:nth-child(3) { animation-delay: 0.3s; }
+        .course-card:nth-child(4) { animation-delay: 0.4s; }
+        .course-card:nth-child(5) { animation-delay: 0.5s; }
+        .course-card:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1>🌟 KN Learning</h1>
+                    <p>Free Learning for Everyone • No Registration Required</p>
+                </div>
+                <div class="user-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">15</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">42</div>
+                        <div class="stat-label">Hours Learned</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Streak Days 🔥</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+            <h2>Welcome Back! Ready to Continue Your Journey?</h2>
+            <p>You're making amazing progress! Keep up the momentum and unlock new achievements.</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar" style="width: 65%;"></div>
+            </div>
+            <div class="progress-text">Overall Progress: 65% • 28 of 43 lessons completed</div>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+            <button class="tab-button active" data-category="esl">📖 ESL (English Learning)</button>
+            <button class="tab-button" data-category="tech">💻 AI & Cloud Technologies</button>
+            <button class="tab-button" data-category="wellness">💪 Well & Health</button>
+            <button class="tab-button" data-category="all">🌐 All Courses</button>
+        </div>
+
+        <!-- ESL Category -->
+        <div class="category-section active" id="esl">
+            <div class="section-header">
+                <h3>📖 ESL (English Learning)</h3>
+                <button class="view-all-btn">View All →</button>
+            </div>
+            <div class="course-grid">
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div class="difficulty-badge">Beginner</div>
+                        <div class="course-badge">Popular</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">English Foundation</div>
+                        <h4 class="course-title">Reading Practice - Beginner</h4>
+                        <p class="course-description">Start your English journey with interactive reading exercises designed for non-native speakers.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">8 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <div class="difficulty-badge">Beginner</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">English Foundation</div>
+                        <h4 class="course-title">Writing Basics</h4>
+                        <p class="course-description">Master the fundamentals of English writing with guided exercises and instant feedback.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">10 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <div class="difficulty-badge">Intermediate</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">English Foundation</div>
+                        <h4 class="course-title">Grammar & Vocabulary Builder</h4>
+                        <p class="course-description">Strengthen your grammar skills and expand your vocabulary with practical examples.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">12 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <div class="difficulty-badge">Advanced</div>
+                        <div class="course-badge">New</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">English Advanced</div>
+                        <h4 class="course-title">Reading Practice - Advanced</h4>
+                        <p class="course-description">Challenge yourself with complex texts and refine your comprehension skills.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">10 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        <div class="difficulty-badge">Intermediate</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">English Communication</div>
+                        <h4 class="course-title">Speaking & Pronunciation</h4>
+                        <p class="course-description">Improve your speaking confidence with guided practice and pronunciation tips.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">9 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+                        <div class="difficulty-badge">All Levels</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">English Practice</div>
+                        <h4 class="course-title">Daily Conversation Practice</h4>
+                        <p class="course-description">Practice everyday English conversations for real-world situations.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">15 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tech Category -->
+        <div class="category-section" id="tech">
+            <div class="section-header">
+                <h3>💻 AI & Cloud Technologies</h3>
+                <button class="view-all-btn">View All →</button>
+            </div>
+            <div class="course-grid">
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div class="difficulty-badge">Beginner</div>
+                        <div class="course-badge">Featured</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">AI & Technology</div>
+                        <h4 class="course-title">Prompt Engineering Mastery</h4>
+                        <p class="course-description">Learn to craft effective prompts for ChatGPT, Claude, and other AI tools.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">12 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <div class="difficulty-badge">Beginner to Advanced</div>
+                        <div class="course-badge">Popular</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">Cloud Computing</div>
+                        <h4 class="course-title">KN Cloud Learning</h4>
+                        <p class="course-description">Comprehensive course covering AWS, GCP, and Azure with interactive quizzes.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">10 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <div class="difficulty-badge">Intermediate</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">AI Fundamentals</div>
+                        <h4 class="course-title">Introduction to Machine Learning</h4>
+                        <p class="course-description">Understand ML basics with practical examples and hands-on projects.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">14 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <div class="difficulty-badge">Beginner</div>
+                        <div class="course-badge">New</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">Cloud Platforms</div>
+                        <h4 class="course-title">AWS Fundamentals</h4>
+                        <p class="course-description">Get started with Amazon Web Services and cloud infrastructure.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">11 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        <div class="difficulty-badge">Intermediate</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">AI Applications</div>
+                        <h4 class="course-title">AI for Real-World Problems</h4>
+                        <p class="course-description">Apply AI concepts to solve practical business and technical challenges.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">13 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+                        <div class="difficulty-badge">Advanced</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">Cloud Architecture</div>
+                        <h4 class="course-title">Multi-Cloud Strategy</h4>
+                        <p class="course-description">Design and implement solutions across AWS, Azure, and GCP.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">16 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wellness Category -->
+        <div class="category-section" id="wellness">
+            <div class="section-header">
+                <h3>💪 Well & Health</h3>
+                <button class="view-all-btn">View All →</button>
+            </div>
+            <div class="course-grid">
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div class="difficulty-badge">All Levels</div>
+                        <div class="course-badge">Popular</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">Mental Wellness</div>
+                        <h4 class="course-title">Mindfulness & Meditation</h4>
+                        <p class="course-description">Learn meditation techniques to reduce stress and improve focus.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">8 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <div class="difficulty-badge">Beginner</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">Physical Health</div>
+                        <h4 class="course-title">Home Fitness Essentials</h4>
+                        <p class="course-description">Build strength and flexibility with no-equipment workouts.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">12 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <div class="difficulty-badge">All Levels</div>
+                        <div class="course-badge">New</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">Nutrition</div>
+                        <h4 class="course-title">Healthy Eating Fundamentals</h4>
+                        <p class="course-description">Understand nutrition basics and build sustainable eating habits.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">10 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        <div class="difficulty-badge">Intermediate</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">Mental Wellness</div>
+                        <h4 class="course-title">Stress Management Strategies</h4>
+                        <p class="course-description">Practical techniques to manage daily stress and anxiety.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">9 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        <div class="difficulty-badge">All Levels</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">Sleep & Recovery</div>
+                        <h4 class="course-title">Better Sleep Habits</h4>
+                        <p class="course-description">Improve sleep quality with evidence-based strategies.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">7 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-image" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+                        <div class="difficulty-badge">Beginner</div>
+                    </div>
+                    <div class="course-content">
+                        <div class="course-category">Holistic Health</div>
+                        <h4 class="course-title">Work-Life Balance Mastery</h4>
+                        <p class="course-description">Create harmony between work, health, and personal life.</p>
+                        <div class="course-meta">
+                            <span class="course-lessons">11 Lessons</span>
+                            <button class="start-btn">Start Learning</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Courses Category -->
+        <div class="category-section" id="all">
+            <div class="section-header">
+                <h3>🌐 All Available Courses</h3>
+                <button class="view-all-btn">Filter & Sort →</button>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 30px;">Browse all courses across ESL, AI & Cloud Technologies, and Well & Health categories.</p>
+            <div class="course-grid">
+                <!-- This would show all courses combined - for brevity, showing message -->
+                <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-secondary);">
+                    <h3 style="margin-bottom: 15px;">🎓 Explore All Courses</h3>
+                    <p>Use the category tabs above to browse courses by topic, or use the search feature to find specific content.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements Section -->
+        <div class="achievements">
+            <h3>🏆 Your Achievements</h3>
+            <div class="achievement-grid">
+                <div class="achievement-card">
+                    <div class="achievement-icon">🎯</div>
+                    <div class="achievement-title">First Steps</div>
+                    <div class="achievement-progress">Completed</div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">📚</div>
+                    <div class="achievement-title">Bookworm</div>
+                    <div class="achievement-progress">15/20 Lessons</div>
+                </div>
+                <div class="achievement-card">
+                    <div class="achievement-icon">🔥</div>
+                    <div class="achievement-title">On Fire</div>
+                    <div class="achievement-progress">8 Day Streak</div>
+                </div>
+                <div class="achievement-card locked">
+                    <div class="achievement-icon">⭐</div>
+                    <div class="achievement-title">Master</div>
+                    <div class="achievement-progress">Locked</div>
+                </div>
+                <div class="achievement-card locked">
+                    <div class="achievement-icon">👑</div>
+                    <div class="achievement-title">Expert</div>
+                    <div class="achievement-progress">Locked</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>Built with ❤️ for learners everywhere • <a href="https://github.com/kneo99/KN-Learning-Ecosystem" target="_blank">View on GitHub</a></p>
+            <p style="margin-top: 10px;">No registration • No payment • Just learning 🌟</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        const tabs = document.querySelectorAll('.tab-button');
+        const sections = document.querySelectorAll('.category-section');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and sections
+                tabs.forEach(t => t.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+
+                // Add active class to clicked tab
+                tab.classList.add('active');
+
+                // Show corresponding section
+                const category = tab.dataset.category;
+                document.getElementById(category).classList.add('active');
+            });
+        });
+
+        // Animate progress bar on load
+        window.addEventListener('load', () => {
+            const progressBar = document.querySelector('.progress-bar');
+            progressBar.style.width = '0%';
+            setTimeout(() => {
+                progressBar.style.width = '65%';
+            }, 500);
+        });
+
+        // Course card click handlers (placeholder)
+        document.querySelectorAll('.course-card, .start-btn').forEach(element => {
+            element.addEventListener('click', (e) => {
+                if (e.target.classList.contains('start-btn')) {
+                    e.stopPropagation();
+                    alert('🚀 Starting course! In a full implementation, this would navigate to the course page.');
+                } else {
+                    alert('📖 Course details coming soon! Click "Start Learning" to begin.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

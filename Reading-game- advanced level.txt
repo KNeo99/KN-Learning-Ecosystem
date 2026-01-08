@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Reading Practice Game for K3</title>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+```
+body {
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 20px;
+}
+
+.container {
+background: white;
+border-radius: 30px;
+box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+max-width: 900px;
+width: 100%;
+padding: 40px;
+}
+
+.consent-screen {
+text-align: center;
+}
+
+.shield-icon {
+font-size: 120px;
+margin-bottom: 20px;
+}
+
+h1 {
+font-size: 3em;
+color: #333;
+margin-bottom: 30px;
+}
+
+h2 {
+font-size: 2em;
+color: #4c51bf;
+margin-bottom: 20px;
+}
+
+.info-box {
+background: #ebf4ff;
+border-radius: 20px;
+padding: 30px;
+margin: 20px 0;
+text-align: left;
+}
+
+.privacy-box {
+background: #fef9e7;
+border: 4px solid #f39c12;
+border-radius: 20px;
+padding: 30px;
+margin: 20px 0;
+text-align: left;
+}
+
+.warning-box {
+background: #fee;
+border: 4px solid #e74c3c;
+border-radius: 15px;
+padding: 20px;
+margin: 20px 0;
+font-weight: bold;
+}
+
+.error-box {
+background: #fff3cd;
+border: 4px solid #ff9800;
+border-radius: 20px;
+padding: 30px;
+margin: 20px 0;
+}
+
+.step-box {
+background: white;
+border-radius: 15px;
+padding: 20px;
+margin: 15px 0;
+}
+
+.step-box h4 {
+font-size: 1.3em;
+margin-bottom: 10px;
+}
+
+.btn-primary {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+border: none;
+padding: 25px 50px;
+font-size: 1.8em;
+font-weight: bold;
+border-radius: 25px;
+cursor: pointer;
+width: 100%;
+margin: 20px 0;
+transition: transform 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) {
+transform: scale(1.05);
+}
+
+.btn-primary:disabled {
+opacity: 0.6;
+cursor: wait;
+}
+
+.btn-reload {
+background: #3498db;
+color: white;
+border: none;
+padding: 15px 30px;
+font-size: 1.2em;
+font-weight: bold;
+border-radius: 15px;
+cursor: pointer;
+width: 100%;
+margin: 10px 0;
+}
+
+.game-screen {
+display: none;
+}
+
+.game-header {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+padding: 30px;
+border-radius: 20px 20px 0 0;
+text-align: center;
+margin: -40px -40px 30px -40px;
+}
+
+.messages-area {
+height: 400px;
+overflow-y: auto;
+padding: 20px;
+margin: 20px 0;
+background: linear-gradient(to bottom, #f8f9fa, white);
+border-radius: 15px;
+}
+
+.message {
+margin: 15px 0;
+display: flex;
+}
+
+.message.bot {
+justify-content: flex-start;
+}
+
+.message.user {
+justify-content: flex-end;
+}
+
+.message-content {
+max-width: 75%;
+padding: 20px;
+border-radius: 20px;
+font-size: 1.3em;
+font-weight: 600;
+box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.message.bot .message-content {
+background: white;
+color: #333;
+border: 3px solid #e0e0e0;
+}
+
+.message.user .message-content {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+}
+
+.score-display {
+background: #f3e5f5;
+border: 3px solid #9c27b0;
+border-radius: 15px;
+padding: 20px;
+margin: 20px 0;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.stars {
+display: flex;
+gap: 10px;
+}
+
+.star {
+font-size: 2em;
+}
+
+.mic-button {
+background: linear-gradient(135deg, #4caf50 0%, #2196f3 100%);
+color: white;
+border: none;
+padding: 30px;
+font-size: 2em;
+font-weight: bold;
+border-radius: 25px;
+cursor: pointer;
+width: 100%;
+margin: 20px 0;
+transition: all 0.3s;
+}
+
+.mic-button:hover:not(:disabled) {
+transform: scale(1.05);
+}
+
+.mic-button.recording {
+background: #e74c3c;
+animation: pulse 1s infinite;
+}
+
+.mic-button:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+}
+
+@keyframes pulse {
+0%, 100% { opacity: 1; }
+50% { opacity: 0.7; }
+}
+
+.spinner {
+display: inline-block;
+width: 30px;
+height: 30px;
+border: 4px solid white;
+border-top-color: transparent;
+border-radius: 50%;
+animation: spin 1s linear infinite;
+margin-right: 10px;
+}
+
+@keyframes spin {
+to { transform: rotate(360deg); }
+}
+
+.status-text {
+text-align: center;
+font-size: 1.2em;
+font-weight: bold;
+color: #666;
+margin-top: 10px;
+}
+
+ul {
+list-style: none;
+padding-left: 0;
+}
+
+li {
+margin: 15px 0;
+font-size: 1.2em;
+}
+
+.hidden {
+display: none;
+}
+</style>
+```
+
+</head>
+<body>
+<div class="container">
+<!-- CONSENT SCREEN -->
+<div id="consentScreen" class="consent-screen">
+<div class="shield-icon">🛡️</div>
+<h1>Voice Recording Consent</h1>
+<h1>--Advanced Level--</h1>
+
+```
+<div class="info-box">
+<h2>🎤 How This Works:</h2>
+<ul>
+<li><strong>1.</strong> Bot reads stories out loud to you</li>
+<li><strong>2.</strong> You speak back what you heard</li>
+<li><strong>3.</strong> Bot checks how accurate you are</li>
+<li><strong>4.</strong> Practice 3 times to improve!</li>
+</ul>
+</div>
+
+<div class="privacy-box">
+<h2>🔒 Privacy & Recording Policy</h2>
+<ul>
+<li>✓ <strong>Your voice WILL be recorded</strong> during this game</li>
+<li>✓ Recording used <strong>ONLY</strong> to check reading accuracy</li>
+<li>✓ <strong>NOT SAVED or STORED</strong> - deleted immediately</li>
+<li>✓ Recording <strong>stops when you exit</strong> this game</li>
+<li>✓ Your <strong>privacy is protected</strong></li>
+</ul>
+</div>
+
+<div class="warning-box">
+⚠️ By clicking "I Agree" below, you consent to voice recording ONLY during this game session.
+No recordings are saved after you exit.
+</div>
+
+<div id="errorBox" class="error-box hidden"></div>
+
+<button id="agreeBtn" class="btn-primary">
+🎤 I Agree - Allow Voice Recording
+</button>
+
+<p style="color: #666; margin-top: 20px;">
+✓ Works best on Chrome, Microsoft Edge, or Safari<br>
+✓ Make sure your microphone is connected
+</p>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="gameScreen" class="game-screen">
+<div class="game-header">
+<h1 style="color: white; margin: 0;">🎤 Voice Reading Practice</h1>
+<p style="font-size: 1.2em; margin-top: 10px;">Speak to practice reading!</p>
+</div>
+
+<div id="scoreDisplay" class="score-display hidden">
+<span id="attemptText" style="font-size: 1.3em; font-weight: bold;">🎯 Attempt: 1 of 3</span>
+<div class="stars">
+<span class="star" id="star1">⭐</span>
+<span class="star" id="star2">⭐</span>
+<span class="star" id="star3">⭐</span>
+</div>
+</div>
+
+<div id="messagesArea" class="messages-area"></div>
+
+<button id="micButton" class="mic-button hidden">
+🎤 CLICK TO SPEAK
+</button>
+
+<div id="statusText" class="status-text"></div>
+</div>
+</div>
+
+<script>
+// Game state
+let recognition = null;
+let isListening = false;
+let waitingForVoice = false;
+let gameState = 'start';
+let userName = '';
+let currentPassageIndex = 0;
+let attempt = 0;
+let scores = [];
+
+const passages = [
+
+{
+    "title": "The Voyage",
+    "text": "The ship sailed into the misty horizon, its sails full and proud. Waves crashed against the hull, echoing like distant drums. The crew moved with practiced ease, each man knowing his role. As the sun dipped below the sea, the captain studied his map with furrowed brow. He knew the journey ahead would test their courage and resolve. Still, they pressed forward into the unknown."
+  },
+  {
+    "title": "The Underground Railroad",
+    "text": "Harriet crept through the woods under cover of darkness, her breath shallow and quick. Each rustling leaf felt like a warning, each shadow a threat. She carried no lantern, only hope and memory. The path was long, but freedom lay at its end. Behind her, chains and cruelty; ahead, dignity and choice. She would not turn back."
+  },
+  {
+    "title": "The Dust Bowl",
+    "text": "The wind howled across the barren plains, lifting dust into the sky like smoke. Crops had failed, and families packed their belongings into rusted trucks. Children coughed as the air thickened, their eyes stinging with grit. The land, once fertile, now seemed to reject life itself. Yet in the face of despair, neighbors shared what little they had. Survival became an act of quiet defiance."
+  },
+  {
+    "title": "The Awakening",
+    "text": "Elena stood at the edge of the cliff, the ocean roaring below her. For years, she had followed the rules, spoken softly, and never questioned. But something inside her had shifted, like a tide turning. The wind tugged at her coat, urging her forward. She closed her eyes and imagined a life of her own making. It was time to choose herself."
+  },
+  {
+    "title": "The Factory Floor",
+    "text": "Steam hissed from the pipes as gears clanked in rhythmic motion. Workers moved like clockwork, their faces blank with fatigue. The foreman barked orders, his voice lost in the din. Outside, the city grew rich on their labor, but inside, time stood still. Each hour was measured in sweat and silence. The machines never slept, and neither did their dreams."
+  },
+  {
+    "title": "The Letter",
+    "text": "James unfolded the yellowed paper with trembling hands. The ink had faded, but the words still burned. It was a letter from his grandfather, written during the war. He spoke of fear, of loyalty, and of love that survived the trenches. James read it aloud, his voice cracking with emotion. History had never felt so close."
+  },
+  {
+    "title": "The Trial",
+    "text": "The courtroom was silent as the judge entered, robes flowing like a shadow. The accused sat stiffly, eyes fixed on the floor. Witnesses whispered in the gallery, their stories tangled with doubt. The prosecutor spoke with fire, the defense with calm precision. Truth hung in the air, heavy and elusive. Justice, it seemed, was not always blind."
+  },
+  {
+    "title": "The March",
+    "text": "They walked together, shoulder to shoulder, their feet pounding the pavement in rhythm. Signs rose above the crowd, painted with hope and fury. Police watched from a distance, uncertain whether to protect or confront. Songs of unity echoed through the streets, old voices singing new truths. The movement was more than protest—it was a promise. Change was not coming; it had arrived."
+  },
+  {
+    "title": "The Library",
+    "text": "Dust floated in the sunlight as Clara wandered between the shelves. Each book held a world, waiting to be discovered. She ran her fingers along the spines, choosing one at random. The pages whispered secrets of kings, rebels, and dreamers. In that quiet space, she felt infinite. Knowledge was her sanctuary."
+  },
+  {
+    "title": "The Inventor",
+    "text": "Gears and wires littered the table, each piece part of a grand design. Theo worked late into the night, his hands stained with oil. He believed machines could make life better, not just easier. Critics called him foolish, but he saw possibility where others saw limits. His invention sparked, then hummed to life. A new era had begun."
+  },
+  {
+    "title": "The Storm",
+    "text": "Lightning split the sky as rain hammered the roof. Inside, the family huddled together, candles flickering in the dark. The power was out, but their stories kept the night alive. Grandmother spoke of storms from her youth, each tale a thread in their shared tapestry. Fear gave way to laughter, and silence to song. The storm passed, but the warmth remained."
+  },
+  {
+    "title": "The Protest",
+    "text": "Maria stood on the steps of city hall, her voice steady and clear. She spoke of injustice, of lives lost and futures stolen. The crowd listened, some with tears, others with clenched fists. Her words were not just speech—they were sparks. Cameras rolled, but she looked only at the people. Power, she knew, came from truth."
+  },
+  {
+    "title": "The Journey West",
+    "text": "Wagons creaked as they rolled across the plains, dust rising in their wake. Families clung to hope, chasing dreams of land and freedom. The sun scorched their backs, and wolves howled in the distance. Each mile was a test of grit and faith. They buried the old and welcomed the new. The frontier was harsh, but it was theirs to shape."
+  },
+  {
+    "title": "The Telescope",
+    "text": "Marcus adjusted the lens, peering into the vastness of space. Stars blinked like ancient eyes, watching silently from afar. He wondered what worlds lay beyond, what stories they held. Science gave him tools, but wonder gave him purpose. The universe was not just cold math—it was poetry. And he was learning to read it."
+  },
+  {
+    "title": "The Debate",
+    "text": "Two students stood at the podium, voices sharp with conviction. One argued for tradition, the other for change. The audience leaned in, caught between logic and emotion. Facts clashed with ideals, and silence followed each rebuttal. It was more than a contest—it was a mirror. In their words, the future wrestled with the past."
+  },
+  {
+    "title": "The Garden",
+    "text": "Rosa knelt in the soil, planting seeds with care. Each one held a promise of color and life. The garden had once been a battlefield, now reborn. Butterflies danced above the blossoms, and children laughed nearby. Nature, she believed, could heal what war had broken. Growth was her quiet rebellion."
+  },
+  {
+    "title": "The Clockmaker",
+    "text": "In a small shop tucked between alleys, the clockmaker worked in silence. His hands moved with precision, each tick a testament to time. Customers came and went, unaware of the stories hidden in gears. He remembered faces, voices, and moments long gone. Time passed, but he preserved it. His craft was memory made mechanical."
+  },
+  {
+    "title": "The Bridge",
+    "text": "Steel beams rose above the river, connecting two cities once divided. Engineers calculated every angle, every weight. But it was more than math—it was hope. People crossed it daily, unaware of its quiet strength. The bridge did not speak, but it united. It stood as proof that connection could be built."
+  },
+  {
+    "title": "The Letter from the Front",
+    "text": "The envelope was stained and torn, but inside lay words of love and longing. A soldier wrote to his sister, describing the mud, the fear, and the stars. He missed home, missed laughter, missed peace. Yet he believed in the cause, even as doubt crept in. She read it slowly, tears falling on the page. War had a voice, and it was tender."
+  },
+  {
+    "title": "The First Flight",
+    "text": "Engines roared as the plane lifted from the ground, trembling with possibility. Amelia gripped the controls, heart pounding with joy. Clouds surrounded her like cotton, and the earth shrank below. She had dreamed of this moment since childhood. The sky was no longer unreachable. She had become part of it."
+  }
+];
+
+// DOM elements
+const consentScreen = document.getElementById('consentScreen');
+const gameScreen = document.getElementById('gameScreen');
+const agreeBtn = document.getElementById('agreeBtn');
+const errorBox = document.getElementById('errorBox');
+const messagesArea = document.getElementById('messagesArea');
+const micButton = document.getElementById('micButton');
+const statusText = document.getElementById('statusText');
+const scoreDisplay = document.getElementById('scoreDisplay');
+const attemptText = document.getElementById('attemptText');
+
+// Add message to chat
+function addMessage(text, type) {
+const messageDiv = document.createElement('div');
+messageDiv.className = `message ${type}`;
+messageDiv.innerHTML = `<div class="message-content">${text}</div>`;
+messagesArea.appendChild(messageDiv);
+messagesArea.scrollTop = messagesArea.scrollHeight;
+}
+
+// Text to speech
+function speak(text) {
+if ('speechSynthesis' in window) {
+window.speechSynthesis.cancel();
+const utterance = new SpeechSynthesisUtterance(text);
+utterance.rate = 0.8;
+utterance.pitch = 1.2;
+utterance.volume = 1;
+window.speechSynthesis.speak(utterance);
+}
+}
+
+// Check accuracy
+function checkAccuracy(userText) {
+const currentPassage = passages[currentPassageIndex];
+const passageWords = currentPassage.text.toLowerCase().split(/\s+/);
+const userWords = userText.toLowerCase().split(/\s+/);
+
+let correctWords = 0;
+const minLength = Math.min(passageWords.length, userWords.length);
+
+for (let i = 0; i < minLength; i++) {
+const passageWord = passageWords[i].replace(/[.,!?]/g, '');
+const userWord = userWords[i].replace(/[.,!?]/g, '');
+if (passageWord === userWord) {
+correctWords++;
+}
+}
+
+const accuracy = Math.round((correctWords / passageWords.length) * 100);
+return { accuracy, correctWords, totalWords: passageWords.length };
+}
+
+// Update stars
+function updateStars() {
+for (let i = 1; i <= 3; i++) {
+const star = document.getElementById(`star${i}`);
+if (scores[i - 1] >= 70) {
+star.textContent = '⭐';
+star.style.color = '#ffd700';
+} else {
+star.textContent = '⭐';
+star.style.color = '#ddd';
+}
+}
+}
+
+// Handle voice input
+function handleVoiceInput(transcript) {
+addMessage(transcript, 'user');
+const currentPassage = passages[currentPassageIndex];
+
+if (gameState === 'getName') {
+userName = transcript;
+gameState = 'reading';
+
+setTimeout(() => addMessage(`Nice to meet you, ${transcript}! 😊`, 'bot'), 500);
+setTimeout(() => addMessage(`Let's practice reading together!`, 'bot'), 1500);
+setTimeout(() => addMessage(`Here's your first story: "${currentPassage.title}" 📖`, 'bot'), 2500);
+setTimeout(() => addMessage(`First, I'll read it to you. Listen carefully! 🔊`, 'bot'), 3500);
+
+setTimeout(() => {
+speak(currentPassage.text);
+addMessage(`"${currentPassage.text}"`, 'bot');
+}, 4500);
+
+setTimeout(() => {
+addMessage(`Now it's YOUR turn! Click the 🎤 button and read the story back to me!`, 'bot');
+waitingForVoice = true;
+micButton.classList.remove('hidden');
+statusText.textContent = '👆 Click the button above to speak';
+}, 9000);
+
+attempt = 1;
+scoreDisplay.classList.remove('hidden');
+attemptText.textContent = `🎯 Attempt: ${attempt} of 3`;
+
+} else if (gameState === 'reading') {
+const result = checkAccuracy(transcript);
+scores.push(result.accuracy);
+updateStars();
+
+setTimeout(() => addMessage(`Let me check your reading... ⏳`, 'bot'), 2500);
+
+setTimeout(() => {
+if (result.accuracy >= 90) {
+addMessage(`🌟 Excellent! You got ${result.correctWords} out of ${result.totalWords} words correct! Score: ${result.accuracy}%`, 'bot');
+speak(`Excellent reading! ${result.accuracy} percent correct!`);
+} else if (result.accuracy >= 70) {
+addMessage(`👍 Good job! You got ${result.correctWords} out of ${result.totalWords} words. Score: ${result.accuracy}%`, 'bot');
+speak(`Good job! ${result.accuracy} percent. Try again!`);
+} else {
+addMessage(`💪 You got ${result.correctWords} out of ${result.totalWords} words. Score: ${result.accuracy}%. Let's practice more!`, 'bot');
+speak(`${result.accuracy} percent. Keep practicing!`);
+}
+
+if (attempt >= 3) {
+const avgScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+gameState = 'complete';
+
+setTimeout(() => addMessage(`🎉 Great job, ${userName}! You completed all 3 attempts!`, 'bot'), 2500);
+setTimeout(() => addMessage(`📊 Your scores: Try 1: ${scores[0]}%, Try 2: ${scores[1]}%, Try 3: ${scores[2]}%`, 'bot'), 3500);
+setTimeout(() => addMessage(`📈 Average Score: ${avgScore}%`, 'bot'), 4500);
+
+setTimeout(() => {
+if (avgScore >= 90) {
+addMessage(`🌟🌟🌟 Amazing! You're an excellent reader!`, 'bot');
+speak('Amazing work! You are an excellent reader!');
+} else if (avgScore >= 70) {
+addMessage(`⭐⭐ Great work! Keep reading!`, 'bot');
+speak('Great work! Keep reading!');
+} else {
+addMessage(`⭐ Good effort! Keep practicing!`, 'bot');
+speak('Good effort! Keep practicing!');
+}
+}, 5500);
+
+setTimeout(() => {
+addMessage(`Would you like to try another story? Click 🎤 and say "next story" or "try again"!`, 'bot');
+waitingForVoice = true;
+micButton.classList.remove('hidden');
+statusText.textContent = '👆 Say "next story" or "try again"';
+}, 7000);
+
+} else {
+attempt++;
+attemptText.textContent = `🎯 Attempt: ${attempt} of 3`;
+
+setTimeout(() => addMessage(`Let's try again! This is attempt ${attempt} of 3.`, 'bot'), 2500);
+setTimeout(() => {
+addMessage(`Listen to the story again: 🔊`, 'bot');
+speak(currentPassage.text);
+addMessage(`"${currentPassage.text}"`, 'bot');
+}, 3500);
+
+setTimeout(() => {
+addMessage(`Click the 🎤 button and read it back to me!`, 'bot');
+waitingForVoice = true;
+micButton.classList.remove('hidden');
+statusText.textContent = '👆 Click the button above to speak';
+}, 7500);
+}
+}, 2000);
+
+} else if (gameState === 'complete') {
+const input = transcript.toLowerCase();
+
+if (input.includes('next')) {
+currentPassageIndex = (currentPassageIndex + 1) % passages.length;
+attempt = 1;
+scores = [];
+gameState = 'reading';
+updateStars();
+attemptText.textContent = `🎯 Attempt: ${attempt} of 3`;
+
+const nextPassage = passages[currentPassageIndex];
+setTimeout(() => addMessage(`Great! New story: "${nextPassage.title}" 📖`, 'bot'), 500);
+setTimeout(() => {
+addMessage(`Listen! 🔊`, 'bot');
+speak(nextPassage.text);
+addMessage(`"${nextPassage.text}"`, 'bot');
+}, 2000);
+setTimeout(() => {
+addMessage(`Your turn! Click 🎤 and read!`, 'bot');
+waitingForVoice = true;
+micButton.classList.remove('hidden');
+statusText.textContent = '👆 Click the button above to speak';
+}, 6000);
+
+} else if (input.includes('again') || input.includes('try')) {
+attempt = 1;
+scores = [];
+gameState = 'reading';
+updateStars();
+attemptText.textContent = `🎯 Attempt: ${attempt} of 3`;
+
+setTimeout(() => addMessage(`Okay! Let's try "${passages[currentPassageIndex].title}" again! 📖`, 'bot'), 500);
+setTimeout(() => {
+addMessage(`Listen: 🔊`, 'bot');
+speak(passages[currentPassageIndex].text);
+addMessage(`"${passages[currentPassageIndex].text}"`, 'bot');
+}, 2000);
+setTimeout(() => {
+addMessage(`Click 🎤 and read!`, 'bot');
+waitingForVoice = true;
+micButton.classList.remove('hidden');
+statusText.textContent = '👆 Click the button above to speak';
+}, 6000);
+} else {
+setTimeout(() => {
+addMessage(`I didn't understand. Say "next story" or "try again"! 🎤`, 'bot');
+waitingForVoice = true;
+micButton.classList.remove('hidden');
+statusText.textContent = '👆 Say "next story" or "try again"';
+}, 500);
+}
+}
+}
+
+// Handle consent button click
+agreeBtn.addEventListener('click', async function() {
+agreeBtn.disabled = true;
+agreeBtn.innerHTML = '<span class="spinner"></span> Processing...';
+errorBox.classList.add('hidden');
+
+// Check browser support
+if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+errorBox.textContent = '❌ Your browser does not support voice recognition. Please use Chrome, Edge, or Safari.';
+errorBox.classList.remove('hidden');
+agreeBtn.disabled = false;
+agreeBtn.innerHTML = '🎤 I Agree - Allow Voice Recording';
+return;
+}
+
+try {
+// Request microphone permission
+const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+stream.getTracks().forEach(track => track.stop());
+
+// Initialize speech recognition
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+recognition = new SpeechRecognition();
+recognition.continuous = false;
+recognition.interimResults = false;
+recognition.lang = 'en-US';
+
+recognition.onstart = () => {
+isListening = true;
+micButton.textContent = '🔴 RECORDING - SPEAK NOW!';
+micButton.classList.add('recording');
+statusText.textContent = '🔴 Listening to you...';
+addMessage('🔴 Listening! Speak now!', 'bot');
+};
+
+recognition.onresult = (event) => {
+const transcript = event.results[0][0].transcript;
+isListening = false;
+waitingForVoice = false;
+micButton.textContent = '🎤 CLICK TO SPEAK';
+micButton.classList.remove('recording');
+micButton.classList.add('hidden');
+statusText.textContent = '⏳ Please wait...';
+handleVoiceInput(transcript);
+};
+
+recognition.onend = () => {
+isListening = false;
+if (waitingForVoice) {
+micButton.textContent = '🎤 CLICK TO SPEAK';
+micButton.classList.remove('recording');
+}
+};
+
+recognition.onerror = (event) => {
+isListening = false;
+micButton.classList.remove('recording');
+if (event.error === 'no-speech') {
+addMessage("😕 I didn't hear anything. Click the mic and try again!", 'bot');
+micButton.classList.remove('hidden');
+statusText.textContent = '👆 Click the button and speak louder';
+} else if (event.error === 'not-allowed') {
+addMessage("❌ Microphone blocked. Please enable it in your browser settings.", 'bot');
+} else {
+addMessage(`⚠️ Error. Please try again!`, 'bot');
+micButton.classList.remove('hidden');
+}
+};
+
+// Show game screen
+consentScreen.style.display = 'none';
+gameScreen.style.display = 'block';
+
+// Start game
+setTimeout(() => {
+addMessage('👋 Welcome to Reading Practice!', 'bot');
+}, 500);
+
+setTimeout(() => {
+addMessage("What's your name? Click the 🎤 microphone button below and say your name!", 'bot');
+waitingForVoice = true;
+gameState = 'getName';
+micButton.classList.remove('hidden');
+statusText.textContent = '👆 Click the button above and say your name';
+}, 1500);
+
+} catch (error) {
+agreeBtn.disabled = false;
+agreeBtn.innerHTML = '🎤 I Agree - Allow Voice Recording';
+
+let errorHTML = '<h3 style="color: #e74c3c; font-size: 2em; margin-bottom: 20px;">⚠️ Microphone Access Denied</h3>';
+errorHTML += '<div class="step-box" style="background: #ebf4ff;"><h4>📍 Step 1: Look for Browser Popup</h4><p>When you click "I Agree", a popup appears at the top of your browser asking for microphone permission.</p></div>';
+errorHTML += '<div class="step-box" style="background: #d5f4e6;"><h4>✅ Step 2: Click "Allow"</h4><p>In the popup, click the <strong>"Allow"</strong> button (NOT "Block").</p></div>';
+errorHTML += '<div class="step-box" style="background: #f3e5f5;"><h4>🔧 Step 3: Manual Enable (if you missed it)</h4><ul style="text-align: left;"><li><strong>Chrome/Edge:</strong> Click 🔒 in address bar → Site settings → Microphone → Allow</li><li><strong>Safari:</strong> Safari menu → Settings for This Website → Microphone → Allow</li><li><strong>Firefox:</strong> Click 🔒 → Click ">" next to Blocked → Allow Microphone</li></ul></div>';
+errorHTML += '<div class="step-box" style="background: #fff9c4;"><h4>🔄 Step 4: Reload & Try Again</h4><p>After allowing microphone, <strong>reload this page</strong> and click "I Agree" again.</p></div>';
+errorHTML += '<button class="btn-reload" onclick="window.location.reload()">🔄 Reload Page Now</button>';
+
+errorBox.innerHTML = errorHTML;
+errorBox.classList.remove('hidden');
+}
+});
+
+// Handle microphone button click
+micButton.addEventListener('click', function() {
+if (!isListening && recognition) {
+try {
+recognition.start();
+} catch (error) {
+console.error('Recognition error:', error);
+}
+}
+});
+</script>
+```
+
+</body>
+</html>

@@ -1,0 +1,3 @@
+Dual Panel - Fundamental AI Learning
+
+Please create a dual panel Fundamental AI learning practice for beginner users to learn basic AI by selecting an AI provider including OpenAI - ChatGPT, Microsoft - Co-Pilot, Google - Gemini, or Anthropic - Claude.   Provide learning road map with gamification, flashcard and dynamic references to the selected AI model.    Please start with simple dual panel learning tool with instructions and provide questions to drive the learning journey.  Please take time build step-by-step plan and create the html codes to run in browser.   The learning process should be driven by a bot and interactive interface to allow user to type or voice as input.

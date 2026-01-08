@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fairy Tale English Teacher 🌟</title>
+    <style>
+        :root {
+            --primary-blue: #4A90E2;
+            --primary-pink: #FF6B9D;
+            --primary-yellow: #FFD166;
+            --primary-green: #06D6A0;
+            --primary-purple: #9D4EDD;
+            --bg-cream: #FFF8E7;
+            --bg-sky: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --text-dark: #2D3748;
+            --shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier', 'Courier New', monospace;
+            background: var(--bg-cream);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            font-style: normal;
+        }
+        
+        /* Floating background elements */
+        .bg-decoration {
+            position: fixed;
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: 0;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .bg-decoration:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            background: var(--primary-pink);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+        
+        .bg-decoration:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            background: var(--primary-blue);
+            top: 50%;
+            right: -50px;
+            animation-delay: 3s;
+        }
+        
+        .bg-decoration:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            background: var(--primary-yellow);
+            bottom: -80px;
+            left: 30%;
+            animation-delay: 6s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(5deg); }
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: slideDown 0.8s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { 
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            font-family: 'Courier', 'Courier New', monospace;
+            font-size: 3em;
+            color: var(--primary-purple);
+            text-shadow: 3px 3px 0 var(--primary-yellow),
+                         6px 6px 0 var(--primary-pink);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            font-style: normal;
+            font-weight: bold;
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .main-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, 
+                var(--primary-pink), 
+                var(--primary-yellow), 
+                var(--primary-green), 
+                var(--primary-blue),
+                var(--primary-purple));
+        }
+        
+        .story-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .story-card {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 3px solid transparent;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border-color: var(--primary-yellow);
+        }
+        
+        .story-card.active {
+            border-color: var(--primary-yellow);
+            box-shadow: 0 0 0 4px rgba(255, 209, 102, 0.3);
+        }
+        
+        .story-emoji {
+            font-size: 3em;
+            display: block;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .story-card h3 {
+            font-family: 'Courier', 'Courier New', monospace;
+            font-size: 1.2em;
+            font-weight: bold;
+            font-style: normal;
+        }
+        
+        .story-display {
+            background: linear-gradient(135deg, #FFF5E1 0%, #FFE4E1 100%);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            min-height: 250px;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .story-display.active {
+            display: block;
+        }
+        
+        .story-image {
+            text-align: center;
+            font-size: 8em;
+            margin-bottom: 20px;
+            animation: scaleIn 0.6s ease-out;
+        }
+        
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .story-text {
+            font-size: 1.5em;
+            line-height: 1.8;
+            color: var(--text-dark);
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .story-text.highlight {
+            background: var(--primary-yellow);
+            padding: 2px 8px;
+            border-radius: 5px;
+            animation: highlight 0.5s ease-out;
+        }
+        
+        @keyframes highlight {
+            from { background: transparent; }
+            to { background: var(--primary-yellow); }
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            font-family: 'Courier', 'Courier New', monospace;
+            font-size: 1.2em;
+            font-weight: bold;
+            font-style: normal;
+            padding: 18px 35px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-pink), var(--primary-purple));
+            color: white;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+            color: white;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, var(--primary-yellow), #FFA500);
+            color: var(--text-dark);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .question-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 20px;
+            display: none;
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .question-section.active {
+            display: block;
+        }
+        
+        .question-text {
+            font-size: 1.5em;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .answer-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .answer-btn {
+            font-size: 1.5em;
+            padding: 20px 50px;
+            border-radius: 20px;
+            border: 4px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-family: 'Courier', 'Courier New', monospace;
+            font-style: normal;
+        }
+        
+        .answer-btn.yes {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+        
+        .answer-btn.no {
+            background: linear-gradient(135deg, #f44336, #da190b);
+            color: white;
+        }
+        
+        .answer-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
+        .answer-btn.correct {
+            border-color: #FFD700;
+            animation: pulse 0.5s ease-out;
+        }
+        
+        .answer-btn.incorrect {
+            animation: shake 0.5s ease-out;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .feedback {
+            text-align: center;
+            font-size: 2em;
+            margin-top: 20px;
+            font-weight: 700;
+            display: none;
+            animation: bounceIn 0.6s ease-out;
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .feedback.active {
+            display: block;
+        }
+        
+        .feedback.correct {
+            color: var(--primary-green);
+        }
+        
+        .feedback.incorrect {
+            color: var(--primary-pink);
+        }
+        
+        .progress-bar {
+            background: #E0E0E0;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, var(--primary-green), var(--primary-blue));
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+        
+        .vocabulary-section {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .vocabulary-section.active {
+            display: block;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .vocab-word {
+            background: linear-gradient(135deg, var(--primary-yellow), #FFE4B5);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .vocab-word h3 {
+            font-size: 2em;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-family: 'Courier', 'Courier New', monospace;
+            font-style: normal;
+            font-weight: bold;
+        }
+        
+        .vocab-word p {
+            font-size: 1.2em;
+            color: #666;
+        }
+        
+        .recording-indicator {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            font-size: 1.2em;
+            color: var(--primary-pink);
+            font-weight: 600;
+        }
+        
+        .recording-indicator.active {
+            display: flex;
+        }
+        
+        .recording-dot {
+            width: 15px;
+            height: 15px;
+            background: var(--primary-pink);
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5em;
+            display: none;
+            z-index: 1000;
+            animation: celebrate 1s ease-out;
+        }
+        
+        @keyframes celebrate {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.5) rotate(180deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .celebration.active {
+            display: block;
+        }
+        
+        .status-message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .status-message.active {
+            display: block;
+        }
+        
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .story-text {
+                font-size: 1.2em;
+            }
+            
+            .btn {
+                font-size: 1em;
+                padding: 15px 25px;
+            }
+            
+            .answer-btn {
+                font-size: 1.2em;
+                padding: 15px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-decoration"></div>
+    <div class="bg-decoration"></div>
+    <div class="bg-decoration"></div>
+    
+    <div class="celebration" id="celebration">🎉</div>
+    
+    <div class="container">
+        <header>
+            <h1>🌟 Fairy Tale English 🌟</h1>
+            <p class="subtitle">Let's learn English together!</p>
+        </header>
+        
+        <div class="main-card">
+            <h2 style="text-align: center; color: var(--primary-purple); margin-bottom: 25px; font-size: 2em;">Choose Your Story</h2>
+            
+            <div class="story-selection">
+                <div class="story-card" data-story="goldilocks">
+                    <span class="story-emoji">🐻</span>
+                    <h3>Goldilocks</h3>
+                </div>
+                <div class="story-card" data-story="pigs">
+                    <span class="story-emoji">🐷</span>
+                    <h3>Three Little Pigs</h3>
+                </div>
+                <div class="story-card" data-story="riding">
+                    <span class="story-emoji">🐺</span>
+                    <h3>Little Red Riding Hood</h3>
+                </div>
+            </div>
+            
+            <div class="status-message" id="statusMessage"></div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="story-display" id="storyDisplay">
+                <div class="story-image" id="storyImage"></div>
+                <div class="story-text" id="storyText"></div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn btn-primary" id="readBtn" onclick="readStory()" disabled>
+                    <span>📖</span> Read to Me
+                </button>
+                <button class="btn btn-success" id="listenBtn" onclick="startListening()" disabled>
+                    <span>🎤</span> I'll Read It!
+                </button>
+                <button class="btn btn-warning" id="nextBtn" onclick="nextPart()" disabled>
+                    <span>➡️</span> Next
+                </button>
+            </div>
+            
+            <div class="recording-indicator" id="recordingIndicator">
+                <div class="recording-dot"></div>
+                <span>Listening to you...</span>
+            </div>
+            
+            <div class="question-section" id="questionSection">
+                <div class="question-text" id="questionText"></div>
+                <div class="answer-buttons">
+                    <button class="answer-btn yes" onclick="answerQuestion(true)">
+                        👍 YES
+                    </button>
+                    <button class="answer-btn no" onclick="answerQuestion(false)">
+                        👎 NO
+                    </button>
+                </div>
+            </div>
+            
+            <div class="feedback" id="feedback"></div>
+            
+            <div class="vocabulary-section" id="vocabularySection">
+                <h2 style="text-align: center; color: var(--primary-blue); margin-bottom: 20px;">📚 New Words to Learn</h2>
+                <div id="vocabularyList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Story database with progressive learning structure
+        const stories = {
+            goldilocks: {
+                title: "Goldilocks and the Three Bears",
+                emoji: "🐻",
+                parts: [
+                    {
+                        image: "🏠🐻",
+                        text: "Once upon a time, three bears lived in a house.",
+                        question: "Do three bears live in the house?",
+                        answer: true,
+                        vocabulary: [{word: "bears", meaning: "big furry animals"}, {word: "house", meaning: "a place to live"}]
+                    },
+                    {
+                        image: "👧🚶‍♀️",
+                        text: "A little girl named Goldilocks walked in the forest.",
+                        question: "Is the girl's name Goldilocks?",
+                        answer: true,
+                        vocabulary: [{word: "walked", meaning: "moved with feet"}, {word: "forest", meaning: "place with many trees"}]
+                    },
+                    {
+                        image: "🚪👧",
+                        text: "She found the bears' house and went inside.",
+                        question: "Did Goldilocks stay outside?",
+                        answer: false,
+                        vocabulary: [{word: "found", meaning: "discovered something"}, {word: "inside", meaning: "in the house"}]
+                    },
+                    {
+                        image: "🥣🍲",
+                        text: "She tried the porridge. One was too hot, one too cold, one just right!",
+                        question: "Were all the porridges the same?",
+                        answer: false,
+                        vocabulary: [{word: "porridge", meaning: "warm breakfast food"}, {word: "just right", meaning: "perfect"}]
+                    }
+                ],
+                congratulations: "🎉 Amazing! You finished Goldilocks! 🎉"
+            },
+            pigs: {
+                title: "The Three Little Pigs",
+                emoji: "🐷",
+                parts: [
+                    {
+                        image: "🐷🐷🐷",
+                        text: "Three little pigs wanted to build houses.",
+                        question: "Are there three pigs?",
+                        answer: true,
+                        vocabulary: [{word: "pigs", meaning: "pink farm animals"}, {word: "build", meaning: "make something"}]
+                    },
+                    {
+                        image: "🏚️",
+                        text: "The first pig built a house of straw.",
+                        question: "Did the first pig use straw?",
+                        answer: true,
+                        vocabulary: [{word: "straw", meaning: "dry grass"}, {word: "first", meaning: "number one"}]
+                    },
+                    {
+                        image: "🐺💨",
+                        text: "A big bad wolf came and huffed and puffed!",
+                        question: "Is the wolf friendly?",
+                        answer: false,
+                        vocabulary: [{word: "wolf", meaning: "wild dog animal"}, {word: "huffed", meaning: "blew air hard"}]
+                    },
+                    {
+                        image: "🏠💪",
+                        text: "The brick house was strong. The wolf could not blow it down!",
+                        question: "Was the brick house strong?",
+                        answer: true,
+                        vocabulary: [{word: "brick", meaning: "red building blocks"}, {word: "strong", meaning: "very powerful"}]
+                    }
+                ],
+                congratulations: "🎉 Wonderful! You finished Three Little Pigs! 🎉"
+            },
+            riding: {
+                title: "Little Red Riding Hood",
+                emoji: "🐺",
+                parts: [
+                    {
+                        image: "👧🧺",
+                        text: "A little girl wore a red hood. She had a basket.",
+                        question: "Did the girl wear a red hood?",
+                        answer: true,
+                        vocabulary: [{word: "hood", meaning: "hat that covers head"}, {word: "basket", meaning: "container to carry things"}]
+                    },
+                    {
+                        image: "👵🏠",
+                        text: "She walked to Grandma's house in the woods.",
+                        question: "Did she visit her grandma?",
+                        answer: true,
+                        vocabulary: [{word: "grandma", meaning: "mother's mother"}, {word: "woods", meaning: "forest with trees"}]
+                    },
+                    {
+                        image: "🐺😈",
+                        text: "A big wolf wanted to trick her.",
+                        question: "Is the wolf nice?",
+                        answer: false,
+                        vocabulary: [{word: "trick", meaning: "fool someone"}, {word: "wolf", meaning: "wild animal like a dog"}]
+                    },
+                    {
+                        image: "🪓🎉",
+                        text: "A woodcutter saved them! They were safe and happy.",
+                        question: "Did everyone end up safe?",
+                        answer: true,
+                        vocabulary: [{word: "saved", meaning: "rescued from danger"}, {word: "safe", meaning: "not in danger"}]
+                    }
+                ],
+                congratulations: "🎉 Excellent! You finished Little Red Riding Hood! 🎉"
+            }
+        };
+
+        let currentStory = null;
+        let currentPart = 0;
+        let recognition = null;
+        let synthesis = window.speechSynthesis;
+        let isReading = false;
+
+        // Initialize speech recognition
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript.toLowerCase();
+                    const currentText = document.getElementById('storyText').textContent.toLowerCase();
+                    
+                    document.getElementById('recordingIndicator').classList.remove('active');
+                    
+                    // Simple matching - check if key words are present
+                    const accuracy = calculateAccuracy(transcript, currentText);
+                    
+                    if (accuracy > 0.5) {
+                        showFeedback(true, "🌟 Great job reading! 🌟");
+                        celebrate();
+                        setTimeout(() => {
+                            document.getElementById('nextBtn').disabled = false;
+                            showQuestion();
+                        }, 1500);
+                    } else {
+                        showFeedback(false, "💪 Try again! You can do it! 💪");
+                        setTimeout(() => {
+                            document.getElementById('listenBtn').disabled = false;
+                        }, 2000);
+                    }
+                };
+                
+                recognition.onerror = function(event) {
+                    document.getElementById('recordingIndicator').classList.remove('active');
+                    showStatus('Please try again. Make sure your microphone is working!', 'error');
+                    document.getElementById('listenBtn').disabled = false;
+                };
+                
+                recognition.onend = function() {
+                    document.getElementById('recordingIndicator').classList.remove('active');
+                };
+            } else {
+                showStatus('Speech recognition is not supported in this browser. Please use Chrome or Edge.', 'error');
+            }
+        }
+
+        function calculateAccuracy(spoken, original) {
+            // Simple word matching algorithm for young learners
+            const spokenWords = spoken.toLowerCase().split(/\s+/);
+            const originalWords = original.toLowerCase().split(/\s+/);
+            
+            let matches = 0;
+            spokenWords.forEach(word => {
+                if (originalWords.some(origWord => origWord.includes(word) || word.includes(origWord))) {
+                    matches++;
+                }
+            });
+            
+            return matches / Math.max(spokenWords.length, originalWords.length);
+        }
+
+        function selectStory(storyId) {
+            currentStory = stories[storyId];
+            currentPart = 0;
+            
+            // Remove active class from all cards
+            document.querySelectorAll('.story-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to selected card
+            const selectedCard = document.querySelector(`[data-story="${storyId}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('active');
+            }
+            
+            document.getElementById('readBtn').disabled = false;
+            document.getElementById('nextBtn').disabled = false; // Enable Next button to allow skipping
+            document.getElementById('storyDisplay').classList.add('active');
+            document.getElementById('questionSection').classList.remove('active');
+            document.getElementById('vocabularySection').classList.remove('active');
+            
+            updateProgress();
+            displayStoryPart();
+            
+            showStatus('Great choice! Click "Read to Me" to start! 📖', 'success');
+        }
+
+        function displayStoryPart() {
+            if (!currentStory) return;
+            
+            const part = currentStory.parts[currentPart];
+            document.getElementById('storyImage').textContent = part.image;
+            document.getElementById('storyText').textContent = part.text;
+            
+            document.getElementById('listenBtn').disabled = true;
+            // Keep Next button enabled so users can skip steps
+            // document.getElementById('nextBtn').disabled = true;
+            document.getElementById('questionSection').classList.remove('active');
+            document.getElementById('feedback').classList.remove('active');
+        }
+
+        function readStory() {
+            if (!currentStory || isReading) return;
+            
+            isReading = true;
+            document.getElementById('readBtn').disabled = true;
+            
+            const part = currentStory.parts[currentPart];
+            const utterance = new SpeechSynthesisUtterance(part.text);
+            
+            // Configure voice for children - slower, clearer
+            utterance.rate = 0.8;
+            utterance.pitch = 1.1;
+            utterance.volume = 1;
+            
+            // Try to use a friendly voice
+            const voices = synthesis.getVoices();
+            const preferredVoice = voices.find(voice => 
+                voice.name.includes('Female') || 
+                voice.name.includes('Google US English') ||
+                voice.name.includes('Microsoft Zira')
+            );
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+            
+            utterance.onend = function() {
+                isReading = false;
+                document.getElementById('readBtn').disabled = false;
+                document.getElementById('listenBtn').disabled = false;
+                showStatus('Now it\'s your turn! Click "I\'ll Read It!" 🎤', 'success');
+            };
+            
+            synthesis.speak(utterance);
+        }
+
+        function startListening() {
+            if (!recognition) {
+                initSpeechRecognition();
+            }
+            
+            if (!recognition) {
+                showStatus('Microphone not available. Please enable it in your browser settings.', 'error');
+                return;
+            }
+            
+            document.getElementById('listenBtn').disabled = true;
+            document.getElementById('recordingIndicator').classList.add('active');
+            
+            try {
+                recognition.start();
+            } catch (error) {
+                showStatus('Please wait a moment and try again.', 'error');
+                document.getElementById('recordingIndicator').classList.remove('active');
+                document.getElementById('listenBtn').disabled = false;
+            }
+        }
+
+        function showQuestion() {
+            const part = currentStory.parts[currentPart];
+            document.getElementById('questionText').textContent = part.question;
+            document.getElementById('questionSection').classList.add('active');
+            
+            // Read the question aloud
+            const utterance = new SpeechSynthesisUtterance(part.question);
+            utterance.rate = 0.8;
+            utterance.pitch = 1.1;
+            synthesis.speak(utterance);
+        }
+
+        function answerQuestion(answer) {
+            const part = currentStory.parts[currentPart];
+            const correct = answer === part.answer;
+            
+            // Visual feedback on buttons
+            const buttons = document.querySelectorAll('.answer-btn');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if ((btn.classList.contains('yes') && answer === true) || 
+                    (btn.classList.contains('no') && answer === false)) {
+                    btn.classList.add(correct ? 'correct' : 'incorrect');
+                }
+            });
+            
+            if (correct) {
+                showFeedback(true, "🎉 Perfect! That's correct! 🎉");
+                celebrate();
+                setTimeout(() => {
+                    showVocabulary();
+                    buttons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.classList.remove('correct', 'incorrect');
+                    });
+                }, 2000);
+            } else {
+                showFeedback(false, "💭 Oops! Try again! 💭");
+                setTimeout(() => {
+                    buttons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.classList.remove('correct', 'incorrect');
+                    });
+                    document.getElementById('feedback').classList.remove('active');
+                }, 2000);
+            }
+        }
+
+        function showVocabulary() {
+            const part = currentStory.parts[currentPart];
+            const vocabList = document.getElementById('vocabularyList');
+            vocabList.innerHTML = '';
+            
+            part.vocabulary.forEach(vocab => {
+                const vocabDiv = document.createElement('div');
+                vocabDiv.className = 'vocab-word';
+                vocabDiv.innerHTML = `
+                    <h3>${vocab.word}</h3>
+                    <p>${vocab.meaning}</p>
+                `;
+                vocabList.appendChild(vocabDiv);
+                
+                // Read vocabulary aloud
+                setTimeout(() => {
+                    const utterance = new SpeechSynthesisUtterance(
+                        `${vocab.word}. ${vocab.meaning}`
+                    );
+                    utterance.rate = 0.7;
+                    synthesis.speak(utterance);
+                }, 500);
+            });
+            
+            document.getElementById('vocabularySection').classList.add('active');
+            document.getElementById('questionSection').classList.remove('active');
+            
+            // Enable next button after showing vocabulary
+            setTimeout(() => {
+                document.getElementById('nextBtn').disabled = false;
+            }, 1000);
+        }
+
+        function nextPart() {
+            currentPart++;
+            
+            if (currentPart >= currentStory.parts.length) {
+                // Story completed!
+                showCompletion();
+                return;
+            }
+            
+            updateProgress();
+            displayStoryPart();
+            document.getElementById('vocabularySection').classList.remove('active');
+            // Keep Next button enabled so users can skip steps
+            // document.getElementById('nextBtn').disabled = true;
+            
+            // Auto-read next part
+            setTimeout(() => {
+                readStory();
+            }, 500);
+        }
+
+        function resetToStorySelection() {
+            // Clear current story state
+            currentStory = null;
+            currentPart = 0;
+            
+            // Remove active class from all story cards
+            document.querySelectorAll('.story-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Clear and hide story display content
+            document.getElementById('storyImage').textContent = '';
+            document.getElementById('storyText').textContent = '';
+            document.getElementById('storyDisplay').classList.remove('active');
+            
+            // Hide other sections
+            document.getElementById('questionSection').classList.remove('active');
+            document.getElementById('vocabularySection').classList.remove('active');
+            document.getElementById('feedback').classList.remove('active');
+            
+            // Reset progress bar
+            document.getElementById('progressFill').style.width = '0%';
+            
+            // Disable control buttons
+            document.getElementById('readBtn').disabled = true;
+            document.getElementById('listenBtn').disabled = true;
+            document.getElementById('nextBtn').disabled = true;
+            
+            // Show welcome message
+            showStatus('👋 Great job! Choose another story to continue learning!', 'success');
+        }
+
+        function showCompletion() {
+            // Keep story display visible and show completion message
+            const storyDisplay = document.getElementById('storyDisplay');
+            storyDisplay.classList.add('active');
+            storyDisplay.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <div style="font-size: 5em; margin-bottom: 20px;">🏆🎉🌟</div>
+                    <h2 style="color: var(--primary-purple); font-size: 2.5em; margin-bottom: 15px; font-family: 'Courier', 'Courier New', monospace; font-style: normal; font-weight: bold;">
+                        ${currentStory.congratulations}
+                    </h2>
+                    <p style="font-size: 1.5em; color: var(--text-dark); margin-bottom: 30px; font-family: 'Courier', 'Courier New', monospace; font-style: normal;">
+                        You are an amazing reader! 
+                    </p>
+                    <p style="font-size: 1.2em; color: var(--primary-blue); font-family: 'Courier', 'Courier New', monospace; font-style: normal;">
+                        Returning to story selection in <span id="countdown">20</span> seconds...
+                    </p>
+                </div>
+            `;
+            
+            // Hide control buttons during completion
+            document.getElementById('readBtn').style.display = 'none';
+            document.getElementById('listenBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            
+            celebrate();
+            
+            // Congratulatory speech
+            const utterance = new SpeechSynthesisUtterance(
+                "Congratulations! You finished the story! You are an amazing reader!"
+            );
+            utterance.rate = 0.8;
+            utterance.pitch = 1.2;
+            synthesis.speak(utterance);
+            
+            // Countdown timer
+            let secondsLeft = 20;
+            const countdownElement = document.getElementById('countdown');
+            const countdownInterval = setInterval(() => {
+                secondsLeft--;
+                if (countdownElement) {
+                    countdownElement.textContent = secondsLeft;
+                }
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+            
+            // Automatically return to story selection after 20 seconds
+            setTimeout(() => {
+                // Restore control buttons
+                document.getElementById('readBtn').style.display = 'flex';
+                document.getElementById('listenBtn').style.display = 'flex';
+                document.getElementById('nextBtn').style.display = 'flex';
+                
+                // Restore story display structure
+                storyDisplay.innerHTML = `
+                    <div class="story-image" id="storyImage"></div>
+                    <div class="story-text" id="storyText"></div>
+                `;
+                
+                resetToStorySelection();
+            }, 20000);
+        }
+
+        function updateProgress() {
+            if (!currentStory) return;
+            const progress = ((currentPart + 1) / currentStory.parts.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function showFeedback(correct, message) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.className = 'feedback active ' + (correct ? 'correct' : 'incorrect');
+        }
+
+        function celebrate() {
+            const celebration = document.getElementById('celebration');
+            celebration.classList.add('active');
+            setTimeout(() => {
+                celebration.classList.remove('active');
+            }, 1000);
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('statusMessage');
+            status.textContent = message;
+            status.className = 'status-message active ' + type;
+            setTimeout(() => {
+                status.classList.remove('active');
+            }, 4000);
+        }
+
+        // Initialize speech synthesis voices
+        window.speechSynthesis.onvoiceschanged = function() {
+            window.speechSynthesis.getVoices();
+        };
+
+        // Initialize on load
+        window.onload = function() {
+            initSpeechRecognition();
+            showStatus('👋 Hello! Choose a story to begin your English adventure!', 'success');
+            
+            // Add iOS-compatible touch event listeners to story cards
+            document.querySelectorAll('.story-card').forEach(card => {
+                const storyId = card.getAttribute('data-story');
+                
+                // Handle both click and touch events for iOS compatibility
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    selectStory(storyId);
+                });
+                
+                card.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    selectStory(storyId);
+                });
+            });
+        };
+    </script>
+</body>
+</html>

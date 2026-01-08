@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Reading Practice - Advanced</title>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 20px;
+}
+
+.container {
+background: white;
+border-radius: 30px;
+box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+max-width: 900px;
+width: 100%;
+padding: 40px;
+}
+
+.consent-screen {
+text-align: center;
+}
+
+.shield-icon {
+font-size: 120px;
+margin-bottom: 20px;
+}
+
+h1 {
+font-size: 3em;
+color: #333;
+margin-bottom: 30px;
+}
+
+h2 {
+font-size: 2em;
+color: #4c51bf;
+margin-bottom: 20px;
+}
+
+.info-box {
+background: #ebf4ff;
+border-radius: 20px;
+padding: 30px;
+margin: 20px 0;
+text-align: left;
+}
+
+.privacy-box {
+background: #fef9e7;
+border: 4px solid #f39c12;
+border-radius: 20px;
+padding: 30px;
+margin: 20px 0;
+text-align: left;
+}
+
+.warning-box {
+background: #fee;
+border: 4px solid #e74c3c;
+border-radius: 15px;
+padding: 20px;
+margin: 20px 0;
+font-weight: bold;
+}
+
+.error-box {
+background: #fff3cd;
+border: 4px solid #ff9800;
+border-radius: 20px;
+padding: 30px;
+margin: 20px 0;
+}
+
+.step-box {
+background: white;
+border-radius: 15px;
+padding: 20px;
+margin: 15px 0;
+}
+
+.step-box h4 {
+font-size: 1.3em;
+margin-bottom: 10px;
+}
+
+.btn-primary {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+border: none;
+padding: 25px 50px;
+font-size: 1.8em;
+font-weight: bold;
+border-radius: 25px;
+cursor: pointer;
+width: 100%;
+margin: 20px 0;
+transition: transform 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) {
+transform: scale(1.05);
+}
+
+.btn-primary:disabled {
+opacity: 0.6;
+cursor: wait;
+}
+
+.btn-reload {
+background: #3498db;
+color: white;
+border: none;
+padding: 15px 30px;
+font-size: 1.2em;
+font-weight: bold;
+border-radius: 15px;
+cursor: pointer;
+width: 100%;
+margin: 10px 0;
+}
+
+.game-screen {
+display: none;
+}
+
+.game-header {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+padding: 30px;
+border-radius: 20px 20px 0 0;
+text-align: center;
+margin: -40px -40px 30px -40px;
+}
+
+.messages-area {
+height: 400px;
+overflow-y: auto;
+padding: 20px;
+margin: 20px 0;
+background: linear-gradient(to bottom, #f8f9fa, white);
+border-radius: 15px;
+}
+
+.story-pinned {
+background: #fff9e6;
+border: 3px solid #ffc107;
+border-radius: 15px;
+padding: 20px;
+margin: 20px 0;
+font-size: 1.2em;
+line-height: 1.6;
+max-height: 200px;
+overflow-y: auto;
+}
+
+.story-pinned h3 {
+color: #f57c00;
+margin-bottom: 15px;
+font-size: 1.4em;
+}
+
+.message {
+margin: 15px 0;
+display: flex;
+}
+
+.message.bot {
+justify-content: flex-start;
+}
+
+.message.user {
+justify-content: flex-end;
+}
+
+.message-content {
+max-width: 75%;
+padding: 20px;
+border-radius: 20px;
+font-size: 1.3em;
+font-weight: 600;
+box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.message.bot .message-content {
+background: white;
+color: #333;
+border: 3px solid #e0e0e0;
+}
+
+.message.user .message-content {
+background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+color: white;
+}
+
+.score-display {
+background: #f3e5f5;
+border: 3px solid #9c27b0;
+border-radius: 15px;
+padding: 20px;
+margin: 20px 0;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.stars {
+display: flex;
+gap: 10px;
+}
+
+.star {
+font-size: 2em;
+}
+
+.button-group {
+display: flex;
+gap: 15px;
+margin: 20px 0;
+}
+
+.mic-button {
+background: linear-gradient(135deg, #4caf50 0%, #2196f3 100%);
+color: white;
+border: none;
+padding: 30px;
+font-size: 2em;
+font-weight: bold;
+border-radius: 25px;
+cursor: pointer;
+flex: 1;
+transition: all 0.3s;
+}
+
+.mic-button:hover:not(:disabled) {
+transform: scale(1.05);
+}
+
+.mic-button.recording {
+background: #e74c3c;
+animation: pulse 1s infinite;
+}
+
+.mic-button:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+}
+
+.done-button {
+background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+color: white;
+border: none;
+padding: 30px;
+font-size: 2em;
+font-weight: bold;
+border-radius: 25px;
+cursor: pointer;
+flex: 1;
+transition: all 0.3s;
+}
+
+.done-button:hover:not(:disabled) {
+transform: scale(1.05);
+}
+
+.done-button:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+}
+
+@keyframes pulse {
+0%, 100% { opacity: 1; }
+50% { opacity: 0.7; }
+}
+
+.spinner {
+display: inline-block;
+width: 30px;
+height: 30px;
+border: 4px solid white;
+border-top-color: transparent;
+border-radius: 50%;
+animation: spin 1s linear infinite;
+margin-right: 10px;
+}
+
+@keyframes spin {
+to { transform: rotate(360deg); }
+}
+
+.status-text {
+text-align: center;
+font-size: 1.2em;
+font-weight: bold;
+color: #666;
+margin-top: 10px;
+}
+
+ul {
+list-style: none;
+padding-left: 0;
+}
+
+li {
+margin: 15px 0;
+font-size: 1.2em;
+}
+
+.hidden {
+display: none;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<!-- CONSENT SCREEN -->
+<div id="consentScreen" class="consent-screen">
+<div class="shield-icon">🛡️</div>
+<h1>Voice Reading Practice</h1>
+<h1>--Advanced Level--</h1>
+
+<div class="info-box">
+<h2>🎤 How This Works:</h2>
+<ul>
+<li><strong>1.</strong> Bot reads stories out loud to you</li>
+<li><strong>2.</strong> Click "Start Reading" and speak what you heard</li>
+<li><strong>3.</strong> Click "Done Reading" when finished</li>
+<li><strong>4.</strong> Bot checks your accuracy and gives feedback</li>
+<li><strong>5.</strong> Practice 3 times to improve!</li>
+</ul>
+</div>
+
+<div class="privacy-box">
+<h2>🔒 Privacy & Recording Policy</h2>
+<ul>
+<li>✓ <strong>Your voice WILL be recorded</strong> during this game</li>
+<li>✓ Recording used <strong>ONLY</strong> to check reading accuracy</li>
+<li>✓ <strong>NOT SAVED or STORED</strong> - deleted immediately</li>
+<li>✓ Recording <strong>stops when you exit</strong> this game</li>
+<li>✓ Your <strong>privacy is protected</strong></li>
+</ul>
+</div>
+
+<div class="warning-box">
+⚠️ By clicking "I Agree" below, you consent to voice recording ONLY during this game session.
+No recordings are saved after you exit.
+</div>
+
+<div id="errorBox" class="error-box hidden"></div>
+
+<button id="agreeBtn" class="btn-primary">
+🎤 I Agree - Allow Microphone Access
+</button>
+
+<p style="color: #666; margin-top: 20px;">
+✓ Works best on Chrome, Microsoft Edge, or Safari<br>
+✓ Make sure your microphone is connected
+</p>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="gameScreen" class="game-screen">
+<div class="game-header">
+<h1 style="color: white; margin: 0;">🎤 Voice Reading Practice</h1>
+<p style="font-size: 1.2em; margin-top: 10px;">Read at your own pace!</p>
+</div>
+
+<div id="scoreDisplay" class="score-display">
+<span id="attemptText" style="font-size: 1.3em; font-weight: bold;">🎯 Attempt: 1 of 3</span>
+<div class="stars">
+<span class="star" id="star1">⭐</span>
+<span class="star" id="star2">⭐</span>
+<span class="star" id="star3">⭐</span>
+</div>
+</div>
+
+<div id="storyPinned" class="story-pinned hidden">
+<h3 id="storyTitle">📖 Story Title</h3>
+<div id="storyText">Story text will appear here...</div>
+</div>
+
+<div id="messagesArea" class="messages-area"></div>
+
+<div class="button-group" id="buttonGroup">
+<button id="micButton" class="mic-button">
+🎤 START READING
+</button>
+<button id="doneButton" class="done-button hidden">
+✅ DONE READING
+</button>
+</div>
+
+<div id="statusText" class="status-text"></div>
+</div>
+</div>
+
+<script>
+let recognition = null;
+let isListening = false;
+let gameState = 'reading';
+let currentPassageIndex = 0;
+let attempt = 1;
+let scores = [];
+let recordedTranscript = '';
+let micPermissionGranted = false;
+
+const passages = [
+{
+"title": "The Voyage",
+"text": "The ship sailed into the misty horizon, its sails full and proud. Waves crashed against the hull, echoing like distant drums. The crew moved with practiced ease, each man knowing his role. As the sun dipped below the sea, the captain studied his map with furrowed brow. He knew the journey ahead would test their courage and resolve. Still, they pressed forward into the unknown."
+},
+{
+"title": "The Underground Railroad",
+"text": "Harriet crept through the woods under cover of darkness, her breath shallow and quick. Each rustling leaf felt like a warning, each shadow a threat. She carried no lantern, only hope and memory. The path was long, but freedom lay at its end. Behind her, chains and cruelty; ahead, dignity and choice. She would not turn back."
+},
+{
+"title": "The Dust Bowl",
+"text": "The wind howled across the barren plains, lifting dust into the sky like smoke. Crops had failed, and families packed their belongings into rusted trucks. Children coughed as the air thickened, their eyes stinging with grit. The land, once fertile, now seemed to reject life itself. Yet in the face of despair, neighbors shared what little they had. Survival became an act of quiet defiance."
+}
+];
+
+const consentScreen = document.getElementById('consentScreen');
+const gameScreen = document.getElementById('gameScreen');
+const agreeBtn = document.getElementById('agreeBtn');
+const errorBox = document.getElementById('errorBox');
+const messagesArea = document.getElementById('messagesArea');
+const micButton = document.getElementById('micButton');
+const doneButton = document.getElementById('doneButton');
+const buttonGroup = document.getElementById('buttonGroup');
+const statusText = document.getElementById('statusText');
+const scoreDisplay = document.getElementById('scoreDisplay');
+const attemptText = document.getElementById('attemptText');
+const storyPinned = document.getElementById('storyPinned');
+const storyTitle = document.getElementById('storyTitle');
+const storyText = document.getElementById('storyText');
+
+function setPinnedStory(title, text) {
+storyTitle.textContent = `📖 ${title}`;
+storyText.textContent = text;
+storyPinned.classList.remove('hidden');
+}
+
+function addMessage(text, type) {
+const messageDiv = document.createElement('div');
+messageDiv.className = `message ${type}`;
+messageDiv.innerHTML = `<div class="message-content">${text}</div>`;
+messagesArea.appendChild(messageDiv);
+messagesArea.scrollTop = messagesArea.scrollHeight;
+}
+
+function speak(text) {
+if ('speechSynthesis' in window) {
+window.speechSynthesis.cancel();
+const utterance = new SpeechSynthesisUtterance(text);
+utterance.rate = 0.8;
+utterance.pitch = 1.2;
+utterance.volume = 1;
+window.speechSynthesis.speak(utterance);
+}
+}
+
+function checkAccuracy(userText) {
+const currentPassage = passages[currentPassageIndex];
+const passageWords = currentPassage.text.toLowerCase().split(/\s+/);
+const userWords = userText.toLowerCase().split(/\s+/);
+
+let correctWords = 0;
+const minLength = Math.min(passageWords.length, userWords.length);
+
+for (let i = 0; i < minLength; i++) {
+const passageWord = passageWords[i].replace(/[.,!?]/g, '');
+const userWord = userWords[i].replace(/[.,!?]/g, '');
+if (passageWord === userWord) {
+correctWords++;
+}
+}
+
+const accuracy = Math.round((correctWords / passageWords.length) * 100);
+return { accuracy, correctWords, totalWords: passageWords.length };
+}
+
+function updateStars() {
+for (let i = 1; i <= 3; i++) {
+const star = document.getElementById(`star${i}`);
+if (scores[i - 1] >= 70) {
+star.textContent = '⭐';
+star.style.color = '#ffd700';
+} else {
+star.textContent = '⭐';
+star.style.color = '#ddd';
+}
+}
+}
+
+function initializeSpeechRecognition() {
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+recognition = new SpeechRecognition();
+recognition.continuous = true;
+recognition.interimResults = true;
+recognition.lang = 'en-US';
+recognition.maxAlternatives = 1;
+
+recognition.onstart = () => {
+isListening = true;
+micButton.style.display = 'none';
+micButton.textContent = '🔴 RECORDING...';
+micButton.classList.add('recording');
+micButton.disabled = true;
+doneButton.classList.remove('hidden');
+doneButton.disabled = false;
+statusText.textContent = '🔴 Reading now... Click "Done" when finished';
+};
+
+recognition.onresult = (event) => {
+for (let i = event.resultIndex; i < event.results.length; i++) {
+const transcript = event.results[i][0].transcript;
+if (event.results[i].isFinal) {
+recordedTranscript += transcript + ' ';
+}
+}
+};
+
+recognition.onend = () => {
+// Only restart if we're still supposed to be listening AND user hasn't clicked Done
+if (isListening && doneButton.classList.contains('hidden') === false) {
+// Automatically restart to keep listening
+try {
+setTimeout(() => {
+if (isListening) {
+recognition.start();
+}
+}, 100);
+} catch (e) {
+console.log('Recognition restart failed:', e);
+}
+} else {
+// User clicked Done or we're supposed to stop
+isListening = false;
+micButton.textContent = '🎤 START READING';
+micButton.classList.remove('recording');
+micButton.disabled = false;
+}
+};
+
+recognition.onerror = (event) => {
+console.log('Recognition error:', event.error);
+
+// Ignore 'no-speech' and 'aborted' errors during active recording
+if (event.error === 'no-speech' && isListening) {
+// Continue listening, don't stop
+return;
+}
+
+if (event.error === 'aborted') {
+// Expected when user clicks "Done"
+return;
+}
+
+// For other errors, stop and reset
+isListening = false;
+micButton.classList.remove('recording');
+micButton.disabled = false;
+micButton.textContent = '🎤 START READING';
+doneButton.classList.add('hidden');
+
+if (event.error === 'not-allowed') {
+addMessage("❌ Microphone blocked. Please enable it in settings.", 'bot');
+statusText.textContent = '❌ Microphone access denied';
+} else {
+statusText.textContent = '👆 Click "Start Reading" to try again';
+}
+};
+}
+
+function handleVoiceInput(transcript) {
+addMessage(transcript, 'user');
+const currentPassage = passages[currentPassageIndex];
+
+if (gameState === 'reading') {
+const result = checkAccuracy(transcript);
+scores.push(result.accuracy);
+updateStars();
+
+setTimeout(() => addMessage(`Let me check your reading... ⏳`, 'bot'), 500);
+
+setTimeout(() => {
+if (result.accuracy >= 90) {
+addMessage(`🌟 Excellent! You got ${result.correctWords} out of ${result.totalWords} words correct! Score: ${result.accuracy}%`, 'bot');
+speak(`Excellent reading! ${result.accuracy} percent correct!`);
+} else if (result.accuracy >= 70) {
+addMessage(`👍 Good job! You got ${result.correctWords} out of ${result.totalWords} words. Score: ${result.accuracy}%`, 'bot');
+speak(`Good job! ${result.accuracy} percent. Try again!`);
+} else {
+addMessage(`💪 You got ${result.correctWords} out of ${result.totalWords} words. Score: ${result.accuracy}%. Let's practice more!`, 'bot');
+speak(`${result.accuracy} percent. Keep practicing!`);
+}
+
+if (attempt >= 3) {
+const avgScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+gameState = 'complete';
+
+setTimeout(() => addMessage(`🎉 Great job! You completed all 3 attempts!`, 'bot'), 2500);
+setTimeout(() => addMessage(`📊 Your scores: Try 1: ${scores[0]}%, Try 2: ${scores[1]}%, Try 3: ${scores[2]}%`, 'bot'), 3500);
+setTimeout(() => addMessage(`📈 Average Score: ${avgScore}%`, 'bot'), 4500);
+
+setTimeout(() => {
+if (avgScore >= 90) {
+addMessage(`🌟🌟🌟 Amazing! You're an excellent reader!`, 'bot');
+speak('Amazing work! You are an excellent reader!');
+} else if (avgScore >= 70) {
+addMessage(`⭐⭐ Great work! Keep reading!`, 'bot');
+speak('Great work! Keep reading!');
+} else {
+addMessage(`⭐ Good effort! Keep practicing!`, 'bot');
+speak('Good effort! Keep practicing!');
+}
+}, 5500);
+
+setTimeout(() => {
+addMessage(`Would you like to try another story? Click 🎤 and say "next story" or "try again"!`, 'bot');
+buttonGroup.classList.remove('hidden');
+micButton.classList.remove('hidden');
+micButton.disabled = false;
+micButton.textContent = '🎤 CLICK TO SPEAK';
+doneButton.classList.add('hidden');
+statusText.textContent = '👆 Say "next story" or "try again"';
+}, 7000);
+
+} else {
+attempt++;
+attemptText.textContent = `🎯 Attempt: ${attempt} of 3`;
+
+setTimeout(() => addMessage(`Let's try again! This is attempt ${attempt} of 3.`, 'bot'), 2500);
+setTimeout(() => {
+addMessage(`The story is pinned above. Click "Start Reading" when ready!`, 'bot');
+buttonGroup.classList.remove('hidden');
+micButton.style.display = '';
+micButton.classList.remove('hidden');
+micButton.disabled = false;
+micButton.textContent = '🎤 START READING';
+doneButton.classList.add('hidden');
+statusText.textContent = '👆 Click "Start Reading" to begin attempt ' + attempt;
+}, 4000);
+}
+}, 2000);
+
+} else if (gameState === 'complete') {
+const input = transcript.toLowerCase();
+
+if (input.includes('next')) {
+currentPassageIndex = (currentPassageIndex + 1) % passages.length;
+attempt = 1;
+scores = [];
+gameState = 'reading';
+updateStars();
+attemptText.textContent = `🎯 Attempt: ${attempt} of 3`;
+
+const nextPassage = passages[currentPassageIndex];
+setTimeout(() => addMessage(`Great! New story: "${nextPassage.title}" 📖`, 'bot'), 500);
+setTimeout(() => {
+addMessage(`Listen! 📊`, 'bot');
+speak(nextPassage.text);
+setPinnedStory(nextPassage.title, nextPassage.text);
+}, 2000);
+setTimeout(() => {
+addMessage(`Your turn! Click "Start Reading"!`, 'bot');
+buttonGroup.classList.remove('hidden');
+micButton.classList.remove('hidden');
+micButton.disabled = false;
+micButton.textContent = '🎤 START READING';
+doneButton.classList.add('hidden');
+statusText.textContent = '👆 Click "Start Reading" to begin';
+}, 45000);
+
+} else if (input.includes('again') || input.includes('try')) {
+attempt = 1;
+scores = [];
+gameState = 'reading';
+updateStars();
+attemptText.textContent = `🎯 Attempt: ${attempt} of 3`;
+
+setTimeout(() => addMessage(`Okay! Let's try "${passages[currentPassageIndex].title}" again! 📖`, 'bot'), 500);
+setTimeout(() => {
+addMessage(`Listen: 📊`, 'bot');
+speak(passages[currentPassageIndex].text);
+setPinnedStory(passages[currentPassageIndex].title, passages[currentPassageIndex].text);
+}, 2000);
+setTimeout(() => {
+addMessage(`Click "Start Reading"!`, 'bot');
+buttonGroup.classList.remove('hidden');
+micButton.classList.remove('hidden');
+micButton.disabled = false;
+micButton.textContent = '🎤 START READING';
+doneButton.classList.add('hidden');
+statusText.textContent = '👆 Click "Start Reading" to begin';
+}, 45000);
+} else {
+setTimeout(() => {
+addMessage(`I didn't understand. Say "next story" or "try again"! 🎤`, 'bot');
+buttonGroup.classList.remove('hidden');
+micButton.classList.remove('hidden');
+micButton.disabled = false;
+micButton.textContent = '🎤 CLICK TO SPEAK';
+doneButton.classList.add('hidden');
+statusText.textContent = '👆 Say "next story" or "try again"';
+}, 500);
+}
+}
+}
+
+agreeBtn.addEventListener('click', async function() {
+agreeBtn.disabled = true;
+agreeBtn.innerHTML = '<span class="spinner"></span> Requesting Microphone Access...';
+errorBox.classList.add('hidden');
+
+if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+errorBox.textContent = '❌ Your browser does not support voice recognition. Please use Chrome, Edge, or Safari.';
+errorBox.classList.remove('hidden');
+agreeBtn.disabled = false;
+agreeBtn.innerHTML = '🎤 I Agree - Allow Microphone Access';
+return;
+}
+
+try {
+const stream = await navigator.mediaDevices.getUserMedia({ 
+audio: {
+echoCancellation: true,
+noiseSuppression: true,
+sampleRate: 44100
+} 
+});
+
+await new Promise(resolve => setTimeout(resolve, 100));
+stream.getTracks().forEach(track => track.stop());
+
+micPermissionGranted = true;
+initializeSpeechRecognition();
+
+consentScreen.style.display = 'none';
+gameScreen.style.display = 'block';
+
+const currentPassage = passages[currentPassageIndex];
+
+setTimeout(() => {
+addMessage('👋 Welcome to Reading Practice!', 'bot');
+}, 500);
+
+setTimeout(() => {
+addMessage(`Here's your first story: "${currentPassage.title}" 📖`, 'bot');
+}, 1500);
+
+setTimeout(() => {
+addMessage(`Listen carefully! 📊`, 'bot');
+speak(currentPassage.text);
+setPinnedStory(currentPassage.title, currentPassage.text);
+}, 2500);
+
+setTimeout(() => {
+addMessage(`Now it's YOUR turn! Click "Start Reading" and read the story back to me!`, 'bot');
+addMessage(`When you finish, click "Done Reading"!`, 'bot');
+statusText.textContent = '👆 Click "Start Reading" to begin';
+}, 45000);
+
+} catch (error) {
+agreeBtn.disabled = false;
+agreeBtn.innerHTML = '🎤 I Agree - Allow Microphone Access';
+
+let errorHTML = '<h3 style="color: #e74c3c; font-size: 2em; margin-bottom: 20px;">⚠️ Microphone Access Required</h3>';
+errorHTML += '<div class="step-box" style="background: #ebf4ff;"><h4>🔍 Step 1: Look for Browser Popup</h4><p>Your browser should show a popup at the TOP of the page asking: <strong>"Allow this site to use your microphone?"</strong></p></div>';
+errorHTML += '<div class="step-box" style="background: #d5f4e6;"><h4>✅ Step 2: Click "Allow"</h4><p>In the popup, click the <strong>"Allow"</strong> button (NOT "Block" or "Deny").</p></div>';
+errorHTML += '<div class="step-box" style="background: #f3e5f5;"><h4>🔧 Step 3: If You Missed the Popup</h4><ul style="text-align: left;"><li><strong>Chrome/Edge:</strong> Click the 🔒 lock icon in the address bar → Site settings → Microphone → Allow</li><li><strong>Safari:</strong> Safari menu → Settings for This Website → Microphone → Allow</li><li><strong>Firefox:</strong> Click 🔒 icon → Click ">" next to Blocked → Allow Microphone</li></ul></div>';
+errorHTML += '<div class="step-box" style="background: #fff9c4;"><h4>🔄 Step 4: Try Again</h4><p>After allowing microphone access, click the button below to reload and start over.</p></div>';
+errorHTML += '<button class="btn-reload" onclick="window.location.reload()">🔄 Reload Page & Try Again</button>';
+
+errorBox.innerHTML = errorHTML;
+errorBox.classList.remove('hidden');
+}
+});
+
+micButton.addEventListener('click', function() {
+if (!isListening && recognition && micPermissionGranted) {
+recordedTranscript = '';
+// Ensure button is hidden before starting
+micButton.style.display = 'none';
+try {
+recognition.start();
+} catch (error) {
+console.error('Recognition error:', error);
+addMessage('❌ Error starting recording. Please try again.', 'bot');
+micButton.style.display = '';
+}
+}
+});
+
+doneButton.addEventListener('click', function() {
+if (isListening && recognition) {
+// Set flag to stop listening before calling stop()
+isListening = false;
+recognition.stop();
+
+micButton.style.display = '';
+micButton.textContent = '🎤 START READING';
+micButton.classList.remove('recording');
+micButton.disabled = false;
+doneButton.classList.add('hidden');
+buttonGroup.classList.add('hidden');
+statusText.textContent = '⏳ Processing your reading...';
+
+setTimeout(() => {
+const finalTranscript = recordedTranscript.trim();
+if (finalTranscript) {
+buttonGroup.classList.remove('hidden');
+micButton.style.display = '';
+handleVoiceInput(finalTranscript);
+} else {
+addMessage("😕 I didn't hear anything. Please try again!", 'bot');
+buttonGroup.classList.remove('hidden');
+micButton.classList.remove('hidden');
+micButton.style.display = '';
+micButton.disabled = false;
+statusText.textContent = '👆 Click "Start Reading" and speak louder';
+}
+}, 1000);
+}
+});
+</script>
+</body>
+</html>

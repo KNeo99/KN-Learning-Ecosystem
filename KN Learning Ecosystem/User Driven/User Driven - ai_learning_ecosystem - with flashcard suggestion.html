@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Learning Ecosystem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            height: 100vh;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.ai {
+            flex-direction: row;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .message.ai .message-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .message-content {
+            background: #f0f0f0;
+            padding: 12px 16px;
+            border-radius: 15px;
+            max-width: 70%;
+            line-height: 1.5;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .input-section {
+            padding: 20px;
+            border-top: 2px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .voice-transcript {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 10px;
+            min-height: 40px;
+            color: #666;
+            font-style: italic;
+            display: none;
+        }
+
+        .voice-transcript.active {
+            display: block;
+        }
+
+        .input-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .text-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .text-input:focus {
+            border-color: #667eea;
+        }
+
+        .voice-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .voice-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .voice-btn.listening {
+            animation: pulse 1.5s infinite;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .send-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            padding: 5px 10px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .quick-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .dashboard-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .lesson-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .lesson-title {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .gamification-zone {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            opacity: 0.9;
+        }
+
+        .badges-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .badge {
+            padding: 8px 16px;
+            background: #e0e0e0;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #999;
+            transition: all 0.3s;
+        }
+
+        .badge.unlocked {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+        }
+
+        .progress-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .discussion-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .discussion-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .discussion-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .discussion-topic {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .discussion-summary {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .discussion-timestamp {
+            font-size: 11px;
+            color: #999;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .discussion-placeholder {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-style: italic;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .flashcard-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .flashcard-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .flashcard {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .flashcard:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .flashcard.flipped {
+            background: white;
+            color: #333;
+            border: 2px solid #667eea;
+        }
+
+        .flashcard-question {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .flashcard-answer {
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .flashcard-hint {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 11px;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .flashcard-placeholder {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-style: italic;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .ai-content-feed {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .refresh-btn {
+            float: right;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg) scale(1.1);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+        }
+
+        .content-items {
+            margin-top: 15px;
+        }
+
+        .content-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .content-item:hover {
+            background: #e8eaf6;
+            transform: translateX(5px);
+        }
+
+        .content-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .content-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .content-meta {
+            font-size: 11px;
+            color: #999;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .content-source {
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-style: italic;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Panel 1: Instructor Chat -->
+        <div class="panel">
+            <div class="panel-header">🤖 AI Instructor Chat</div>
+            <div class="chat-history" id="chatHistory"></div>
+            <div class="input-section">
+                <div class="voice-transcript" id="voiceTranscript">Listening...</div>
+                <div class="quick-actions">
+                    <button class="quick-btn" onclick="quickAction('repeat')" title="Repeat the last instruction">🔄 Repeat</button>
+                    <button class="quick-btn" onclick="quickAction('hint')" title="Get a helpful hint">💡 Hint</button>
+                    <button class="quick-btn" onclick="quickAction('examples')" title="Show me examples">📝 Examples</button>
+                </div>
+                <div class="input-controls">
+                    <input type="text" class="text-input" id="textInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)" title="Type your response here">
+                    <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()" title="Click to start voice recording">🎤</button>
+                    <button class="send-btn" onclick="sendMessage()" title="Send your message">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel 2: Learning Dashboard -->
+        <div class="panel">
+            <div class="panel-header">📊 Your Learning Journey</div>
+            <div class="dashboard-content">
+                <div class="lesson-card">
+                    <div class="lesson-title" id="currentStage">Welcome to AI Learning!</div>
+                    <div style="opacity: 0.9;" id="stageDescription">Background & Introduction - Scroll down to explore AI topics</div>
+                </div>
+
+                <div class="gamification-zone">
+                    <div class="section-title">🏆 Your Achievements</div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="pointsValue">0</div>
+                            <div class="stat-label">Points</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="topicsValue">0</div>
+                            <div class="stat-label">Topics</div>
+                        </div>
+                    </div>
+                    <div class="badges-container">
+                        <div class="badge" id="badge1">Beginner</div>
+                        <div class="badge" id="badge2">Explorer</div>
+                        <div class="badge" id="badge3">Expert</div>
+                    </div>
+                </div>
+
+                <div class="discussion-section">
+                    <div class="section-title">📝 Current Discussion</div>
+                    <div id="discussionContent" class="discussion-content">
+                        <div class="discussion-placeholder">
+                            Your conversation topics will appear here as you chat with the AI Instructor.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flashcard-section">
+                    <div class="section-title">💡 Flashcard Suggestions</div>
+                    <div id="flashcardContainer" class="flashcard-container">
+                        <div class="flashcard-placeholder">
+                            Start chatting with the AI Instructor to see relevant flashcards appear here!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-content-feed">
+                    <div class="section-title">
+                        🌐 Continue Learning and Explore AI
+                        <button class="refresh-btn" onclick="fetchAIContent()" title="Refresh content">🔄</button>
+                    </div>
+                    <div id="aiContentContainer" class="content-items">
+                        <div class="loading-spinner">Loading fresh AI content...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isListening = false;
+        let recognition = null;
+        let learningStage = 'welcome';
+        let points = 0;
+        let topicsExplored = 0;
+        let lastAIMessage = '';
+        let discussionTopics = [];
+
+        function initializeSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+
+                recognition.onresult = (event) => {
+                    const transcript = Array.from(event.results)
+                        .map(result => result[0].transcript)
+                        .join('');
+                    
+                    document.getElementById('voiceTranscript').textContent = transcript;
+                    document.getElementById('textInput').value = transcript;
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    stopListening();
+                };
+
+                recognition.onend = () => {
+                    if (isListening) {
+                        try {
+                            recognition.start();
+                        } catch(e) {
+                            console.log('Recognition restart failed');
+                        }
+                    }
+                };
+            }
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function startWelcomeSequence() {
+            const welcomeMessage = "Welcome to your personalized AI Learning Journey! I'm your AI Instructor. Before we dive into your custom learning path, let me give you a quick background and introduction to AI. Here's how to interact: Click the microphone button to speak, then click Send when you're done. Or simply type your responses. Ready to begin?";
+            
+            addMessage(welcomeMessage, false);
+            speak(welcomeMessage);
+            lastAIMessage = welcomeMessage;
+        }
+
+        function toggleVoice() {
+            if (!recognition) {
+                addMessage("Speech recognition is not available. Please use text input instead.", false);
+                return;
+            }
+
+            if (!isListening) {
+                try {
+                    recognition.start();
+                    isListening = true;
+                    document.getElementById('voiceBtn').classList.add('listening');
+                    document.getElementById('voiceBtn').textContent = '🔴';
+                    document.getElementById('voiceTranscript').classList.add('active');
+                    document.getElementById('voiceTranscript').textContent = 'Recording... Click Send when finished.';
+                } catch (error) {
+                    console.error('Error starting recognition:', error);
+                }
+            }
+        }
+
+        function stopListening() {
+            isListening = false;
+            document.getElementById('voiceBtn').classList.remove('listening');
+            document.getElementById('voiceBtn').textContent = '🎤';
+            document.getElementById('voiceTranscript').classList.remove('active');
+        }
+
+        function addMessage(text, isUser = false) {
+            const chatHistory = document.getElementById('chatHistory');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${isUser ? '👤' : '🤖'}</div>
+                <div class="message-content">${text}</div>
+            `;
+            
+            chatHistory.appendChild(messageDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('textInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                if (isListening) {
+                    recognition.stop();
+                    stopListening();
+                }
+                
+                addMessage(message, true);
+                input.value = '';
+                
+                setTimeout(() => {
+                    respondToUser(message);
+                }, 1000);
+            }
+        }
+
+        function respondToUser(userMessage) {
+            const lowerMessage = userMessage.toLowerCase();
+            let response = '';
+            let newFlashcards = [];
+            let discussionTopic = '';
+            let discussionSummary = '';
+
+            if (learningStage === 'welcome') {
+                if (lowerMessage.includes('yes') || lowerMessage.includes('ready') || lowerMessage.includes('start')) {
+                    learningStage = 'background';
+                    response = "Excellent! Let's start with Part 1: Background. AI, or Artificial Intelligence, is technology that enables machines to perform tasks that typically require human intelligence. There are different types: Reactive AI (responds to inputs), Limited Memory AI (learns from past data), and Generative AI (creates new content). Does this make sense?";
+                    updateStage('Part 1: Background', 'Understanding AI fundamentals');
+                    awardPoints(25);
+                    discussionTopic = 'What is AI?';
+                    discussionSummary = 'Exploring the definition of Artificial Intelligence and its three main types: Reactive AI, Limited Memory AI, and Generative AI.';
+                    newFlashcards = [
+                        { question: 'What is Artificial Intelligence?', answer: 'Technology that enables machines to perform tasks requiring human intelligence' },
+                        { question: 'Name 3 types of AI', answer: 'Reactive AI, Limited Memory AI, Generative AI' }
+                    ];
+                } else {
+                    response = "No problem! When you're ready, just say 'I'm ready' or 'let's start'!";
+                }
+            } else if (learningStage === 'background') {
+                if (lowerMessage.includes('yes') || lowerMessage.includes('sense') || lowerMessage.includes('understand')) {
+                    learningStage = 'introduction';
+                    response = "Great! Now for Part 2: AI in Real-World. AI powers voice assistants like Siri and Alexa, Netflix recommendations, spam filters, and ChatGPT. These are all examples of AI working behind the scenes. Can you think of any AI tools you've used?";
+                    updateStage('Part 2: Introduction', 'AI in the real world');
+                    awardPoints(25);
+                    topicsExplored++;
+                    document.getElementById('topicsValue').textContent = topicsExplored;
+                    discussionTopic = 'AI in Everyday Life';
+                    discussionSummary = 'Learning about practical AI applications including voice assistants, recommendation systems, email filters, and conversational AI like ChatGPT.';
+                    newFlashcards = [
+                        { question: 'Name 3 everyday AI applications', answer: 'Voice assistants, Netflix recommendations, Email spam filters' },
+                        { question: 'What powers ChatGPT?', answer: 'Generative AI that creates conversational responses' }
+                    ];
+                } else {
+                    response = "Let me explain differently. Reactive AI is like a calculator - it gives instant answers. Limited Memory AI is like Netflix learning your preferences. Generative AI creates new content like art or text. Does that help?";
+                    discussionTopic = 'Understanding AI Types';
+                    discussionSummary = 'Breaking down AI types with simple analogies: Calculator (Reactive), Netflix (Limited Memory), Artist (Generative).';
+                }
+            } else if (learningStage === 'introduction') {
+                learningStage = 'custom-learning';
+                response = "Fantastic! Now that you understand the basics, what would you like to explore next? I can teach you about: How AI works technically, Practical AI tools you can use today, AI in specific industries, Building your own AI apps, or AI ethics and future. What interests you?";
+                updateStage('Choose Your Path', 'What do you want to learn?');
+                awardPoints(50);
+                topicsExplored++;
+                document.getElementById('topicsValue').textContent = topicsExplored;
+                discussionTopic = 'Your Learning Interests';
+                discussionSummary = 'Transitioning to personalized learning. Exploring your interests to create a custom AI learning path tailored to your goals.';
+            } else if (learningStage === 'custom-learning') {
+                if (lowerMessage.includes('technical') || lowerMessage.includes('how') || lowerMessage.includes('work') || lowerMessage.includes('1')) {
+                    response = "Great choice! Let's dive into how AI actually works. We'll cover machine learning basics, neural networks, and how AI models are trained. Machine learning is when computers learn patterns from data without being explicitly programmed. Ready to explore?";
+                    discussionTopic = 'How AI Works - Technical';
+                    discussionSummary = 'Beginning technical deep dive into machine learning fundamentals, neural networks, and AI model training processes.';
+                    newFlashcards = [
+                        { question: 'What is Machine Learning?', answer: 'When computers learn patterns from data without explicit programming' },
+                        { question: 'What are Neural Networks?', answer: 'Computing systems inspired by biological brains used for deep learning' }
+                    ];
+                } else if (lowerMessage.includes('practical') || lowerMessage.includes('tool') || lowerMessage.includes('use') || lowerMessage.includes('2')) {
+                    response = "Perfect! Let's learn practical AI tools. We'll start with prompt engineering - the art of talking to AI effectively. Good prompts are specific, clear, and contextual. For example: Instead of 'write about dogs', try 'Write a 200-word article about golden retrievers for dog owners'. See the difference?";
+                    discussionTopic = 'Practical AI Tools';
+                    discussionSummary = 'Learning prompt engineering techniques to effectively communicate with AI tools like ChatGPT for better results.';
+                    newFlashcards = [
+                        { question: 'What is Prompt Engineering?', answer: 'The skill of crafting effective instructions to get better AI responses' },
+                        { question: 'What makes a good prompt?', answer: 'Specific, clear, contextual instructions with desired format and detail level' }
+                    ];
+                } else if (lowerMessage.includes('industry') || lowerMessage.includes('field') || lowerMessage.includes('business') || lowerMessage.includes('3')) {
+                    response = "Excellent! AI is transforming every industry. In healthcare, it helps diagnose diseases. In business, it automates tasks and predicts trends. In education, it personalizes learning. Which field interests you most?";
+                    discussionTopic = 'AI Across Industries';
+                    discussionSummary = 'Exploring real-world AI applications in healthcare, business, education, and other industries.';
+                    newFlashcards = [
+                        { question: 'How is AI used in healthcare?', answer: 'Disease diagnosis, drug discovery, personalized treatment plans' },
+                        { question: 'How is AI used in business?', answer: 'Process automation, predictive analytics, customer insights' }
+                    ];
+                } else {
+                    response = "That's interesting! Tell me more about what specific aspect of AI you'd like to explore, and I'll create a learning path for you.";
+                    discussionTopic = 'Exploring Your Interests';
+                    discussionSummary = 'Having an open discussion to understand your specific AI learning goals and interests.';
+                }
+                awardPoints(30);
+                topicsExplored++;
+                document.getElementById('topicsValue').textContent = topicsExplored;
+            } else {
+                response = "Great question! What else would you like to know about AI?";
+                discussionTopic = 'Q&A Session';
+                discussionSummary = 'Addressing your specific questions about AI concepts and applications.';
+                awardPoints(10);
+            }
+
+            if (discussionTopic) {
+                addDiscussionItem(discussionTopic, discussionSummary);
+            }
+
+            if (newFlashcards.length > 0) {
+                addFlashcards(newFlashcards);
+            }
+
+            addMessage(response, false);
+            speak(response);
+            lastAIMessage = response;
+        }
+
+        function updateStage(title, description) {
+            document.getElementById('currentStage').textContent = title;
+            document.getElementById('stageDescription').textContent = description;
+        }
+
+        function addDiscussionItem(topic, summary) {
+            const container = document.getElementById('discussionContent');
+            
+            // Remove placeholder if exists
+            const placeholder = container.querySelector('.discussion-placeholder');
+            if (placeholder) {
+                placeholder.remove();
+            }
+
+            // Create new discussion item
+            const item = document.createElement('div');
+            item.className = 'discussion-item';
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            
+            item.innerHTML = `
+                <div class="discussion-topic">${topic}</div>
+                <div class="discussion-summary">${summary}</div>
+                <div class="discussion-timestamp">${timeString}</div>
+            `;
+            
+            container.appendChild(item);
+            
+            // Keep only last 5 discussion items
+            const items = container.querySelectorAll('.discussion-item');
+            if (items.length > 5) {
+                items[0].remove();
+            }
+
+            // Store in array
+            discussionTopics.push({ topic, summary, time: timeString });
+        }
+
+        function awardPoints(amount) {
+            points += amount;
+            document.getElementById('pointsValue').textContent = points;
+            
+            if (points >= 50) {
+                document.getElementById('badge1').classList.add('unlocked');
+            }
+            if (points >= 200) {
+                document.getElementById('badge2').classList.add('unlocked');
+            }
+            if (points >= 500) {
+                document.getElementById('badge3').classList.add('unlocked');
+            }
+        }
+
+        function addFlashcards(cards) {
+            const container = document.getElementById('flashcardContainer');
+            container.innerHTML = '';
+            
+            cards.forEach((card, index) => {
+                const flashcardDiv = document.createElement('div');
+                flashcardDiv.className = 'flashcard';
+                flashcardDiv.onclick = () => flipCard(index);
+                flashcardDiv.id = 'flashcard-' + index;
+                
+                flashcardDiv.innerHTML = `
+                    <div class="flashcard-question">${card.question}</div>
+                    <div class="flashcard-hint">Click to reveal answer</div>
+                `;
+                
+                flashcardDiv.dataset.answer = card.answer;
+                flashcardDiv.dataset.question = card.question;
+                flashcardDiv.dataset.flipped = 'false';
+                
+                container.appendChild(flashcardDiv);
+            });
+        }
+
+        function flipCard(index) {
+            const card = document.getElementById('flashcard-' + index);
+            const isFlipped = card.dataset.flipped === 'true';
+            
+            if (isFlipped) {
+                card.classList.remove('flipped');
+                card.innerHTML = `
+                    <div class="flashcard-question">${card.dataset.question}</div>
+                    <div class="flashcard-hint">Click to reveal answer</div>
+                `;
+                card.dataset.flipped = 'false';
+            } else {
+                card.classList.add('flipped');
+                card.innerHTML = `
+                    <div class="flashcard-answer">${card.dataset.answer}</div>
+                    <div class="flashcard-hint">Click to see question</div>
+                `;
+                card.dataset.flipped = 'true';
+            }
+        }
+
+        function quickAction(action) {
+            let message = '';
+            if (action === 'repeat') {
+                message = lastAIMessage;
+            } else if (action === 'hint') {
+                message = "💡 Try being specific with your questions. Ask about AI concepts, tools, or applications!";
+            } else if (action === 'examples') {
+                message = "📝 Example questions: 'What's machine learning?', 'How can I use AI at work?', 'What are the best AI tools?'";
+            }
+            addMessage(message, false);
+            speak(message);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        async function fetchAIContent() {
+            const container = document.getElementById('aiContentContainer');
+            container.innerHTML = '<div class="loading-spinner">Loading AI content...</div>';
+
+            try {
+                const topics = ['Artificial_intelligence', 'Machine_learning', 'ChatGPT'];
+                const topic = topics[Math.floor(Math.random() * topics.length)];
+                
+                const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${topic}`);
+                const data = await response.json();
+
+                let html = '';
+                if (data && data.extract) {
+                    html += `
+                        <div class="content-item" onclick="window.open('${data.content_urls.desktop.page}', '_blank')">
+                            <div class="content-title">📖 ${data.title}</div>
+                            <div class="content-description">${data.extract.substring(0, 150)}...</div>
+                            <div class="content-meta">
+                                <span class="content-source">Wikipedia</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                html += `
+                    <div class="content-item" onclick="window.open('https://www.deeplearning.ai/', '_blank')">
+                        <div class="content-title">🎓 DeepLearning.AI</div>
+                        <div class="content-description">Free AI courses by Andrew Ng</div>
+                        <div class="content-meta">
+                            <span class="content-source">Education</span>
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML = html;
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="content-item">
+                        <div class="content-title">📚 AI Learning Resources</div>
+                        <div class="content-description">Explore DeepLearning.AI and Hugging Face</div>
+                    </div>
+                `;
+            }
+        }
+
+        window.addEventListener('load', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                stream.getTracks().forEach(track => track.stop());
+                initializeSpeechRecognition();
+            } catch (error) {
+                console.log('Microphone not available');
+            }
+            
+            startWelcomeSequence();
+            fetchAIContent();
+        });
+    </script>
+</body>
+</html>

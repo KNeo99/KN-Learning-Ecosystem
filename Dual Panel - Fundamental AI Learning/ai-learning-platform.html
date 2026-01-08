@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Learning Journey - Interactive Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            max-width: 1600px;
+            margin: 0 auto;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* Left Panel - Learning Hub */
+        .left-panel {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        /* Right Panel - Interactive Practice */
+        .right-panel {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* Progress Dashboard */
+        .progress-dashboard {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .level-bar {
+            background: rgba(255,255,255,0.3);
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .level-progress {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Badges */
+        .badges-section {
+            margin: 20px 0;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .badge {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .badge.earned {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .badge-icon {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .badge-name {
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        /* Learning Modules */
+        .modules-section {
+            margin: 20px 0;
+        }
+
+        .module-card {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .module-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .module-card.completed {
+            border-left-color: #4CAF50;
+            background: #e8f5e9;
+        }
+
+        .module-card.active {
+            border-left-color: #FF9800;
+            background: #fff3e0;
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .module-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .module-xp {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .module-description {
+            color: #666;
+            margin-top: 10px;
+        }
+
+        /* Lesson Content */
+        .lesson-content {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            line-height: 1.8;
+        }
+
+        .lesson-content h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .lesson-content p {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .lesson-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .lesson-content li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        /* Flashcard */
+        .flashcard-container {
+            perspective: 1000px;
+            margin: 20px 0;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 250px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            font-size: 1.3em;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .flashcard-back {
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .provider-selector {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .provider-selector h3 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 1em;
+        }
+
+        .provider-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .provider-btn {
+            padding: 12px 8px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .provider-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .provider-btn.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .provider-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+
+        .provider-info.visible {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .provider-info h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .provider-info p {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .provider-info a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .provider-info a:hover {
+            text-decoration: underline;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.bot {
+            text-align: left;
+        }
+
+        .message.user {
+            text-align: right;
+        }
+
+        .message-bubble {
+            display: inline-block;
+            padding: 15px 20px;
+            border-radius: 20px;
+            max-width: 80%;
+            line-height: 1.6;
+        }
+
+        .message.bot .message-bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.user .message-bubble {
+            background: #4CAF50;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        #userInput {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #userInput:focus {
+            border-color: #667eea;
+        }
+
+        .voice-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.3s;
+        }
+
+        .voice-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .voice-btn.recording {
+            color: #f44336;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .send-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn.module-list-btn {
+            background: linear-gradient(135deg, #9C27B0 0%, #673AB7 100%);
+            color: white;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            text-align: center;
+            padding: 50px;
+        }
+
+        .welcome-screen h2 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .welcome-screen p {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        /* Question Options */
+        .question-options {
+            margin: 20px 0;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-size: 1em;
+        }
+
+        .option-btn:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option-btn.correct {
+            border-color: #4CAF50;
+            background: #e8f5e9;
+        }
+
+        .option-btn.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                overflow-y: auto;
+            }
+
+            .left-panel, .right-panel {
+                width: 100%;
+            }
+
+            .progress-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .provider-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .provider-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .section-title {
+            color: #667eea;
+            font-size: 1.5em;
+            margin: 25px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-size: 1.2em;
+            padding: 20px;
+        }
+
+        .typing-indicator {
+            display: inline-block;
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Panel - Learning Hub -->
+        <div class="left-panel">
+            <div class="header">
+                <h1>🎓 AI Learning Journey</h1>
+                <p>Master the fundamentals of AI through interactive learning</p>
+            </div>
+
+            <!-- Progress Dashboard -->
+            <div class="progress-dashboard">
+                <h2>Your Progress</h2>
+                <div class="progress-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="userLevel">1</div>
+                        <div class="stat-label">Level</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="userXP">0</div>
+                        <div class="stat-label">XP Points</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="modulesCompleted">0</div>
+                        <div class="stat-label">Modules Done</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="streakDays">0</div>
+                        <div class="stat-label">Day Streak 🔥</div>
+                    </div>
+                </div>
+                <div class="level-bar">
+                    <div class="level-progress" id="levelProgress" style="width: 0%">
+                        <span id="levelText">Beginner</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Badges Section -->
+            <div class="badges-section">
+                <h2 class="section-title">🏆 Achievements</h2>
+                <div class="badges-grid" id="badgesGrid">
+                    <!-- Badges will be dynamically added -->
+                </div>
+            </div>
+
+            <!-- Learning Content Area -->
+            <div id="learningContent">
+                <!-- Welcome or Module content will appear here -->
+            </div>
+
+            <!-- Flashcard Section -->
+            <div id="flashcardSection" class="hidden">
+                <h2 class="section-title">📚 Flashcards</h2>
+                <div class="flashcard-container">
+                    <div class="flashcard" id="flashcard">
+                        <div class="flashcard-face flashcard-front" id="flashcardFront">
+                            Click to flip
+                        </div>
+                        <div class="flashcard-face flashcard-back" id="flashcardBack">
+                            Answer appears here
+                        </div>
+                    </div>
+                </div>
+                <div class="flashcard-controls">
+                    <button class="btn btn-secondary" onclick="previousCard()">← Previous</button>
+                    <button class="btn btn-success" onclick="markKnown()">Know It! ✓</button>
+                    <button class="btn btn-primary" onclick="nextCard()">Next →</button>
+                </div>
+                <p style="text-align: center; margin-top: 15px; color: #666;">
+                    Card <span id="cardNumber">1</span> of <span id="totalCards">0</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Panel - Interactive Practice -->
+        <div class="right-panel">
+            <div class="header">
+                <h2>🤖 Interactive Learning Bot</h2>
+                <p>Chat with me to learn and practice!</p>
+            </div>
+
+            <!-- AI Provider Selection -->
+            <div class="provider-selector" id="providerSelector">
+                <h3>Choose Your AI Provider</h3>
+                <div class="provider-buttons">
+                    <button class="provider-btn" onclick="selectProvider('openai')">
+                        OpenAI<br>ChatGPT
+                    </button>
+                    <button class="provider-btn" onclick="selectProvider('microsoft')">
+                        Microsoft<br>Copilot
+                    </button>
+                    <button class="provider-btn" onclick="selectProvider('google')">
+                        Google<br>Gemini
+                    </button>
+                    <button class="provider-btn" onclick="selectProvider('anthropic')">
+                        Anthropic<br>Claude
+                    </button>
+                </div>
+                
+                <!-- Provider Information Display -->
+                <div class="provider-info" id="providerInfo">
+                    <h4 id="providerName"></h4>
+                    <p id="providerDescription"></p>
+                    <a id="providerLink" href="#" target="_blank">Learn more about this AI →</a>
+                </div>
+            </div>
+
+            <!-- Chat Interface -->
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will appear here -->
+                </div>
+
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="userInput" 
+                            placeholder="Type your answer or question..."
+                            onkeypress="handleKeyPress(event)"
+                        >
+                        <button class="voice-btn" id="voiceBtn" onclick="toggleVoiceInput()">
+                            🎤
+                        </button>
+                    </div>
+                    <button class="send-btn" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== DATA STRUCTURES =====
+        
+        const learningModules = [
+            {
+                id: 1,
+                title: "Introduction to AI",
+                xp: 100,
+                description: "Learn what AI is and how it works",
+                lessons: [
+                    {
+                        title: "What is AI?",
+                        content: `
+                            <h3>Welcome to AI Fundamentals! 🎉</h3>
+                            <p><strong>Artificial Intelligence (AI)</strong> is technology that enables computers to perform tasks that typically require human intelligence. Think of it as teaching computers to "think" and make decisions.</p>
+                            
+                            <h4>Key Concepts:</h4>
+                            <ul>
+                                <li><strong>Machine Learning:</strong> AI systems learn from data and improve over time</li>
+                                <li><strong>Natural Language Processing:</strong> Understanding and generating human language</li>
+                                <li><strong>Pattern Recognition:</strong> Identifying patterns in data to make predictions</li>
+                            </ul>
+                            
+                            <p>The AI assistants you'll learn about (ChatGPT, Copilot, Gemini, and Claude) are called <strong>Large Language Models (LLMs)</strong>. They've been trained on vast amounts of text to understand and generate human-like responses.</p>
+                            
+                            <p><strong>Real-world example:</strong> When you ask an AI assistant "What's the weather like today?", it understands your question, processes it, and generates a helpful response - just like a knowledgeable friend would!</p>
+                        `
+                    }
+                ],
+                flashcards: [
+                    { front: "What is AI?", back: "Technology that enables computers to perform tasks requiring human intelligence" },
+                    { front: "What is Machine Learning?", back: "AI systems that learn from data and improve over time" },
+                    { front: "What is NLP?", back: "Natural Language Processing - AI's ability to understand and generate human language" },
+                    { front: "What are LLMs?", back: "Large Language Models - AI trained on vast amounts of text to understand and generate responses" },
+                    { front: "Name 2 AI assistants", back: "ChatGPT, Copilot, Gemini, or Claude (any two are correct!)" }
+                ],
+                questions: [
+                    {
+                        question: "What does AI stand for?",
+                        options: ["Automated Intelligence", "Artificial Intelligence", "Advanced Interface", "Automatic Information"],
+                        correct: 1,
+                        explanation: "AI stands for Artificial Intelligence - technology that mimics human intelligence."
+                    },
+                    {
+                        question: "What is a Large Language Model?",
+                        options: [
+                            "A physical robot that speaks",
+                            "A small chatbot program",
+                            "An AI trained on vast text data to understand and generate language",
+                            "A translation software"
+                        ],
+                        correct: 2,
+                        explanation: "LLMs are AI models trained on massive amounts of text data to understand and generate human-like language."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Understanding AI Providers",
+                xp: 150,
+                description: "Compare different AI assistants and their strengths",
+                lessons: [
+                    {
+                        title: "AI Provider Overview",
+                        content: `
+                            <h3>Meet the AI Assistants! 🤖</h3>
+                            <p>There are several popular AI assistants, each with unique strengths. Let's explore them!</p>
+                            
+                            <h4>OpenAI - ChatGPT</h4>
+                            <ul>
+                                <li>One of the most popular AI assistants</li>
+                                <li>Great for creative writing, coding, and general questions</li>
+                                <li>Known for conversational abilities</li>
+                            </ul>
+                            
+                            <h4>Microsoft - Copilot</h4>
+                            <ul>
+                                <li>Integrated with Microsoft products</li>
+                                <li>Excellent for productivity and research</li>
+                                <li>Can search the web for current information</li>
+                            </ul>
+                            
+                            <h4>Google - Gemini</h4>
+                            <ul>
+                                <li>Google's powerful AI assistant</li>
+                                <li>Strong at research and information synthesis</li>
+                                <li>Can process images and understand context</li>
+                            </ul>
+                            
+                            <h4>Anthropic - Claude</h4>
+                            <ul>
+                                <li>Focused on being helpful, harmless, and honest</li>
+                                <li>Excellent at analysis and detailed explanations</li>
+                                <li>Great for coding and technical tasks</li>
+                            </ul>
+                            
+                            <p><strong>Pro Tip:</strong> Try different AI assistants for different tasks to find which works best for your needs!</p>
+                        `
+                    }
+                ],
+                flashcards: [
+                    { front: "Who created ChatGPT?", back: "OpenAI" },
+                    { front: "What is Microsoft's AI called?", back: "Copilot" },
+                    { front: "What is Google's AI assistant?", back: "Gemini" },
+                    { front: "Which AI focuses on being helpful, harmless, and honest?", back: "Claude by Anthropic" },
+                    { front: "What does LLM stand for?", back: "Large Language Model" }
+                ],
+                questions: [
+                    {
+                        question: "Which AI provider is integrated with Microsoft products?",
+                        options: ["ChatGPT", "Copilot", "Gemini", "Claude"],
+                        correct: 1,
+                        explanation: "Microsoft Copilot is integrated with Microsoft's suite of products for enhanced productivity."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Prompt Engineering Basics",
+                xp: 200,
+                description: "Learn how to communicate effectively with AI",
+                lessons: [
+                    {
+                        title: "The Art of Prompting",
+                        content: `
+                            <h3>How to Talk to AI 💬</h3>
+                            <p>A <strong>prompt</strong> is what you say to an AI assistant. Good prompts get great results!</p>
+                            
+                            <h4>Prompt Best Practices:</h4>
+                            
+                            <p><strong>1. Be Specific</strong></p>
+                            <ul>
+                                <li>❌ Bad: "Tell me about dogs"</li>
+                                <li>✅ Good: "Explain the differences between Golden Retrievers and Labrador Retrievers"</li>
+                            </ul>
+                            
+                            <p><strong>2. Provide Context</strong></p>
+                            <ul>
+                                <li>❌ Bad: "Write a summary"</li>
+                                <li>✅ Good: "Write a 3-paragraph summary of this article for a 10-year-old audience"</li>
+                            </ul>
+                            
+                            <p><strong>3. Break Down Complex Tasks</strong></p>
+                            <ul>
+                                <li>❌ Bad: "Plan my vacation"</li>
+                                <li>✅ Good: "Suggest 5 family-friendly destinations in Europe for a 2-week summer vacation with kids ages 8 and 12"</li>
+                            </ul>
+                            
+                            <p><strong>4. Ask for Specific Formats</strong></p>
+                            <ul>
+                                <li>"Create a bullet-point list..."</li>
+                                <li>"Write this as a table..."</li>
+                                <li>"Explain this in simple terms..."</li>
+                            </ul>
+                            
+                            <p><strong>Remember:</strong> AI assistants are like helpful teammates - the clearer your instructions, the better they can help!</p>
+                        `
+                    }
+                ],
+                flashcards: [
+                    { front: "What is a prompt?", back: "The text or question you give to an AI assistant" },
+                    { front: "Why should prompts be specific?", back: "Specific prompts help AI understand exactly what you want and provide better results" },
+                    { front: "Give an example of providing context", back: "Instead of 'Write a summary', say 'Write a 2-paragraph summary for beginners'" },
+                    { front: "Should you break down complex tasks?", back: "Yes! Breaking tasks into steps helps AI give better, more organized results" },
+                    { front: "What's better: 'Tell me about space' or 'Explain how stars form'?", back: "The specific question 'Explain how stars form' is better" }
+                ],
+                questions: [
+                    {
+                        question: "Which is a better prompt?",
+                        options: [
+                            "Help me with math",
+                            "Explain how to solve quadratic equations with examples",
+                            "Math stuff",
+                            "Tell me everything about math"
+                        ],
+                        correct: 1,
+                        explanation: "This prompt is specific, clear, and asks for examples - perfect for getting helpful results!"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Effective Communication",
+                xp: 200,
+                description: "Master the art of AI conversations",
+                lessons: [
+                    {
+                        title: "Having Great Conversations",
+                        content: `
+                            <h3>Talking with AI Like a Pro 🗣️</h3>
+                            
+                            <h4>Conversation Tips:</h4>
+                            
+                            <p><strong>1. Follow-Up Questions</strong></p>
+                            <p>Don't hesitate to ask for clarification or more details:</p>
+                            <ul>
+                                <li>"Can you explain that in simpler terms?"</li>
+                                <li>"Can you give me an example?"</li>
+                                <li>"What about [specific aspect]?"</li>
+                            </ul>
+                            
+                            <p><strong>2. Iterative Refinement</strong></p>
+                            <p>Start broad, then narrow down:</p>
+                            <ul>
+                                <li>First: "Tell me about healthy eating"</li>
+                                <li>Then: "Focus on breakfast options"</li>
+                                <li>Finally: "Give me 5 quick breakfast recipes under 15 minutes"</li>
+                            </ul>
+                            
+                            <p><strong>3. Provide Feedback</strong></p>
+                            <ul>
+                                <li>"That's helpful, but could you make it shorter?"</li>
+                                <li>"This is great! Can you add more examples?"</li>
+                                <li>"I need this in a different format..."</li>
+                            </ul>
+                            
+                            <p><strong>4. Use Examples</strong></p>
+                            <p>Show the AI what you want:</p>
+                            <ul>
+                                <li>"Write in a style similar to..."</li>
+                                <li>"Here's an example of what I'm looking for..."</li>
+                            </ul>
+                            
+                            <p><strong>Practice makes perfect!</strong> The more you interact with AI, the better you'll get at asking the right questions.</p>
+                        `
+                    }
+                ],
+                flashcards: [
+                    { front: "What is iterative refinement?", back: "Starting with broad questions and gradually narrowing down to get exactly what you need" },
+                    { front: "Should you ask follow-up questions?", back: "Yes! Always ask for clarification or more details when needed" },
+                    { front: "How can you improve AI responses?", back: "Provide feedback like 'make it shorter' or 'add more examples'" },
+                    { front: "Why use examples in prompts?", back: "Examples show the AI exactly what style or format you want" },
+                    { front: "What if the first response isn't perfect?", back: "Keep refining! Ask the AI to adjust based on your feedback" }
+                ],
+                questions: [
+                    {
+                        question: "What's the best approach when an AI response is too technical?",
+                        options: [
+                            "Give up and ask someone else",
+                            "Accept the technical answer",
+                            "Ask the AI to explain it in simpler terms",
+                            "Start a completely new conversation"
+                        ],
+                        correct: 2,
+                        explanation: "Always ask AI to adjust its response! Saying 'Can you explain this in simpler terms?' is perfectly fine."
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Practical Applications",
+                xp: 250,
+                description: "Real-world uses of AI assistants",
+                lessons: [
+                    {
+                        title: "AI in Everyday Life",
+                        content: `
+                            <h3>How to Use AI Every Day 🌟</h3>
+                            
+                            <h4>1. Writing & Content Creation</h4>
+                            <ul>
+                                <li>Draft emails and messages</li>
+                                <li>Write blog posts or articles</li>
+                                <li>Create social media content</li>
+                                <li>Proofread and edit text</li>
+                            </ul>
+                            
+                            <h4>2. Learning & Research</h4>
+                            <ul>
+                                <li>Explain complex topics simply</li>
+                                <li>Create study guides and flashcards</li>
+                                <li>Practice languages</li>
+                                <li>Get homework help (understanding concepts!)</li>
+                            </ul>
+                            
+                            <h4>3. Coding & Technical Tasks</h4>
+                            <ul>
+                                <li>Write code snippets</li>
+                                <li>Debug errors</li>
+                                <li>Explain technical concepts</li>
+                                <li>Create documentation</li>
+                            </ul>
+                            
+                            <h4>4. Creative Projects</h4>
+                            <ul>
+                                <li>Brainstorm ideas</li>
+                                <li>Write stories or poetry</li>
+                                <li>Create recipes</li>
+                                <li>Plan events or trips</li>
+                            </ul>
+                            
+                            <h4>5. Problem Solving</h4>
+                            <ul>
+                                <li>Analyze data</li>
+                                <li>Make decisions</li>
+                                <li>Find solutions to challenges</li>
+                                <li>Compare options</li>
+                            </ul>
+                            
+                            <p><strong>Pro Tip:</strong> AI is a tool to enhance your work, not replace your thinking. Always review and personalize AI-generated content!</p>
+                        `
+                    }
+                ],
+                flashcards: [
+                    { front: "Name 3 writing tasks AI can help with", back: "Drafting emails, creating content, proofreading (any 3 writing tasks)" },
+                    { front: "How can AI help with learning?", back: "Explain topics, create study guides, practice languages, understand concepts" },
+                    { front: "Can AI help with coding?", back: "Yes! Write code, debug errors, explain concepts, create documentation" },
+                    { front: "What creative tasks can AI assist with?", back: "Brainstorming, writing stories, creating recipes, planning events" },
+                    { front: "Should you always use AI content as-is?", back: "No! Always review, verify, and personalize AI-generated content" }
+                ],
+                questions: [
+                    {
+                        question: "What's the best way to use AI for learning?",
+                        options: [
+                            "Copy answers directly for homework",
+                            "Use it to understand concepts and create study materials",
+                            "Let AI do all the thinking",
+                            "Only use it for simple questions"
+                        ],
+                        correct: 1,
+                        explanation: "AI is best used as a learning tool to help understand concepts, not to copy answers directly!"
+                    }
+                ]
+            },
+            {
+                id: 6,
+                title: "Best Practices & Ethics",
+                xp: 200,
+                description: "Use AI responsibly and effectively",
+                lessons: [
+                    {
+                        title: "Responsible AI Use",
+                        content: `
+                            <h3>Being a Responsible AI User ⚖️</h3>
+                            
+                            <h4>1. Verify Information</h4>
+                            <p>AI can make mistakes! Always:</p>
+                            <ul>
+                                <li>Double-check important facts</li>
+                                <li>Verify sources when possible</li>
+                                <li>Don't rely on AI for medical or legal advice</li>
+                                <li>Cross-reference critical information</li>
+                            </ul>
+                            
+                            <h4>2. Privacy Considerations</h4>
+                            <ul>
+                                <li>Don't share personal sensitive information</li>
+                                <li>Avoid sharing others' private data</li>
+                                <li>Be cautious with confidential business information</li>
+                                <li>Remember: conversations may be stored</li>
+                            </ul>
+                            
+                            <h4>3. Academic Integrity</h4>
+                            <ul>
+                                <li>Use AI as a learning tool, not a shortcut</li>
+                                <li>Always cite AI-assisted work when required</li>
+                                <li>Focus on understanding, not just getting answers</li>
+                                <li>Follow your school/workplace AI policies</li>
+                            </ul>
+                            
+                            <h4>4. Critical Thinking</h4>
+                            <ul>
+                                <li>Question AI responses</li>
+                                <li>Add your own expertise and judgment</li>
+                                <li>Understand AI limitations</li>
+                                <li>Don't accept everything at face value</li>
+                            </ul>
+                            
+                            <h4>5. Bias Awareness</h4>
+                            <ul>
+                                <li>AI can reflect biases from training data</li>
+                                <li>Be aware of potential stereotypes</li>
+                                <li>Use diverse sources for important decisions</li>
+                                <li>Challenge outputs that seem biased</li>
+                            </ul>
+                            
+                            <p><strong>Remember:</strong> AI is a powerful tool. Use it wisely, ethically, and always think critically! 🧠</p>
+                        `
+                    }
+                ],
+                flashcards: [
+                    { front: "Why verify AI information?", back: "AI can make mistakes - always double-check important facts" },
+                    { front: "Should you share personal info with AI?", back: "No! Avoid sharing sensitive personal or confidential information" },
+                    { front: "How to use AI ethically in school?", back: "Use it as a learning tool, cite when required, and focus on understanding" },
+                    { front: "What is critical thinking with AI?", back: "Questioning responses, adding your judgment, and not accepting everything at face value" },
+                    { front: "Can AI have biases?", back: "Yes! AI can reflect biases from its training data - stay aware and critical" }
+                ],
+                questions: [
+                    {
+                        question: "What should you do before using AI-generated facts in important work?",
+                        options: [
+                            "Trust it completely",
+                            "Verify the information from reliable sources",
+                            "Share it immediately",
+                            "Assume it's always correct"
+                        ],
+                        correct: 1,
+                        explanation: "Always verify AI-generated information, especially for important or critical work!"
+                    }
+                ]
+            }
+        ];
+
+        const badges = [
+            { id: 'first_steps', name: 'First Steps', icon: '🎯', requirement: 'Complete Module 1' },
+            { id: 'explorer', name: 'AI Explorer', icon: '🗺️', requirement: 'Try all 4 providers' },
+            { id: 'prompt_master', name: 'Prompt Master', icon: '💬', requirement: 'Complete Module 3' },
+            { id: 'streak', name: 'Streak Keeper', icon: '🔥', requirement: '3-day streak' },
+            { id: 'knowledge', name: 'Knowledge Seeker', icon: '📚', requirement: 'Review all flashcards' },
+            { id: 'graduate', name: 'Graduate', icon: '🎓', requirement: 'Complete all modules' }
+        ];
+
+        // ===== STATE MANAGEMENT =====
+        
+        let gameState = {
+            xp: 0,
+            level: 1,
+            completedModules: [],
+            currentModule: null,
+            currentLesson: 0,
+            earnedBadges: [],
+            selectedProvider: null,
+            currentFlashcardSet: [],
+            currentFlashcardIndex: 0,
+            knownFlashcards: [],
+            lastLoginDate: null,
+            streakDays: 0,
+            providersUsed: [],
+            questionsAnswered: 0,
+            correctAnswers: 0
+        };
+
+        let recognition = null;
+        let isRecording = false;
+
+        // ===== INITIALIZATION =====
+        
+        function init() {
+            loadGameState();
+            updateStreak();
+            renderBadges();
+            updateDashboard();
+            showWelcome();
+            addBotMessage("👋 Hello! I'm your AI Learning Assistant. Choose an AI provider above to get started, then we'll begin your journey to mastering AI fundamentals!");
+            
+            // Initialize speech recognition if available
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById('userInput').value = transcript;
+                    isRecording = false;
+                    document.getElementById('voiceBtn').classList.remove('recording');
+                };
+                
+                recognition.onerror = function() {
+                    isRecording = false;
+                    document.getElementById('voiceBtn').classList.remove('recording');
+                };
+            }
+        }
+
+        // ===== GAME STATE MANAGEMENT =====
+        
+        function loadGameState() {
+            const saved = localStorage.getItem('aiLearningState');
+            if (saved) {
+                gameState = { ...gameState, ...JSON.parse(saved) };
+            }
+        }
+
+        function saveGameState() {
+            localStorage.setItem('aiLearningState', JSON.stringify(gameState));
+        }
+
+        function updateStreak() {
+            const today = new Date().toDateString();
+            const lastLogin = gameState.lastLoginDate;
+            
+            if (lastLogin) {
+                const lastDate = new Date(lastLogin);
+                const daysDiff = Math.floor((new Date() - lastDate) / (1000 * 60 * 60 * 24));
+                
+                if (daysDiff === 1) {
+                    gameState.streakDays++;
+                    awardXP(10, "Daily streak bonus! 🔥");
+                } else if (daysDiff > 1) {
+                    gameState.streakDays = 1;
+                }
+            } else {
+                gameState.streakDays = 1;
+            }
+            
+            gameState.lastLoginDate = today;
+            saveGameState();
+            checkBadges();
+        }
+
+        function awardXP(amount, reason = "") {
+            gameState.xp += amount;
+            updateLevel();
+            saveGameState();
+            updateDashboard();
+            
+            if (reason) {
+                showNotification(`+${amount} XP! ${reason}`, 'success');
+            }
+        }
+
+        function updateLevel() {
+            const levels = [
+                { level: 1, name: 'Beginner', xpRequired: 0 },
+                { level: 2, name: 'Learner', xpRequired: 200 },
+                { level: 3, name: 'Intermediate', xpRequired: 500 },
+                { level: 4, name: 'Advanced', xpRequired: 800 },
+                { level: 5, name: 'Expert', xpRequired: 1200 }
+            ];
+            
+            for (let i = levels.length - 1; i >= 0; i--) {
+                if (gameState.xp >= levels[i].xpRequired) {
+                    if (gameState.level < levels[i].level) {
+                        gameState.level = levels[i].level;
+                        showNotification(`🎉 Level Up! You're now ${levels[i].name}!`, 'success');
+                    }
+                    break;
+                }
+            }
+        }
+
+        function updateDashboard() {
+            document.getElementById('userLevel').textContent = gameState.level;
+            document.getElementById('userXP').textContent = gameState.xp;
+            document.getElementById('modulesCompleted').textContent = gameState.completedModules.length;
+            document.getElementById('streakDays').textContent = gameState.streakDays;
+            
+            // Update progress bar
+            const nextLevelXP = [200, 500, 800, 1200, 2000][gameState.level - 1] || 2000;
+            const prevLevelXP = [0, 200, 500, 800, 1200][gameState.level - 1] || 0;
+            const progress = ((gameState.xp - prevLevelXP) / (nextLevelXP - prevLevelXP)) * 100;
+            document.getElementById('levelProgress').style.width = Math.min(progress, 100) + '%';
+            
+            const levelNames = ['Beginner', 'Learner', 'Intermediate', 'Advanced', 'Expert'];
+            document.getElementById('levelText').textContent = levelNames[gameState.level - 1] || 'Master';
+        }
+
+        function checkBadges() {
+            // First Steps
+            if (gameState.completedModules.includes(1) && !gameState.earnedBadges.includes('first_steps')) {
+                earnBadge('first_steps');
+            }
+            
+            // AI Explorer
+            if (gameState.providersUsed.length >= 4 && !gameState.earnedBadges.includes('explorer')) {
+                earnBadge('explorer');
+            }
+            
+            // Prompt Master
+            if (gameState.completedModules.includes(3) && !gameState.earnedBadges.includes('prompt_master')) {
+                earnBadge('prompt_master');
+            }
+            
+            // Streak Keeper
+            if (gameState.streakDays >= 3 && !gameState.earnedBadges.includes('streak')) {
+                earnBadge('streak');
+            }
+            
+            // Knowledge Seeker - check if user has reviewed flashcards from at least 3 modules
+            const flashcardModules = new Set(
+                gameState.knownFlashcards.map(key => parseInt(key.split('-')[0]))
+            );
+            if (flashcardModules.size >= 3 && !gameState.earnedBadges.includes('knowledge')) {
+                earnBadge('knowledge');
+            }
+            
+            // Graduate
+            if (gameState.completedModules.length >= 6 && !gameState.earnedBadges.includes('graduate')) {
+                earnBadge('graduate');
+            }
+        }
+
+        function earnBadge(badgeId) {
+            if (!gameState.earnedBadges.includes(badgeId)) {
+                gameState.earnedBadges.push(badgeId);
+                const badge = badges.find(b => b.id === badgeId);
+                showNotification(`🏆 Badge Earned: ${badge.name}!`, 'success');
+                awardXP(50, "Badge bonus!");
+                saveGameState();
+                renderBadges();
+            }
+        }
+
+        function renderBadges() {
+            const grid = document.getElementById('badgesGrid');
+            grid.innerHTML = badges.map(badge => `
+                <div class="badge ${gameState.earnedBadges.includes(badge.id) ? 'earned' : ''}">
+                    <div class="badge-icon">${badge.icon}</div>
+                    <div class="badge-name">${badge.name}</div>
+                </div>
+            `).join('');
+        }
+
+        // ===== PROVIDER SELECTION =====
+        
+        const providerData = {
+            openai: {
+                name: "OpenAI ChatGPT",
+                description: "ChatGPT is one of the most popular AI assistants, powered by OpenAI's GPT (Generative Pre-trained Transformer) models. It excels at creative writing, coding assistance, answering questions, and engaging in natural conversations. ChatGPT can help with brainstorming, learning new topics, debugging code, and much more. It's known for its versatility and conversational abilities.",
+                link: "https://openai.com/chatgpt"
+            },
+            microsoft: {
+                name: "Microsoft Copilot",
+                description: "Microsoft Copilot is an AI assistant integrated across Microsoft's ecosystem, including Windows, Edge browser, and Microsoft 365 applications. Built on advanced language models, Copilot can search the web for current information, help with productivity tasks, generate content, and assist with coding. It's particularly powerful for users in the Microsoft ecosystem looking to enhance their workflow.",
+                link: "https://www.microsoft.com/en-us/microsoft-copilot"
+            },
+            google: {
+                name: "Google Gemini",
+                description: "Google Gemini is Google's advanced AI assistant, designed to understand and process multimodal information including text, images, and code. Gemini excels at research tasks, information synthesis, and complex reasoning. It can analyze images, help with coding projects, and provide detailed explanations. As part of Google's AI ecosystem, it benefits from extensive training and integration with Google's services.",
+                link: "https://gemini.google.com"
+            },
+            anthropic: {
+                name: "Anthropic Claude",
+                description: "Claude is an AI assistant created by Anthropic with a focus on being helpful, harmless, and honest. Claude excels at detailed analysis, coding tasks, writing assistance, and having nuanced conversations. It's designed with strong safety features and is particularly good at following instructions precisely, maintaining context in long conversations, and providing well-structured responses. Claude is trusted for both creative and technical work.",
+                link: "https://www.anthropic.com/claude"
+            }
+        };
+        
+        function selectProvider(provider) {
+            gameState.selectedProvider = provider;
+            
+            if (!gameState.providersUsed.includes(provider)) {
+                gameState.providersUsed.push(provider);
+                awardXP(20, `Trying ${getProviderName(provider)}!`);
+            }
+            
+            // Update UI - highlight selected button
+            document.querySelectorAll('.provider-btn').forEach(btn => btn.classList.remove('selected'));
+            event.target.closest('.provider-btn').classList.add('selected');
+            
+            // Display provider information
+            const providerInfo = document.getElementById('providerInfo');
+            const data = providerData[provider];
+            
+            document.getElementById('providerName').textContent = data.name;
+            document.getElementById('providerDescription').textContent = data.description;
+            document.getElementById('providerLink').href = data.link;
+            providerInfo.classList.add('visible');
+            
+            saveGameState();
+            checkBadges();
+            
+            addBotMessage(`Excellent choice! You've selected ${getProviderName(provider)}. I've displayed information about this AI in the provider section above. Let's start learning! Type 'start' or 'next', or click a module on the left to begin.`);
+        }
+
+        function getProviderName(provider) {
+            const names = {
+                'openai': 'OpenAI ChatGPT',
+                'microsoft': 'Microsoft Copilot',
+                'google': 'Google Gemini',
+                'anthropic': 'Anthropic Claude'
+            };
+            return names[provider] || provider;
+        }
+
+        // ===== WELCOME & MODULE DISPLAY =====
+        
+        function showWelcome() {
+            const content = document.getElementById('learningContent');
+            content.innerHTML = `
+                <div class="welcome-screen">
+                    <h2>Welcome to Your AI Learning Journey! 🚀</h2>
+                    <p>Master AI fundamentals through interactive lessons, flashcards, and hands-on practice. Earn XP, unlock badges, and level up your skills!</p>
+                    <h3 class="section-title">📖 Learning Modules</h3>
+                </div>
+            `;
+            
+            const modulesSection = document.createElement('div');
+            modulesSection.className = 'modules-section';
+            
+            learningModules.forEach(module => {
+                const isCompleted = gameState.completedModules.includes(module.id);
+                const isActive = gameState.currentModule === module.id;
+                
+                const moduleCard = document.createElement('div');
+                moduleCard.className = `module-card ${isCompleted ? 'completed' : ''} ${isActive ? 'active' : ''}`;
+                moduleCard.onclick = () => startModule(module.id);
+                
+                moduleCard.innerHTML = `
+                    <div class="module-header">
+                        <span class="module-title">${isCompleted ? '✅ ' : ''}${module.title}</span>
+                        <span class="module-xp">${module.xp} XP</span>
+                    </div>
+                    <div class="module-description">${module.description}</div>
+                `;
+                
+                modulesSection.appendChild(moduleCard);
+            });
+            
+            content.appendChild(modulesSection);
+        }
+
+        function startModule(moduleId) {
+            if (!gameState.selectedProvider) {
+                addBotMessage("Please select an AI provider first! Choose one from the buttons above.");
+                return;
+            }
+            
+            const module = learningModules.find(m => m.id === moduleId);
+            gameState.currentModule = moduleId;
+            gameState.currentLesson = 0;
+            saveGameState();
+            
+            displayLesson(module);
+            addBotMessage(`Let's dive into "${module.title}"! Read the lesson on the left, then I'll ask you some questions to check your understanding. Ready? 🎯`);
+        }
+
+        function displayLesson(module) {
+            const content = document.getElementById('learningContent');
+            const lesson = module.lessons[gameState.currentLesson];
+            
+            content.innerHTML = `
+                <h2 class="section-title">${module.title}</h2>
+                <div class="lesson-content">
+                    ${lesson.content}
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="startQuiz()">I'm Ready for Questions! ✓</button>
+                    <button class="btn btn-secondary" onclick="showFlashcards()">Practice Flashcards 📚</button>
+                    <button class="btn btn-success" onclick="showModuleList()">← Module Topics List</button>
+                </div>
+            `;
+            
+            // Load flashcards
+            gameState.currentFlashcardSet = module.flashcards;
+            gameState.currentFlashcardIndex = 0;
+        }
+
+        function showModuleList() {
+            // Hide flashcard section if visible
+            document.getElementById('flashcardSection').classList.add('hidden');
+            
+            showWelcome(); // Refresh the module list
+            addBotMessage("Here's the module topics list! Choose your next learning adventure. 🎓");
+            
+            // Scroll left panel to modules section
+            setTimeout(() => {
+                const modulesSection = document.querySelector('.modules-section');
+                if (modulesSection) {
+                    modulesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 300);
+        }
+
+        // ===== QUIZ SYSTEM =====
+        
+        function startQuiz() {
+            const module = learningModules.find(m => m.id === gameState.currentModule);
+            if (!module || !module.questions || module.questions.length === 0) {
+                completeModule();
+                return;
+            }
+            
+            askQuestion(module.questions[0], 0, module);
+        }
+
+        function askQuestion(question, questionIndex, module) {
+            addBotMessage(`Question ${questionIndex + 1}: ${question.question}`);
+            
+            const chatMessages = document.getElementById('chatMessages');
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'question-options';
+            
+            question.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(index, question.correct, question.explanation, questionIndex, module);
+                optionsDiv.appendChild(btn);
+            });
+            
+            chatMessages.appendChild(optionsDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function checkAnswer(selected, correct, explanation, questionIndex, module) {
+            gameState.questionsAnswered++;
+            
+            // Disable all option buttons
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.onclick = null;
+                btn.style.cursor = 'default';
+            });
+            
+            if (selected === correct) {
+                gameState.correctAnswers++;
+                document.querySelectorAll('.option-btn')[selected].classList.add('correct');
+                addBotMessage(`✅ Correct! ${explanation}`);
+                awardXP(10, "Correct answer!");
+                
+                // Next question or complete
+                if (questionIndex + 1 < module.questions.length) {
+                    setTimeout(() => {
+                        askQuestion(module.questions[questionIndex + 1], questionIndex + 1, module);
+                    }, 2000);
+                } else {
+                    setTimeout(completeModule, 2000);
+                }
+            } else {
+                document.querySelectorAll('.option-btn')[selected].classList.add('incorrect');
+                document.querySelectorAll('.option-btn')[correct].classList.add('correct');
+                addBotMessage(`❌ Not quite. ${explanation} Let's try the next question!`);
+                
+                setTimeout(() => {
+                    if (questionIndex + 1 < module.questions.length) {
+                        askQuestion(module.questions[questionIndex + 1], questionIndex + 1, module);
+                    } else {
+                        completeModule();
+                    }
+                }, 3000);
+            }
+            
+            saveGameState();
+        }
+
+        function completeModule() {
+            const module = learningModules.find(m => m.id === gameState.currentModule);
+            
+            if (!gameState.completedModules.includes(module.id)) {
+                gameState.completedModules.push(module.id);
+                awardXP(module.xp, `Completed ${module.title}!`);
+                addBotMessage(`🎉 Congratulations! You've completed "${module.title}" and earned ${module.xp} XP! Check the left panel for your progress and try the flashcards to reinforce your learning.`);
+                
+                saveGameState();
+                checkBadges();
+                showWelcome();
+            } else {
+                addBotMessage("Great review! Feel free to practice the flashcards or move on to another module.");
+            }
+        }
+
+        // ===== FLASHCARD SYSTEM =====
+        
+        function showFlashcards() {
+            const module = learningModules.find(m => m.id === gameState.currentModule);
+            if (!module || !module.flashcards) return;
+            
+            document.getElementById('flashcardSection').classList.remove('hidden');
+            document.getElementById('totalCards').textContent = module.flashcards.length;
+            gameState.currentFlashcardIndex = 0;
+            displayFlashcard();
+            
+            addBotMessage("📚 Flashcard practice mode activated! **Please scroll down in the left panel** to see your flashcards. Click the card to flip it, then mark whether you know it. This helps reinforce your learning!");
+            
+            // Auto-scroll to flashcard section in left panel
+            setTimeout(() => {
+                const flashcardSection = document.getElementById('flashcardSection');
+                if (flashcardSection) {
+                    flashcardSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 500);
+        }
+
+        function displayFlashcard() {
+            const module = learningModules.find(m => m.id === gameState.currentModule);
+            if (!module) return;
+            
+            const card = module.flashcards[gameState.currentFlashcardIndex];
+            document.getElementById('flashcardFront').textContent = card.front;
+            document.getElementById('flashcardBack').textContent = card.back;
+            document.getElementById('cardNumber').textContent = gameState.currentFlashcardIndex + 1;
+            
+            // Reset flip
+            document.getElementById('flashcard').classList.remove('flipped');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const flashcard = document.getElementById('flashcard');
+            if (flashcard) {
+                flashcard.addEventListener('click', function() {
+                    this.classList.toggle('flipped');
+                });
+            }
+        });
+
+        function nextCard() {
+            const module = learningModules.find(m => m.id === gameState.currentModule);
+            if (gameState.currentFlashcardIndex < module.flashcards.length - 1) {
+                gameState.currentFlashcardIndex++;
+                displayFlashcard();
+            } else {
+                addBotMessage("🎉 You've reviewed all flashcards for this module! Great job! Ready to continue your learning journey? Type **'start'** or **'next'** in the chat to get back to the module list and choose your next adventure!");
+                awardXP(25, "Completed flashcard set!");
+                checkBadges(); // Check for Knowledge Seeker badge
+            }
+        }
+
+        function previousCard() {
+            if (gameState.currentFlashcardIndex > 0) {
+                gameState.currentFlashcardIndex--;
+                displayFlashcard();
+            }
+        }
+
+        function markKnown() {
+            const cardKey = `${gameState.currentModule}-${gameState.currentFlashcardIndex}`;
+            if (!gameState.knownFlashcards.includes(cardKey)) {
+                gameState.knownFlashcards.push(cardKey);
+                awardXP(5, "Flashcard mastered!");
+                saveGameState();
+            }
+            nextCard();
+        }
+
+        // ===== CHAT INTERFACE =====
+        
+        function addBotMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            messageDiv.innerHTML = `
+                <div class="message-bubble">${message}</div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addUserMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            messageDiv.innerHTML = `
+                <div class="message-bubble">${message}</div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            addUserMessage(message);
+            input.value = '';
+            
+            // Process message
+            setTimeout(() => {
+                processUserMessage(message.toLowerCase());
+            }, 500);
+        }
+
+        function processUserMessage(message) {
+            // Check for common commands
+            if (message.includes('start') || message.includes('begin') || message.includes('next')) {
+                if (gameState.selectedProvider) {
+                    showWelcome(); // Refresh the module list
+                    addBotMessage("Great! I've refreshed the module list on the left panel. Click on any module to start learning. I recommend starting with Module 1: Introduction to AI! 🎓");
+                    // Scroll left panel to modules section
+                    setTimeout(() => {
+                        const leftPanel = document.querySelector('.left-panel');
+                        const modulesSection = document.querySelector('.modules-section');
+                        if (modulesSection) {
+                            modulesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }, 300);
+                } else {
+                    addBotMessage("First, please select an AI provider from the buttons above. Then we can start your learning journey!");
+                }
+            } else if (message.includes('help')) {
+                addBotMessage("I'm here to guide you! You can:\n• Type 'start' or 'next' to view module list\n• Select a module from the left panel\n• Practice with flashcards\n• Ask me questions about the lessons\n• Check your progress in the dashboard\n\nWhat would you like to do?");
+            } else if (message.includes('progress') || message.includes('status')) {
+                addBotMessage(`You're doing great! You've earned ${gameState.xp} XP, completed ${gameState.completedModules.length} modules, and have a ${gameState.streakDays}-day streak! Keep it up! 🌟`);
+            } else if (message.includes('flashcard')) {
+                if (gameState.currentModule) {
+                    showFlashcards();
+                } else {
+                    addBotMessage("First, start a module to access its flashcards! Choose a module from the left panel.");
+                }
+            } else {
+                // General response
+                const responses = [
+                    "That's an interesting point! Have you tried exploring the modules on the left?",
+                    "I see! Would you like to start a lesson or practice with flashcards?",
+                    "Great question! The lessons cover this in detail. Select a module to learn more!",
+                    "Keep going! Your progress is looking great. Ready for the next challenge?",
+                    "Excellent! You can always ask me for help or guidance as you learn."
+                ];
+                addBotMessage(responses[Math.floor(Math.random() * responses.length)]);
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // ===== VOICE INPUT =====
+        
+        function toggleVoiceInput() {
+            if (!recognition) {
+                addBotMessage("Sorry, voice input is not supported in your browser. Please type your message instead.");
+                return;
+            }
+            
+            if (isRecording) {
+                recognition.stop();
+                isRecording = false;
+                document.getElementById('voiceBtn').classList.remove('recording');
+            } else {
+                recognition.start();
+                isRecording = true;
+                document.getElementById('voiceBtn').classList.add('recording');
+                addBotMessage("🎤 Listening... Speak now!");
+            }
+        }
+
+        // ===== NOTIFICATIONS =====
+        
+        function showNotification(message, type = 'info') {
+            // Simple console notification (can be enhanced with UI toast)
+            console.log(`[${type.toUpperCase()}] ${message}`);
+            
+            // Show in bot chat for important updates
+            if (type === 'success') {
+                addBotMessage(`✨ ${message}`);
+            }
+        }
+
+        // ===== INITIALIZE ON LOAD =====
+        
+        window.onload = init;
+    </script>
+</body>
+</html>

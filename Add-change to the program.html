@@ -1,0 +1,45 @@
+
+
+
+
+<script>
+function showMessageWithDelay(message, delay = 5000) {
+  const messageBox = document.getElementById("message-box");
+  messageBox.innerText = message;
+  setTimeout(() => {
+    enableMicPrompt(); // triggers mic prompt after delay
+  }, delay);
+}
+</script>
+
+
+/* only prompt for microphone once *?
+<script>
+let micPrompted = false;
+
+function promptMicOnce() {
+  if (!micPrompted) {
+    micPrompted = true;
+    // Show mic button or auto-start mic
+    document.getElementById("mic-button").style.display = "block";
+  }
+}
+</script>
+
+
+
+/*To add more delay for user to read the sentences   */
+<div id="reading-timer">Reading time: <span id="timer-count">5</span> seconds</div>
+
+<script>
+function startReadingTimer(seconds) {
+  let count = seconds;
+  const timerDisplay = document.getElementById("timer-count");
+  const interval = setInterval(() => {
+    timerDisplay.textContent = count;
+    count--;
+    if (count < 0) clearInterval(interval);
+  }, 1000);
+}
+</script>
+

@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Learning Ecosystem - LLM Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .flashcard-container {
+            perspective: 1000px;
+            height: 200px;
+        }
+        .flashcard {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flashcard-flipped .flashcard {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+        .flashcard-front {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .flashcard-back {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            transform: rotateY(180deg);
+        }
+        .message-animation {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .llm-card {
+            transition: all 0.3s ease;
+        }
+        .llm-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .comparison-table {
+            overflow-x: auto;
+        }
+        .badge-pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    🎓 AI Learning Ecosystem
+                </h1>
+                <div class="flex gap-4 items-center">
+                    <div class="text-sm font-semibold text-gray-700">
+                        <span id="totalPoints" class="text-blue-600">0</span> pts
+                    </div>
+                    <div class="text-sm font-semibold text-gray-700">
+                        <span id="streakCounter">0 Day Streak! 🔥</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Main Learning Area -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Navigation Tabs -->
+                <div class="bg-white rounded-2xl shadow-lg p-4">
+                    <div class="flex gap-2 overflow-x-auto">
+                        <button onclick="showTab('chat')" id="chatTab" class="tab-btn px-6 py-2 rounded-lg font-semibold transition-all bg-blue-600 text-white">
+                            💬 Chat Learning
+                        </button>
+                        <button onclick="showTab('llm-explorer')" id="llmTab" class="tab-btn px-6 py-2 rounded-lg font-semibold transition-all bg-gray-200 text-gray-700 hover:bg-gray-300">
+                            🤖 LLM Explorer
+                        </button>
+                        <button onclick="showTab('comparison')" id="comparisonTab" class="tab-btn px-6 py-2 rounded-lg font-semibold transition-all bg-gray-200 text-gray-700 hover:bg-gray-300">
+                            ⚖️ Compare LLMs
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Learning Section -->
+                <div id="chatSection" class="tab-content">
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
+                            <h2 class="text-2xl font-bold mb-2">Interactive AI Chat</h2>
+                            <p class="text-blue-100">Learn by conversing with your AI instructor</p>
+                            <div class="mt-4">
+                                <div class="bg-white/20 rounded-full h-2">
+                                    <div id="progressBar" class="bg-white h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                </div>
+                                <p class="text-sm mt-2">Progress: <span id="progressPercent">0</span>%</p>
+                            </div>
+                        </div>
+
+                        <div id="chatMessages" class="p-6 space-y-4 h-96 overflow-y-auto bg-gray-50">
+                            <!-- Messages will be added here -->
+                        </div>
+
+                        <div class="p-4 bg-white border-t">
+                            <div class="flex gap-2 mb-3">
+                                <button onclick="giveHint()" class="px-3 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full hover:bg-yellow-200 transition">
+                                    💡 Hint
+                                </button>
+                                <button onclick="repeatLastMessage()" class="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition">
+                                    🔄 Repeat
+                                </button>
+                                <button onclick="showFlashcards()" class="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded-full hover:bg-purple-200 transition">
+                                    🃏 Flashcards
+                                </button>
+                                <button onclick="skipTopic()" class="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition">
+                                    ⏭️ Skip
+                                </button>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" id="userInput" placeholder="Type your response..." 
+                                    class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                                    onkeypress="if(event.key==='Enter') sendMessage()">
+                                <button onclick="toggleVoiceInput()" id="voiceBtn" class="px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                                    🎤
+                                </button>
+                                <button onclick="sendMessage()" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">
+                                    Send
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LLM Explorer Section -->
+                <div id="llmExplorerSection" class="tab-content hidden">
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h2 class="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            🤖 Explore AI Language Models
+                        </h2>
+                        <p class="text-gray-600 mb-6">Discover the unique capabilities of different AI models. Click on each to learn more!</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="llmCardsContainer">
+                            <!-- LLM cards will be generated here -->
+                        </div>
+
+                        <!-- LLM Detail Modal -->
+                        <div id="llmDetailModal" class="hidden mt-6 p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl border-2 border-blue-300">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 id="modalLLMName" class="text-2xl font-bold"></h3>
+                                <button onclick="closeLLMDetail()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                            </div>
+                            <div id="modalLLMContent" class="space-y-4">
+                                <!-- Detail content will be populated here -->
+                            </div>
+                            <div class="mt-6 flex gap-3">
+                                <button onclick="tryLLMQuiz()" class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-semibold">
+                                    🎯 Take Quiz
+                                </button>
+                                <button onclick="earnLLMBadge()" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold">
+                                    🏆 Earn Badge
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparison Section -->
+                <div id="comparisonSection" class="tab-content hidden">
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h2 class="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            ⚖️ Compare AI Models
+                        </h2>
+                        <p class="text-gray-600 mb-6">See how different LLMs stack up against each other</p>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Select LLMs to Compare:</label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-2" id="llmCheckboxes">
+                                <!-- Checkboxes will be generated here -->
+                            </div>
+                        </div>
+
+                        <button onclick="generateComparison()" class="mb-6 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">
+                            Compare Selected Models
+                        </button>
+
+                        <div id="comparisonResults" class="comparison-table">
+                            <!-- Comparison table will be generated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flashcard Section -->
+                <div id="flashcardSection" class="hidden">
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold">📚 Study Flashcards</h3>
+                            <button onclick="closeFlashcards()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                        </div>
+                        
+                        <div id="flashcardContainer" class="flashcard-container mb-4" onclick="flipCard()">
+                            <div class="flashcard">
+                                <div class="flashcard-front">
+                                    <p id="flashcardFront" class="text-xl font-semibold text-center"></p>
+                                </div>
+                                <div class="flashcard-back">
+                                    <p id="flashcardBack" class="text-lg text-center"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <button onclick="previousCard()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
+                                ← Previous
+                            </button>
+                            <span id="cardCounter" class="text-sm font-semibold text-gray-600">1 / 1</span>
+                            <button onclick="nextCard()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition">
+                                Next →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-6">
+                
+                <!-- Current Lesson -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-lg font-bold mb-3 text-gray-800">📖 Current Lesson</h3>
+                    <div class="p-4 bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl">
+                        <p class="font-semibold text-gray-800" id="currentLessonTitle">What is AI?</p>
+                        <p class="text-sm text-gray-600 mt-1" id="currentLessonConcept">Understanding artificial intelligence basics</p>
+                    </div>
+                </div>
+
+                <!-- Badges & Achievements -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-lg font-bold mb-3 text-gray-800">🏆 Your Badges</h3>
+                    <div id="badgesContainer" class="grid grid-cols-2 gap-3">
+                        <p class="text-gray-500 text-sm col-span-2">Keep learning to earn badges!</p>
+                    </div>
+                </div>
+
+                <!-- Learning Path -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-lg font-bold mb-3 text-gray-800">🗺️ Learning Path</h3>
+                    <div id="learningPath" class="space-y-3">
+                        <!-- Learning path will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Resources -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-lg font-bold mb-3 text-gray-800">🔗 Resources</h3>
+                    <p class="text-sm text-gray-600 mb-3" id="referencesDescription">Explore curated resources</p>
+                    <div id="referencesContainer" class="space-y-2">
+                        <!-- References will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global Variables
+        let points = 0;
+        let streak = 1;
+        let userProgress = 0;
+        let currentLesson = 0;
+        let badges = [];
+        let messages = [];
+        let topicOffered = false;
+        let currentFlashcardIndex = 0;
+        let flashcardFlipped = false;
+        let recognition = null;
+        let isListening = false;
+        let currentLLMSelected = null;
+        let selectedLLMsForComparison = [];
+
+        // LLM Data
+        const llmData = [
+            {
+                id: 'claude',
+                name: 'Claude (Anthropic)',
+                icon: '🤖',
+                color: 'from-orange-400 to-red-500',
+                description: 'Thoughtful, nuanced responses with strong reasoning capabilities',
+                strengths: ['Long context windows', 'Strong reasoning', 'Detailed explanations', 'Constitutional AI safety'],
+                weaknesses: ['Limited internet access', 'Cannot generate images'],
+                bestFor: 'Complex analysis, research, detailed writing, coding assistance',
+                contextWindow: '200K tokens',
+                released: '2023',
+                quiz: [
+                    { q: 'What company created Claude?', a: 'Anthropic' },
+                    { q: 'What is Claude\'s key safety approach called?', a: 'Constitutional AI' }
+                ]
+            },
+            {
+                id: 'gpt4',
+                name: 'GPT-4 (OpenAI)',
+                icon: '🌟',
+                color: 'from-green-400 to-teal-500',
+                description: 'Versatile model with strong general capabilities',
+                strengths: ['Multimodal (text & images)', 'Wide knowledge base', 'Plugin ecosystem', 'Code interpreter'],
+                weaknesses: ['Can be verbose', 'Knowledge cutoff limitations'],
+                bestFor: 'General tasks, creative writing, multimodal analysis, plugin integration',
+                contextWindow: '128K tokens',
+                released: '2023',
+                quiz: [
+                    { q: 'Which company developed GPT-4?', a: 'OpenAI' },
+                    { q: 'Can GPT-4 process images?', a: 'Yes' }
+                ]
+            },
+            {
+                id: 'gemini',
+                name: 'Gemini (Google)',
+                icon: '💎',
+                color: 'from-blue-400 to-purple-500',
+                description: 'Google\'s multimodal AI with strong search integration',
+                strengths: ['Real-time search integration', 'Multimodal', 'Google ecosystem', 'Fast responses'],
+                weaknesses: ['Newer model', 'Less creative in some tasks'],
+                bestFor: 'Research with current info, factual queries, Google Workspace integration',
+                contextWindow: '1M tokens (Pro 1.5)',
+                released: '2023',
+                quiz: [
+                    { q: 'What company makes Gemini?', a: 'Google' },
+                    { q: 'What\'s unique about Gemini\'s context window?', a: 'Very large (1M tokens)' }
+                ]
+            },
+            {
+                id: 'llama',
+                name: 'Llama (Meta)',
+                icon: '🦙',
+                color: 'from-purple-400 to-pink-500',
+                description: 'Open-source model that can run locally',
+                strengths: ['Open-source', 'Can run locally', 'Privacy-friendly', 'Customizable'],
+                weaknesses: ['Requires technical setup', 'Smaller versions less capable'],
+                bestFor: 'Privacy-sensitive tasks, custom applications, local deployment',
+                contextWindow: '8K-128K tokens',
+                released: '2023',
+                quiz: [
+                    { q: 'Is Llama open-source?', a: 'Yes' },
+                    { q: 'Which company developed Llama?', a: 'Meta' }
+                ]
+            },
+            {
+                id: 'mistral',
+                name: 'Mistral AI',
+                icon: '🌊',
+                color: 'from-cyan-400 to-blue-500',
+                description: 'European open-source models with strong performance',
+                strengths: ['Open-source options', 'Efficient', 'European data privacy', 'Good reasoning'],
+                weaknesses: ['Smaller ecosystem', 'Less well-known'],
+                bestFor: 'European deployments, cost-effective solutions, specialized tasks',
+                contextWindow: '32K tokens',
+                released: '2023',
+                quiz: [
+                    { q: 'Where is Mistral AI based?', a: 'Europe (France)' },
+                    { q: 'Does Mistral offer open-source models?', a: 'Yes' }
+                ]
+            },
+            {
+                id: 'cohere',
+                name: 'Cohere',
+                icon: '🔗',
+                color: 'from-pink-400 to-rose-500',
+                description: 'Enterprise-focused AI with strong retrieval capabilities',
+                strengths: ['RAG capabilities', 'Enterprise features', 'Semantic search', 'Embeddings'],
+                weaknesses: ['Less known for chat', 'Smaller public presence'],
+                bestFor: 'Enterprise search, retrieval augmented generation, embeddings',
+                contextWindow: '128K tokens',
+                released: '2021',
+                quiz: [
+                    { q: 'What is Cohere best known for?', a: 'Enterprise AI and RAG' },
+                    { q: 'What does RAG stand for?', a: 'Retrieval Augmented Generation' }
+                ]
+            }
+        ];
+
+        // Lessons Data
+        const lessons = [
+            {
+                title: 'What is AI?',
+                description: 'Understanding artificial intelligence basics',
+                concept: 'AI enables machines to perform tasks that typically require human intelligence',
+                flashcards: [
+                    { front: 'What does AI stand for?', back: 'Artificial Intelligence - technology that enables machines to simulate human intelligence' },
+                    { front: 'Name 3 types of AI', back: '1. Reactive Machines\n2. Limited Memory AI\n3. Theory of Mind AI' }
+                ],
+                references: [
+                    { title: 'AI Basics - Stanford Course', type: 'Course', url: 'https://stanford.edu' },
+                    { title: 'What is AI? - IBM', type: 'Article', url: 'https://ibm.com' },
+                    { title: 'AI Explained - YouTube', type: 'Video', url: 'https://youtube.com' }
+                ]
+            },
+            {
+                title: 'AI in Everyday Life',
+                description: 'How AI impacts your daily activities',
+                concept: 'AI is integrated into many everyday technologies we use',
+                flashcards: [
+                    { front: 'Name 3 AI systems you use daily', back: 'Voice assistants, recommendation algorithms, spam filters' },
+                    { front: 'How does Netflix use AI?', back: 'Recommendation algorithms that learn your preferences' }
+                ],
+                references: [
+                    { title: 'AI in Daily Life', type: 'Article', url: 'https://example.com' },
+                    { title: 'Smart Home AI', type: 'Guide', url: 'https://example.com' }
+                ]
+            },
+            {
+                title: 'AI Prompting Mastery',
+                description: 'Learn to communicate effectively with AI',
+                concept: 'Good prompts are clear, specific, and provide context',
+                flashcards: [
+                    { front: 'What makes a good AI prompt?', back: 'Clear, specific, contextual, and well-structured' },
+                    { front: 'Give an example of a good prompt', back: 'Instead of "Tell me about weather" → "What\'s the 7-day weather forecast for Seattle, WA?"' }
+                ],
+                references: [
+                    { title: 'Prompt Engineering Guide', type: 'Guide', url: 'https://example.com' },
+                    { title: 'Best Practices', type: 'Article', url: 'https://example.com' }
+                ]
+            },
+            {
+                title: 'Understanding LLMs',
+                description: 'Explore large language models',
+                concept: 'LLMs are AI models trained on vast amounts of text data',
+                flashcards: [
+                    { front: 'What is an LLM?', back: 'Large Language Model - AI trained on massive text datasets to understand and generate human language' },
+                    { front: 'Name 3 popular LLMs', back: 'GPT-4, Claude, Gemini' }
+                ],
+                references: [
+                    { title: 'LLM Overview', type: 'Article', url: 'https://example.com' },
+                    { title: 'How LLMs Work', type: 'Video', url: 'https://example.com' }
+                ]
+            }
+        ];
+
+        // Badge System
+        const badgesList = [
+            { id: 1, name: 'First Steps', icon: '🌱', points: 10 },
+            { id: 2, name: 'Quick Learner', icon: '⚡', points: 50 },
+            { id: 3, name: 'Knowledge Seeker', icon: '📚', points: 100 },
+            { id: 4, name: 'AI Expert', icon: '🎓', points: 200 },
+            { id: 5, name: 'LLM Master', icon: '🤖', points: 300 }
+        ];
+
+        // Tab Navigation
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('bg-blue-600', 'text-white');
+                el.classList.add('bg-gray-200', 'text-gray-700');
+            });
+
+            if (tabName === 'chat') {
+                document.getElementById('chatSection').classList.remove('hidden');
+                document.getElementById('chatTab').classList.add('bg-blue-600', 'text-white');
+                document.getElementById('chatTab').classList.remove('bg-gray-200', 'text-gray-700');
+            } else if (tabName === 'llm-explorer') {
+                document.getElementById('llmExplorerSection').classList.remove('hidden');
+                document.getElementById('llmTab').classList.add('bg-blue-600', 'text-white');
+                document.getElementById('llmTab').classList.remove('bg-gray-200', 'text-gray-700');
+                loadLLMCards();
+            } else if (tabName === 'comparison') {
+                document.getElementById('comparisonSection').classList.remove('hidden');
+                document.getElementById('comparisonTab').classList.add('bg-blue-600', 'text-white');
+                document.getElementById('comparisonTab').classList.remove('bg-gray-200', 'text-gray-700');
+                loadComparisonCheckboxes();
+            }
+        }
+
+        // LLM Explorer Functions
+        function loadLLMCards() {
+            const container = document.getElementById('llmCardsContainer');
+            container.innerHTML = '';
+            
+            llmData.forEach(llm => {
+                const card = document.createElement('div');
+                card.className = `llm-card p-5 bg-gradient-to-br ${llm.color} rounded-xl cursor-pointer text-white shadow-lg`;
+                card.onclick = () => showLLMDetail(llm.id);
+                card.innerHTML = `
+                    <div class="text-4xl mb-2">${llm.icon}</div>
+                    <h3 class="text-xl font-bold mb-2">${llm.name}</h3>
+                    <p class="text-sm opacity-90">${llm.description}</p>
+                    <div class="mt-4 text-xs opacity-80">
+                        <span class="bg-white/20 px-2 py-1 rounded">Context: ${llm.contextWindow}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function showLLMDetail(llmId) {
+            const llm = llmData.find(l => l.id === llmId);
+            currentLLMSelected = llm;
+            
+            document.getElementById('llmDetailModal').classList.remove('hidden');
+            document.getElementById('modalLLMName').textContent = `${llm.icon} ${llm.name}`;
+            
+            const content = `
+                <div class="bg-white p-4 rounded-lg">
+                    <p class="text-gray-700 mb-4">${llm.description}</p>
+                    
+                    <div class="mb-4">
+                        <h4 class="font-bold text-green-700 mb-2">✅ Strengths:</h4>
+                        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                            ${llm.strengths.map(s => `<li>${s}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 class="font-bold text-red-700 mb-2">⚠️ Limitations:</h4>
+                        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                            ${llm.weaknesses.map(w => `<li>${w}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <h4 class="font-bold text-blue-800 mb-1">🎯 Best For:</h4>
+                        <p class="text-sm text-gray-700">${llm.bestFor}</p>
+                    </div>
+                    
+                    <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+                        <div class="bg-purple-50 p-2 rounded">
+                            <span class="font-semibold text-purple-800">Context Window:</span>
+                            <p class="text-gray-700">${llm.contextWindow}</p>
+                        </div>
+                        <div class="bg-pink-50 p-2 rounded">
+                            <span class="font-semibold text-pink-800">Released:</span>
+                            <p class="text-gray-700">${llm.released}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modalLLMContent').innerHTML = content;
+            earnPoints(20);
+        }
+
+        function closeLLMDetail() {
+            document.getElementById('llmDetailModal').classList.add('hidden');
+        }
+
+        function tryLLMQuiz() {
+            if (!currentLLMSelected) return;
+            
+            const quiz = currentLLMSelected.quiz;
+            const question = quiz[Math.floor(Math.random() * quiz.length)];
+            
+            const answer = prompt(`🎯 Quick Quiz!\n\n${question.q}`);
+            
+            if (answer && answer.toLowerCase().includes(question.a.toLowerCase())) {
+                alert('🎉 Correct! +50 points!');
+                earnPoints(50);
+            } else {
+                alert(`🤔 Not quite! The answer is: ${question.a}\n\nYou still earn +10 points for trying!`);
+                earnPoints(10);
+            }
+        }
+
+        function earnLLMBadge() {
+            if (!currentLLMSelected) return;
+            
+            const newBadge = {
+                id: `llm-${currentLLMSelected.id}`,
+                name: `${currentLLMSelected.name} Expert`,
+                icon: currentLLMSelected.icon
+            };
+            
+            if (!badges.find(b => b.id === newBadge.id)) {
+                badges.push(newBadge);
+                updateBadges();
+                earnPoints(100);
+                alert(`🏆 Congratulations! You've earned the "${newBadge.name}" badge!`);
+            } else {
+                alert('You already have this badge! Keep exploring other LLMs.');
+            }
+        }
+
+        // Comparison Functions
+        function loadComparisonCheckboxes() {
+            const container = document.getElementById('llmCheckboxes');
+            container.innerHTML = '';
+            
+            llmData.forEach(llm => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-2 p-2 bg-gray-50 rounded hover:bg-gray-100';
+                div.innerHTML = `
+                    <input type="checkbox" id="compare-${llm.id}" value="${llm.id}" 
+                        class="w-4 h-4" onchange="updateComparisonSelection()">
+                    <label for="compare-${llm.id}" class="text-sm cursor-pointer flex-1">
+                        ${llm.icon} ${llm.name}
+                    </label>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function updateComparisonSelection() {
+            selectedLLMsForComparison = [];
+            document.querySelectorAll('#llmCheckboxes input:checked').forEach(cb => {
+                selectedLLMsForComparison.push(cb.value);
+            });
+        }
+
+        function generateComparison() {
+            if (selectedLLMsForComparison.length < 2) {
+                alert('Please select at least 2 LLMs to compare!');
+                return;
+            }
+
+            const selectedLLMs = llmData.filter(llm => selectedLLMsForComparison.includes(llm.id));
+            
+            let tableHTML = `
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="border p-3 text-left font-bold">Feature</th>
+                            ${selectedLLMs.map(llm => `<th class="border p-3 text-center">${llm.icon} ${llm.name}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border p-3 font-semibold bg-gray-50">Context Window</td>
+                            ${selectedLLMs.map(llm => `<td class="border p-3 text-center">${llm.contextWindow}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td class="border p-3 font-semibold bg-gray-50">Released</td>
+                            ${selectedLLMs.map(llm => `<td class="border p-3 text-center">${llm.released}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td class="border p-3 font-semibold bg-gray-50">Best For</td>
+                            ${selectedLLMs.map(llm => `<td class="border p-3 text-sm">${llm.bestFor}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td class="border p-3 font-semibold bg-gray-50">Key Strengths</td>
+                            ${selectedLLMs.map(llm => `<td class="border p-3 text-sm"><ul class="list-disc list-inside">${llm.strengths.slice(0, 3).map(s => `<li>${s}</li>`).join('')}</ul></td>`).join('')}
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('comparisonResults').innerHTML = tableHTML;
+            earnPoints(30);
+        }
+
+        // Chat Functions
+        function addMessage(type, text, animate = false) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${type === 'user' ? 'justify-end' : 'justify-start'} ${animate ? 'message-animation' : ''}`;
+            
+            const bubbleClass = type === 'user' 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-white text-gray-800 border border-gray-200';
+            
+            messageDiv.innerHTML = `
+                <div class="${bubbleClass} rounded-2xl px-4 py-3 max-w-md shadow-sm">
+                    <p class="text-sm whitespace-pre-line">${text}</p>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            messages.push({ type, text });
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            addMessage('user', text, true);
+            input.value = '';
+            
+            processUserInput(text);
+        }
+
+        function earnPoints(amount) {
+            points += amount;
+            updatePoints();
+        }
+
+        function processUserInput(text) {
+            const lowerText = text.toLowerCase();
+            let earnedPoints = Math.floor(Math.random() * 10) + 5;
+
+            if (lowerText.includes('yes') && topicOffered) {
+                topicOffered = false;
+                currentLesson++;
+                if (currentLesson < lessons.length) {
+                    startLesson();
+                }
+                return;
+            }
+
+            if (lowerText.includes('skip')) {
+                topicOffered = false;
+                currentLesson++;
+                if (currentLesson < lessons.length) {
+                    addMessage('ai', `Skipping to "${lessons[currentLesson].title}". Say 'yes' to start, or 'skip' again to continue.`, true);
+                    topicOffered = true;
+                } else {
+                    addMessage('ai', "You've seen all topics! Try exploring the LLM Explorer tab 🤖", true);
+                }
+                return;
+            }
+
+            if (lowerText.includes('flashcard')) {
+                showFlashcards();
+                addMessage('ai', "Opening flashcards! Review the key concepts. 📚", true);
+                return;
+            }
+
+            setTimeout(() => {
+                let response = '';
+
+                if (lowerText.includes('limited memory') || lowerText.includes('memory')) {
+                    response = `Perfect! 🎯 You're absolutely right! Limited Memory AI learns from historical data.\n\n+${earnedPoints} points!`;
+                    earnPoints(earnedPoints);
+                    userProgress = Math.min(100, userProgress + 20);
+                } else if (lowerText.includes('assistant') || lowerText.includes('siri') || lowerText.includes('alexa')) {
+                    response = `Excellent example! 🌟 Voice assistants are great examples of AI in daily life.\n\n+${earnedPoints} points!`;
+                    earnPoints(earnedPoints);
+                    streak++;
+                    updateStreak();
+                } else if (lowerText.includes('llm') || lowerText.includes('language model')) {
+                    response = `Great! 🤖 Check out the LLM Explorer tab to learn about different language models like Claude, GPT-4, and Gemini!\n\n+${earnedPoints} points!`;
+                    earnPoints(earnedPoints);
+                } else {
+                    response = `Interesting response! +${earnedPoints} points for participating! Keep going! 💪`;
+                    earnPoints(earnedPoints);
+                }
+
+                updateProgress();
+                addMessage('ai', response, true);
+
+                if (userProgress >= 100 && currentLesson < lessons.length - 1) {
+                    setTimeout(offerNextTopic, 2000);
+                }
+            }, 1000);
+        }
+
+        function startLesson() {
+            updateLessonDisplay();
+            updateReferences();
+            userProgress = 0;
+            
+            const lesson = lessons[currentLesson];
+            const intro = `Let's learn about ${lesson.title}! 🎓\n\n${lesson.concept}\n\nWhat questions do you have?`;
+            
+            updateProgress();
+            addMessage('ai', intro, true);
+        }
+
+        function offerNextTopic() {
+            const nextLesson = currentLesson + 1;
+            if (nextLesson < lessons.length) {
+                const nextTopic = lessons[nextLesson];
+                addMessage('ai', `Great! The next topic is "${nextTopic.title}" - ${nextTopic.description}. Say 'yes' to continue, or try the LLM Explorer! 🤖`, true);
+                topicOffered = true;
+            } else {
+                addMessage('ai', "You've completed all lessons! 🎉 Explore the LLM Explorer tab to learn about different AI models!", true);
+            }
+        }
+
+        function repeatLastMessage() {
+            const lastAI = messages.filter(m => m.type === 'ai').slice(-1)[0];
+            if (lastAI) {
+                addMessage('ai', "Let me repeat: " + lastAI.text, true);
+            }
+        }
+
+        function giveHint() {
+            addMessage('ai', "💡 Hint: Think about AI systems that learn from past interactions or data!", true);
+        }
+
+        function skipTopic() {
+            processUserInput('skip');
+        }
+
+        // Flashcard Functions
+        function showFlashcards() {
+            document.getElementById('flashcardSection').classList.remove('hidden');
+            currentFlashcardIndex = 0;
+            flashcardFlipped = false;
+            updateFlashcard();
+        }
+
+        function closeFlashcards() {
+            document.getElementById('flashcardSection').classList.add('hidden');
+        }
+
+        function flipCard() {
+            flashcardFlipped = !flashcardFlipped;
+            const container = document.getElementById('flashcardContainer');
+            if (flashcardFlipped) {
+                container.classList.add('flashcard-flipped');
+            } else {
+                container.classList.remove('flashcard-flipped');
+            }
+        }
+
+        function nextCard() {
+            const cards = lessons[currentLesson].flashcards;
+            currentFlashcardIndex = (currentFlashcardIndex + 1) % cards.length;
+            flashcardFlipped = false;
+            document.getElementById('flashcardContainer').classList.remove('flashcard-flipped');
+            updateFlashcard();
+        }
+
+        function previousCard() {
+            const cards = lessons[currentLesson].flashcards;
+            currentFlashcardIndex = (currentFlashcardIndex - 1 + cards.length) % cards.length;
+            flashcardFlipped = false;
+            document.getElementById('flashcardContainer').classList.remove('flashcard-flipped');
+            updateFlashcard();
+        }
+
+        function updateFlashcard() {
+            const cards = lessons[currentLesson].flashcards;
+            const card = cards[currentFlashcardIndex];
+            document.getElementById('flashcardFront').textContent = card.front;
+            document.getElementById('flashcardBack').textContent = card.back;
+            document.getElementById('cardCounter').textContent = `${currentFlashcardIndex + 1} / ${cards.length}`;
+        }
+
+        // UI Update Functions
+        function updateLessonDisplay() {
+            const lesson = lessons[currentLesson];
+            document.getElementById('currentLessonTitle').textContent = lesson.title;
+            document.getElementById('currentLessonConcept').textContent = lesson.concept;
+            updateLearningPath();
+        }
+
+        function updateReferences() {
+            const lesson = lessons[currentLesson];
+            document.getElementById('referencesDescription').textContent = `Explore resources for ${lesson.title}`;
+            
+            const container = document.getElementById('referencesContainer');
+            container.innerHTML = '';
+            
+            lesson.references.forEach(ref => {
+                const refDiv = document.createElement('a');
+                refDiv.href = ref.url;
+                refDiv.target = '_blank';
+                refDiv.className = 'block p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg hover:shadow-md transition border border-blue-200';
+                refDiv.innerHTML = `
+                    <h4 class="font-semibold text-gray-800 text-sm">${ref.title}</h4>
+                    <span class="inline-block px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full mt-1">${ref.type}</span>
+                `;
+                container.appendChild(refDiv);
+            });
+        }
+
+        function updateProgress() {
+            document.getElementById('progressPercent').textContent = userProgress;
+            document.getElementById('progressBar').style.width = userProgress + '%';
+        }
+
+        function updateStreak() {
+            document.getElementById('streakCounter').textContent = `${streak} Day Streak! 🔥`;
+        }
+
+        function updatePoints() {
+            document.getElementById('totalPoints').textContent = points;
+            checkBadges();
+        }
+
+        function checkBadges() {
+            badgesList.forEach(badge => {
+                if (points >= badge.points && !badges.find(b => b.id === badge.id)) {
+                    badges.push(badge);
+                    updateBadges();
+                    addMessage('ai', `🎉 Congratulations! You've earned the ${badge.icon} ${badge.name} badge!`, true);
+                }
+            });
+        }
+
+        function updateBadges() {
+            const container = document.getElementById('badgesContainer');
+            
+            if (badges.length > 0) {
+                container.innerHTML = '';
+                badges.forEach(badge => {
+                    const badgeDiv = document.createElement('div');
+                    badgeDiv.className = 'bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl p-3 text-center badge-pulse';
+                    badgeDiv.innerHTML = `
+                        <span class="text-3xl">${badge.icon}</span>
+                        <p class="text-xs font-semibold text-gray-800 mt-1">${badge.name}</p>
+                    `;
+                    container.appendChild(badgeDiv);
+                });
+            } else {
+                container.innerHTML = '<p class="text-gray-500 text-sm col-span-2">Keep learning to earn badges!</p>';
+            }
+        }
+
+        function updateLearningPath() {
+            const container = document.getElementById('learningPath');
+            container.innerHTML = '';
+            
+            lessons.forEach((lesson, idx) => {
+                const lessonDiv = document.createElement('div');
+                lessonDiv.className = `p-3 rounded-xl border-2 transition-all ${
+                    idx === currentLesson 
+                        ? 'border-blue-500 bg-blue-50' 
+                        : idx < currentLesson 
+                        ? 'border-green-300 bg-green-50' 
+                        : 'border-gray-200 bg-gray-50'
+                }`;
+                
+                const icon = idx < currentLesson 
+                    ? '<span class="text-green-600 font-bold">✓</span>'
+                    : idx === currentLesson 
+                    ? '<span class="text-blue-600 font-bold">→</span>'
+                    : '<span class="text-gray-400">🔒</span>';
+                
+                lessonDiv.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800 text-sm">${lesson.title}</h4>
+                            <p class="text-xs text-gray-600 mt-0.5">${lesson.description}</p>
+                        </div>
+                        ${icon}
+                    </div>
+                `;
+                container.appendChild(lessonDiv);
+            });
+        }
+
+        // Voice Recognition
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById('userInput').value = transcript;
+                    isListening = false;
+                    document.getElementById('voiceBtn').textContent = '🎤';
+                };
+
+                recognition.onerror = () => {
+                    isListening = false;
+                    document.getElementById('voiceBtn').textContent = '🎤';
+                };
+            }
+        }
+
+        function toggleVoiceInput() {
+            if (!recognition) {
+                alert('Speech recognition not supported in this browser. Try Chrome or Edge!');
+                return;
+            }
+
+            if (isListening) {
+                recognition.stop();
+                isListening = false;
+                document.getElementById('voiceBtn').textContent = '🎤';
+            } else {
+                recognition.start();
+                isListening = true;
+                document.getElementById('voiceBtn').textContent = '🔴';
+            }
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            initSpeechRecognition();
+            updateLessonDisplay();
+            updateReferences();
+            updateProgress();
+            updateStreak();
+            updatePoints();
+            
+            addMessage('ai', "Welcome to your AI Learning Journey! 🎓 I'm your AI instructor. Let's start with 'What is AI?' - covering AI basics and types. Say 'yes' to start, or explore the LLM Explorer tab to learn about different AI models! 🤖", true);
+        };
+    </script>
+</body>
+</html>

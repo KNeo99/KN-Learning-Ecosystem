@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Learning Ecosystem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            height: 100vh;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        /* Panel 1: Chat Interface */
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.ai {
+            flex-direction: row;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .message.ai .message-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .message-content {
+            background: #f0f0f0;
+            padding: 12px 16px;
+            border-radius: 15px;
+            max-width: 70%;
+            line-height: 1.5;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .input-section {
+            padding: 20px;
+            border-top: 2px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .voice-transcript {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 10px;
+            min-height: 40px;
+            color: #666;
+            font-style: italic;
+            display: none;
+        }
+
+        .voice-transcript.active {
+            display: block;
+        }
+
+        .input-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .text-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .text-input:focus {
+            border-color: #667eea;
+        }
+
+        .voice-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .voice-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .voice-btn.listening {
+            animation: pulse 1.5s infinite;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .send-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            padding: 6px 12px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .quick-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Panel 2: Learning Dashboard */
+        .dashboard-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .lesson-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .lesson-title {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .progress-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .streak-counter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            font-size: 1.2em;
+        }
+
+        .gamification-zone {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .badges-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .badge:hover {
+            transform: scale(1.1);
+        }
+
+        .badge.locked {
+            background: #e0e0e0;
+            opacity: 0.5;
+        }
+
+        .badge-name {
+            position: absolute;
+            bottom: -25px;
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+            width: 100px;
+        }
+
+        .concept-map {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .concept-node {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid #e0e0e0;
+        }
+
+        .concept-node.completed {
+            border-left-color: #4caf50;
+        }
+
+        .concept-node.current {
+            border-left-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .concept-node.locked {
+            opacity: 0.5;
+        }
+
+        .concept-node:hover:not(.locked) {
+            background: #e8eaf6;
+            transform: translateX(5px);
+        }
+
+        .concept-icon {
+            font-size: 24px;
+        }
+
+        .concept-info {
+            flex: 1;
+        }
+
+        .concept-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .concept-status {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .ai-content-feed {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .refresh-btn {
+            float: right;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg) scale(1.1);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+        }
+
+        .content-items {
+            margin-top: 15px;
+        }
+
+        .content-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .content-item:hover {
+            background: #e8eaf6;
+            transform: translateX(5px);
+        }
+
+        .content-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .content-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .content-meta {
+            font-size: 11px;
+            color: #999;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .content-source {
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-style: italic;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Panel 1: Instructor Chat -->
+        <div class="panel">
+            <div class="panel-header">🤖 AI Instructor Chat</div>
+            <div class="chat-history" id="chatHistory">
+                <!-- Messages will be added here -->
+            </div>
+            <div class="input-section">
+                <div class="voice-transcript" id="voiceTranscript">Listening...</div>
+                <div class="quick-actions">
+                    <button class="quick-btn" onclick="quickAction('repeat')" title="Repeat the last instruction">🔄 Repeat Last Step</button>
+                    <button class="quick-btn" onclick="quickAction('hint')" title="Get a helpful hint">💡 Give Me a Hint</button>
+                    <button class="quick-btn" onclick="quickAction('next')" title="Move to the next topic">➡️ Next Topic</button>
+                </div>
+                <div class="input-controls">
+                    <input type="text" class="text-input" id="textInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+                    <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()">🎤</button>
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel 2: Learning Dashboard -->
+        <div class="panel">
+            <div class="panel-header">📊 Learning Dashboard</div>
+            <div class="dashboard-content">
+                <div class="lesson-card">
+                    <div class="lesson-title">Current Lesson: What is AI?</div>
+                    <div style="opacity: 0.9;">Learn the fundamental concepts and scroll down for Artificial Intelligence topics/updates</div>
+                </div>
+
+                <div class="progress-section">
+                    <div class="section-title">Your Progress</div>
+                    <div>Lesson 1 of 3</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 33%;">33%</div>
+                    </div>
+                    <div class="streak-counter">
+                        🔥 <strong id="streakCount">3</strong> Day Streak!
+                    </div>
+                </div>
+
+                <div class="gamification-zone">
+                    <div class="section-title">Your Stats</div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="pointsValue">250</div>
+                            <div class="stat-label">Points</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="levelValue">2</div>
+                            <div class="stat-label">Level</div>
+                        </div>
+                    </div>
+                    <div class="badges-container">
+                        <div class="badge">
+                            <span>🎓</span>
+                            <div class="badge-name">AI Novice</div>
+                        </div>
+                        <div class="badge locked">
+                            <span>🔒</span>
+                            <div class="badge-name">Prompt Master</div>
+                        </div>
+                        <div class="badge locked">
+                            <span>🔒</span>
+                            <div class="badge-name">AI Expert</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concept-map">
+                    <div class="section-title">Course Map</div>
+                    <div class="concept-node completed" onclick="selectLesson(0)">
+                        <div class="concept-icon">✅</div>
+                        <div class="concept-info">
+                            <div class="concept-title">Introduction to AI</div>
+                            <div class="concept-status">Completed</div>
+                        </div>
+                    </div>
+                    <div class="concept-node current" onclick="selectLesson(1)">
+                        <div class="concept-icon">📚</div>
+                        <div class="concept-info">
+                            <div class="concept-title">What is AI?</div>
+                            <div class="concept-status">In Progress</div>
+                        </div>
+                    </div>
+                    <div class="concept-node" onclick="selectLesson(2)">
+                        <div class="concept-icon">🌍</div>
+                        <div class="concept-info">
+                            <div class="concept-title">AI in Everyday Life</div>
+                            <div class="concept-status">Next Up</div>
+                        </div>
+                    </div>
+                    <div class="concept-node locked">
+                        <div class="concept-icon">🔒</div>
+                        <div class="concept-info">
+                            <div class="concept-title">Introduction to Prompting</div>
+                            <div class="concept-status">Locked</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-content-feed">
+                    <div class="section-title">
+                        🌐 Continue Learning and Explore AI
+                        <button class="refresh-btn" onclick="fetchAIContent()" title="Refresh content">🔄</button>
+                    </div>
+                    <div id="aiContentContainer" class="content-items">
+                        <div class="loading-spinner">Loading fresh AI content...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isListening = false;
+        let recognition = null;
+        let currentLesson = 1;
+        let userProgress = 33;
+        let points = 250;
+        let level = 2;
+        let streak = 3;
+        let microphonePermissionGranted = false;
+        let speechSynthesis = window.speechSynthesis;
+
+        // Initialize speech recognition
+        function initializeSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+
+                recognition.onstart = () => {
+                    console.log('Voice recognition started');
+                };
+
+                recognition.onresult = (event) => {
+                    const transcript = Array.from(event.results)
+                        .map(result => result[0].transcript)
+                        .join('');
+                    
+                    document.getElementById('voiceTranscript').textContent = transcript;
+                    document.getElementById('textInput').value = transcript;
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    if (event.error === 'not-allowed') {
+                        addMessage("Microphone permission was denied. Please enable it in your browser settings and refresh the page.", false);
+                    }
+                    stopListening();
+                };
+
+                recognition.onend = () => {
+                    if (isListening) {
+                        // Restart if it stops unexpectedly while we want to keep listening
+                        recognition.start();
+                    }
+                };
+            }
+        }
+
+        // Text-to-speech function
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Request microphone permission and start
+        async function requestMicrophonePermission() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                stream.getTracks().forEach(track => track.stop()); // Stop the stream, we just needed permission
+                microphonePermissionGranted = true;
+                
+                initializeSpeechRecognition();
+                
+                const welcomeMessage = "Welcome to your AI Learning Journey! I'm your AI Instructor, and I'm here to guide you through the fascinating world of Artificial Intelligence. Here's how to use this platform: Click the microphone button to start recording your voice, speak your answer, then click the Send button when you're done. You can also type your responses if you prefer. Let's start with the basics. Are you ready to begin?";
+                
+                addMessage(welcomeMessage, false);
+                speak(welcomeMessage);
+                
+            } catch (error) {
+                console.error('Microphone permission error:', error);
+                addMessage("We need microphone access for voice interaction. Please allow microphone access and refresh the page. You can still type your responses!", false);
+            }
+        }
+
+        function toggleVoice() {
+            if (!recognition) {
+                addMessage("Speech recognition is not available. Please use text input instead.", false);
+                return;
+            }
+
+            if (!isListening) {
+                // Start listening - begins recording immediately
+                try {
+                    recognition.start();
+                    isListening = true;
+                    document.getElementById('voiceBtn').classList.add('listening');
+                    document.getElementById('voiceBtn').textContent = '🔴';
+                    document.getElementById('voiceTranscript').classList.add('active');
+                    document.getElementById('voiceTranscript').textContent = 'Recording... Click Send when finished.';
+                } catch (error) {
+                    console.error('Error starting recognition:', error);
+                }
+            }
+        }
+
+        function stopListening() {
+            isListening = false;
+            document.getElementById('voiceBtn').classList.remove('listening');
+            document.getElementById('voiceBtn').textContent = '🎤';
+            document.getElementById('voiceTranscript').classList.remove('active');
+            document.getElementById('voiceTranscript').textContent = '';
+        }
+
+        function addMessage(text, isUser = false) {
+            const chatHistory = document.getElementById('chatHistory');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${isUser ? '👤' : '🤖'}</div>
+                <div class="message-content">${text}</div>
+            `;
+            
+            chatHistory.appendChild(messageDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('textInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                // Stop listening if currently active
+                if (isListening) {
+                    recognition.stop();
+                    stopListening();
+                }
+                
+                addMessage(message, true);
+                input.value = '';
+                
+                // Simulate AI response
+                setTimeout(() => {
+                    respondToUser(message);
+                }, 1000);
+            }
+        }
+
+        function respondToUser(userMessage) {
+            const lowerMessage = userMessage.toLowerCase();
+            let response = '';
+
+            // Simple AI responses based on lesson content
+            if (lowerMessage.includes('ready') || lowerMessage.includes('yes') || lowerMessage.includes('start')) {
+                response = "Excellent! Let's dive in. AI, or Artificial Intelligence, refers to computer systems that can perform tasks that typically require human intelligence. There are several types of AI. Can you tell me what comes to mind when you think about AI?";
+            } else if (lowerMessage.includes('reactive') || lowerMessage.includes('limited memory')) {
+                response = "Great answer! You're learning fast! 🎉 Reactive Machines respond to current situations, while Limited Memory AI learns from past data. You've earned 50 points!";
+                updatePoints(50);
+            } else if (lowerMessage.includes('generative')) {
+                response = "Excellent! Generative AI creates new content like text, images, or music. It's what powers tools like ChatGPT and DALL-E. You're mastering these concepts! 🌟";
+                updatePoints(30);
+            } else if (lowerMessage.includes('help') || lowerMessage.includes('hint')) {
+                response = "Here's a hint: Think about AI systems that can create something new versus AI that just responds to inputs. Which type learns from historical data?";
+            } else {
+                response = "That's an interesting perspective! Let me help you understand this better. AI comes in different forms: Reactive Machines (respond to inputs), Limited Memory AI (learns from data), and Generative AI (creates new content). Which would you like to explore first?";
+            }
+
+            addMessage(response);
+            speak(response);
+        }
+
+        function updatePoints(earnedPoints) {
+            points += earnedPoints;
+            document.getElementById('pointsValue').textContent = points;
+            
+            // Level up logic
+            if (points >= 500 && level < 3) {
+                level = 3;
+                document.getElementById('levelValue').textContent = level;
+                const levelUpMessage = "🎊 Congratulations! You've reached Level 3! Keep up the amazing work!";
+                addMessage(levelUpMessage, false);
+                speak(levelUpMessage);
+            }
+        }
+
+        function quickAction(action) {
+            let message = '';
+            switch(action) {
+                case 'repeat':
+                    message = "Let me repeat: We're learning about different types of AI - Reactive Machines, Limited Memory AI, and Generative AI. Each has unique capabilities!";
+                    break;
+                case 'hint':
+                    message = "💡 Hint: Limited Memory AI learns from past experiences, like how Netflix remembers what you watch to recommend new shows!";
+                    break;
+                case 'next':
+                    if (currentLesson < 3) {
+                        currentLesson++;
+                        updateProgress();
+                        message = "Great! Let's move to the next topic. Now we'll explore AI in Everyday Life! 🌟";
+                    } else {
+                        message = "You've completed all the beginner lessons! Ready for advanced challenges?";
+                    }
+                    break;
+            }
+            addMessage(message, false);
+            speak(message);
+        }
+
+        function updateProgress() {
+            userProgress = Math.min((currentLesson / 3) * 100, 100);
+            document.getElementById('progressFill').style.width = userProgress + '%';
+            document.getElementById('progressFill').textContent = Math.round(userProgress) + '%';
+        }
+
+        function selectLesson(lessonIndex) {
+            const lessons = [
+                "You've already completed the Introduction to AI! Would you like to review it?",
+                "You're currently working on 'What is AI?' - the foundation of your AI knowledge!",
+                "Ready to explore AI in Everyday Life? Complete the current lesson first!",
+                "This lesson is locked. Keep progressing to unlock Introduction to Prompting!"
+            ];
+            
+            const message = lessons[lessonIndex];
+            addMessage(message, false);
+            speak(message);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            requestMicrophonePermission();
+            fetchAIContent();
+        });
+
+        // Fetch fresh AI content from public APIs
+        async function fetchAIContent() {
+            const container = document.getElementById('aiContentContainer');
+            container.innerHTML = '<div class="loading-spinner">Loading fresh AI content...</div>';
+
+            try {
+                // Using multiple free APIs to get AI-related content
+                
+                // Option 1: Fetch from NewsAPI (AI news)
+                // Note: You'll need to sign up for a free API key at https://newsapi.org/
+                // For demo purposes, using a fallback method
+                
+                // Option 2: Using Wikipedia API for AI topics
+                const topics = ['Artificial_intelligence', 'Machine_learning', 'Natural_language_processing', 'Computer_vision', 'Deep_learning'];
+                const randomTopic = topics[Math.floor(Math.random() * topics.length)];
+                
+                const wikiResponse = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${randomTopic}`);
+                const wikiData = await wikiResponse.json();
+
+                // Option 3: Using arXiv API for AI research papers
+                const arxivResponse = await fetch('https://export.arxiv.org/api/query?search_query=cat:cs.AI&start=0&max_results=5&sortBy=submittedDate&sortOrder=descending');
+                const arxivText = await arxivResponse.text();
+                const arxivPapers = parseArxivXML(arxivText);
+
+                // Display content
+                let contentHTML = '';
+
+                // Add Wikipedia summary
+                if (wikiData && wikiData.extract) {
+                    contentHTML += `
+                        <div class="content-item" onclick="openLink('${wikiData.content_urls.desktop.page}')">
+                            <div class="content-title">📖 ${wikiData.title}</div>
+                            <div class="content-description">${wikiData.extract.substring(0, 150)}...</div>
+                            <div class="content-meta">
+                                <span class="content-source">Wikipedia</span>
+                                <span>Click to read more</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Add arXiv papers
+                arxivPapers.forEach((paper, index) => {
+                    if (index < 3) {
+                        contentHTML += `
+                            <div class="content-item" onclick="openLink('${paper.link}')">
+                                <div class="content-title">🔬 ${paper.title}</div>
+                                <div class="content-description">${paper.summary.substring(0, 120)}...</div>
+                                <div class="content-meta">
+                                    <span class="content-source">arXiv</span>
+                                    <span>${paper.published}</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+
+                // Add curated AI learning resources
+                contentHTML += `
+                    <div class="content-item" onclick="openLink('https://www.deeplearning.ai/')">
+                        <div class="content-title">🎓 DeepLearning.AI Courses</div>
+                        <div class="content-description">Free courses by Andrew Ng on machine learning and AI fundamentals</div>
+                        <div class="content-meta">
+                            <span class="content-source">Education</span>
+                            <span>Recommended</span>
+                        </div>
+                    </div>
+                    <div class="content-item" onclick="openLink('https://huggingface.co/')">
+                        <div class="content-title">🤗 Hugging Face Hub</div>
+                        <div class="content-description">Explore the latest AI models, datasets, and machine learning demos</div>
+                        <div class="content-meta">
+                            <span class="content-source">Community</span>
+                            <span>Interactive</span>
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML = contentHTML;
+
+            } catch (error) {
+                console.error('Error fetching AI content:', error);
+                container.innerHTML = `
+                    <div class="content-item">
+                        <div class="content-title">📚 Recommended AI Resources</div>
+                        <div class="content-description">Explore these curated learning resources:</div>
+                    </div>
+                    <div class="content-item" onclick="openLink('https://www.deeplearning.ai/')">
+                        <div class="content-title">🎓 DeepLearning.AI</div>
+                        <div class="content-description">Free AI courses by Andrew Ng</div>
+                        <div class="content-meta">
+                            <span class="content-source">Education</span>
+                        </div>
+                    </div>
+                    <div class="content-item" onclick="openLink('https://paperswithcode.com/')">
+                        <div class="content-title">📊 Papers with Code</div>
+                        <div class="content-description">Latest AI research papers with implementations</div>
+                        <div class="content-meta">
+                            <span class="content-source">Research</span>
+                        </div>
+                    </div>
+                    <div class="content-item" onclick="openLink('https://huggingface.co/')">
+                        <div class="content-title">🤗 Hugging Face</div>
+                        <div class="content-description">AI models and datasets community</div>
+                        <div class="content-meta">
+                            <span class="content-source">Community</span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function parseArxivXML(xmlString) {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+            const entries = xmlDoc.getElementsByTagName('entry');
+            const papers = [];
+
+            for (let i = 0; i < Math.min(entries.length, 5); i++) {
+                const entry = entries[i];
+                const title = entry.getElementsByTagName('title')[0]?.textContent.trim().replace(/\s+/g, ' ') || 'Untitled';
+                const summary = entry.getElementsByTagName('summary')[0]?.textContent.trim().replace(/\s+/g, ' ') || '';
+                const link = entry.getElementsByTagName('id')[0]?.textContent || '';
+                const published = entry.getElementsByTagName('published')[0]?.textContent.split('T')[0] || '';
+
+                papers.push({ title, summary, link, published });
+            }
+
+            return papers;
+        }
+
+        function openLink(url) {
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>

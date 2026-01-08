@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Learning Ecosystem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            height: 100vh;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.ai {
+            flex-direction: row;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .message.ai .message-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .message-content {
+            background: #f0f0f0;
+            padding: 12px 16px;
+            border-radius: 15px;
+            max-width: 70%;
+            line-height: 1.5;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .input-section {
+            padding: 20px;
+            border-top: 2px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .voice-transcript {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 10px;
+            min-height: 40px;
+            color: #666;
+            font-style: italic;
+            display: none;
+        }
+
+        .voice-transcript.active {
+            display: block;
+        }
+
+        .input-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .text-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .text-input:focus {
+            border-color: #667eea;
+        }
+
+        .voice-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .voice-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .voice-btn.listening {
+            animation: pulse 1.5s infinite;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .send-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            padding: 5px 10px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .quick-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .dashboard-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .lesson-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .lesson-title {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .gamification-zone {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            opacity: 0.9;
+        }
+
+        .badges-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .badge {
+            padding: 8px 16px;
+            background: #e0e0e0;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #999;
+            transition: all 0.3s;
+        }
+
+        .badge.unlocked {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+        }
+
+        .progress-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .discussion-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .discussion-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .discussion-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .discussion-topic {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .discussion-summary {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .discussion-timestamp {
+            font-size: 11px;
+            color: #999;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .discussion-placeholder {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-style: italic;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .flashcard-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .flashcard-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .flashcard {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .flashcard:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .flashcard.flipped {
+            background: white;
+            color: #333;
+            border: 2px solid #667eea;
+        }
+
+        .flashcard-question {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .flashcard-answer {
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .flashcard-hint {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 11px;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .flashcard-placeholder {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-style: italic;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .ai-content-feed {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .refresh-btn {
+            float: right;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            transform: rotate(180deg) scale(1.1);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+        }
+
+        .content-items {
+            margin-top: 15px;
+        }
+
+        .content-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .content-item:hover {
+            background: #e8eaf6;
+            transform: translateX(5px);
+        }
+
+        .content-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .content-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .content-meta {
+            font-size: 11px;
+            color: #999;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .content-source {
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-style: italic;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Panel 1: Instructor Chat -->
+        <div class="panel">
+            <div class="panel-header">🤖 AI Instructor Chat</div>
+            <div class="chat-history" id="chatHistory"></div>
+            <div class="input-section">
+                <div class="voice-transcript" id="voiceTranscript">Listening...</div>
+                <div class="quick-actions">
+                    <button class="quick-btn" onclick="quickAction('repeat')" title="Repeat the last instruction">🔄 Repeat</button>
+                    <button class="quick-btn" onclick="quickAction('hint')" title="Get a helpful hint">💡 Hint</button>
+                    <button class="quick-btn" onclick="quickAction('examples')" title="Show me examples">📝 Examples</button>
+                </div>
+                <div class="input-controls">
+                    <input type="text" class="text-input" id="textInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)" title="Type your response here">
+                    <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()" title="Click to start voice recording">🎤</button>
+                    <button class="send-btn" onclick="sendMessage()" title="Send your message">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel 2: Learning Dashboard -->
+        <div class="panel">
+            <div class="panel-header">📊 Your Learning Journey</div>
+            <div class="dashboard-content">
+                <div class="lesson-card">
+                    <div class="lesson-title" id="currentStage">Welcome to AI Learning!</div>
+                    <div style="opacity: 0.9;" id="stageDescription">Background & Introduction - Scroll down to explore AI topics</div>
+                </div>
+
+                <div class="gamification-zone">
+                    <div class="section-title">🏆 Your Achievements</div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="pointsValue">0</div>
+                            <div class="stat-label">Points</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="topicsValue">0</div>
+                            <div class="stat-label">Topics</div>
+                        </div>
+                    </div>
+                    <div class="badges-container">
+                        <div class="badge" id="badge1">Beginner</div>
+                        <div class="badge" id="badge2">Explorer</div>
+                        <div class="badge" id="badge3">Expert</div>
+                    </div>
+                </div>
+
+                <div class="discussion-section">
+                    <div class="section-title">📝 Current Discussion</div>
+                    <div id="discussionContent" class="discussion-content">
+                        <div class="discussion-placeholder">
+                            Your conversation topics will appear here as you chat with the AI Instructor.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flashcard-section">
+                    <div class="section-title">💡 Flashcard Suggestions</div>
+                    <div id="flashcardContainer" class="flashcard-container">
+                        <div class="flashcard-placeholder">
+                            Start chatting with the AI Instructor to see relevant flashcards appear here!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-content-feed">
+                    <div class="section-title">
+                        🌐 Continue Learning and Explore AI
+                        <button class="refresh-btn" onclick="fetchAIContent()" title="Refresh content">🔄</button>
+                    </div>
+                    <div id="aiContentContainer" class="content-items">
+                        <div class="loading-spinner">Loading fresh AI content...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isListening = false;
+        let recognition = null;
+        let learningStage = 'welcome';
+        let points = 0;
+        let topicsExplored = 0;
+        let lastAIMessage = '';
+        let discussionTopics = [];
+
+        function initializeSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+
+                recognition.onresult = (event) => {
+                    const transcript = Array.from(event.results)
+                        .map(result => result[0].transcript)
+                        .join('');
+                    
+                    document.getElementById('voiceTranscript').textContent = transcript;
+                    document.getElementById('textInput').value = transcript;
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    stopListening();
+                };
+
+                recognition.onend = () => {
+                    if (isListening) {
+                        try {
+                            recognition.start();
+                        } catch(e) {
+                            console.log('Recognition restart failed');
+                        }
+                    }
+                };
+            }
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function startWelcomeSequence() {
+            const welcomeMessage = "Welcome to your personalized AI Learning Journey! I'm your AI Instructor. Before we dive into your custom learning path, let me give you a quick background and introduction to AI. Here's how to interact: Click the microphone button to speak, then click Send when you're done. Or simply type your responses. Ready to begin?";
+            
+            addMessage(welcomeMessage, false);
+            speak(welcomeMessage);
+            lastAIMessage = welcomeMessage;
+        }
+
+        function toggleVoice() {
+            if (!recognition) {
+                addMessage("Speech recognition is not available. Please use text input instead.", false);
+                return;
+            }
+
+            if (!isListening) {
+                try {
+                    recognition.start();
+                    isListening = true;
+                    document.getElementById('voiceBtn').classList.add('listening');
+                    document.getElementById('voiceBtn').textContent = '🔴';
+                    document.getElementById('voiceTranscript').classList.add('active');
+                    document.getElementById('voiceTranscript').textContent = 'Recording... Click Send when finished.';
+                } catch (error) {
+                    console.error('Error starting recognition:', error);
+                }
+            }
+        }
+
+        function stopListening() {
+            isListening = false;
+            document.getElementById('voiceBtn').classList.remove('listening');
+            document.getElementById('voiceBtn').textContent = '🎤';
+            document.getElementById('voiceTranscript').classList.remove('active');
+        }
+
+        function addMessage(text, isUser = false) {
+            const chatHistory = document.getElementById('chatHistory');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${isUser ? '👤' : '🤖'}</div>
+                <div class="message-content">${text}</div>
+            `;
+            
+            chatHistory.appendChild(messageDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('textInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                if (isListening) {
+                    recognition.stop();
+                    stopListening();
+                }
+                
+                addMessage(message, true);
+                input.value = '';
+                
+                setTimeout(() => {
+                    respondToUser(message);
+                }, 1000);
+            }
+        }
+
+        function respondToUser(userMessage) {
+            const lowerMessage = userMessage.toLowerCase();
+            let response = '';
+            let newFlashcards = [];
+            let discussionTopic = '';
+            let discussionSummary = '';
+
+            // Dynamic keyword detection for intelligent responses
+            const keywords = {
+                greeting: ['hello', 'hi', 'hey', 'greetings'],
+                aiBasics: ['what is ai', 'define ai', 'artificial intelligence', 'what does ai mean'],
+                types: ['type', 'kind', 'category', 'different ai', 'reactive', 'generative', 'limited memory'],
+                realWorld: ['example', 'real world', 'everyday', 'use case', 'application', 'practical'],
+                tools: ['tool', 'software', 'chatgpt', 'gemini', 'claude', 'midjourney', 'dall-e', 'copilot'],
+                learning: ['learn', 'machine learning', 'deep learning', 'neural network', 'training', 'model'],
+                prompting: ['prompt', 'how to ask', 'better question', 'improve', 'communicate'],
+                ethics: ['ethic', 'bias', 'fair', 'privacy', 'danger', 'risk', 'safe'],
+                future: ['future', 'what next', 'coming', 'trend', 'prediction', 'agi'],
+                business: ['business', 'company', 'work', 'productivity', 'automation', 'job'],
+                coding: ['code', 'program', 'python', 'develop', 'build', 'api'],
+                compare: ['difference', 'compare', 'versus', 'vs', 'better', 'which'],
+                howTo: ['how do i', 'how can i', 'how to', 'teach me', 'show me'],
+                gemini: ['gemini', 'google ai', 'bard', 'google gemini'],
+                chatgpt: ['chatgpt', 'gpt', 'openai'],
+                image: ['image', 'picture', 'photo', 'visual', 'art', 'generation'],
+                data: ['data', 'dataset', 'training data', 'information']
+            };
+
+            // Check which category the question falls into
+            let matchedCategory = null;
+            for (const [category, words] of Object.entries(keywords)) {
+                if (words.some(word => lowerMessage.includes(word))) {
+                    matchedCategory = category;
+                    break;
+                }
+            }
+
+            // Welcome stage
+            if (learningStage === 'welcome') {
+                if (lowerMessage.includes('yes') || lowerMessage.includes('ready') || lowerMessage.includes('start')) {
+                    learningStage = 'learning';
+                    response = "Excellent! I'm here to answer any questions about AI. You can ask me about AI basics, real-world applications, specific tools like ChatGPT or Google Gemini, how to use AI in your work, coding with AI, or anything else! What would you like to know?";
+                    updateStage('Interactive Learning', 'Ask me anything about AI!');
+                    awardPoints(25);
+                    discussionTopic = 'Getting Started';
+                    discussionSummary = 'Beginning your personalized AI learning journey with open-ended exploration.';
+                } else {
+                    response = "No problem! When you're ready to explore AI, just say 'I'm ready' or ask me any question about AI!";
+                }
+            } else {
+                // Dynamic learning mode - respond to any question
+                learningStage = 'learning';
+                
+                if (matchedCategory === 'greeting') {
+                    response = "Hello! How can I help you learn about AI today? Feel free to ask about any AI topic!";
+                    discussionTopic = 'Greeting';
+                    discussionSummary = 'Welcoming interaction and ready to answer questions.';
+                    
+                } else if (matchedCategory === 'aiBasics') {
+                    response = "AI (Artificial Intelligence) is technology that enables machines to perform tasks requiring human intelligence - like understanding language, recognizing images, making decisions, and learning from experience. There are three main types: Reactive AI (responds to inputs like a chess program), Limited Memory AI (learns from past data like Netflix recommendations), and Generative AI (creates new content like ChatGPT). What aspect interests you most?";
+                    discussionTopic = 'AI Fundamentals';
+                    discussionSummary = 'Understanding what AI is and the three main categories of artificial intelligence systems.';
+                    newFlashcards = [
+                        { question: 'What is Artificial Intelligence?', answer: 'Technology that enables machines to perform tasks requiring human intelligence' },
+                        { question: 'Three types of AI?', answer: 'Reactive AI, Limited Memory AI, and Generative AI' }
+                    ];
+                    awardPoints(20);
+                    
+                } else if (matchedCategory === 'gemini') {
+                    response = "Google Gemini is Google's advanced AI model that can process text, images, audio, and video. It comes in different versions (Ultra, Pro, Nano) for various use cases. Gemini excels at understanding context, reasoning across different types of information, and generating detailed responses. You can use it through Google AI Studio or integrate it into applications via API. Key features: multimodal understanding, long context windows, and strong reasoning capabilities. Would you like to know how to use Gemini effectively or compare it to other AI tools?";
+                    discussionTopic = 'Google Gemini';
+                    discussionSummary = 'Exploring Google Gemini AI: features, capabilities, versions, and how to interface with it for various applications.';
+                    newFlashcards = [
+                        { question: 'What is Google Gemini?', answer: 'Google\'s multimodal AI that processes text, images, audio, and video' },
+                        { question: 'Gemini versions?', answer: 'Ultra (most capable), Pro (balanced), Nano (efficient for devices)' },
+                        { question: 'How to access Gemini?', answer: 'Through Google AI Studio, API integration, or Gemini app' }
+                    ];
+                    awardPoints(30);
+                    
+                } else if (matchedCategory === 'chatgpt') {
+                    response = "ChatGPT is OpenAI's conversational AI powered by GPT (Generative Pre-trained Transformer) models. It's trained on vast amounts of text data to understand and generate human-like responses. ChatGPT-4 is the latest, offering improved reasoning, creativity, and accuracy. You can use it for writing, coding, research, brainstorming, tutoring, and more. It has both free and paid (Plus) versions. The key to getting great results is writing clear, specific prompts. Want to learn prompt engineering techniques?";
+                    discussionTopic = 'ChatGPT & OpenAI';
+                    discussionSummary = 'Understanding ChatGPT: how it works, capabilities, versions, and practical applications for various tasks.';
+                    newFlashcards = [
+                        { question: 'What powers ChatGPT?', answer: 'GPT (Generative Pre-trained Transformer) large language models' },
+                        { question: 'ChatGPT use cases?', answer: 'Writing, coding, research, brainstorming, tutoring, content creation' }
+                    ];
+                    awardPoints(30);
+                    
+                } else if (matchedCategory === 'tools') {
+                    response = "There are many powerful AI tools available! Here are the main categories: 1) **Conversational AI**: ChatGPT, Claude, Google Gemini, Bing Chat - for chat, writing, research. 2) **Image Generation**: DALL-E, Midjourney, Stable Diffusion - create images from text. 3) **Coding Assistants**: GitHub Copilot, Cursor, Tabnine - help write code. 4) **Productivity**: Notion AI, Jasper, Copy.ai - content creation. 5) **Voice AI**: ElevenLabs, Descript - voice cloning and editing. Which category interests you?";
+                    discussionTopic = 'AI Tools Landscape';
+                    discussionSummary = 'Overview of popular AI tools across categories: conversational, image generation, coding, productivity, and voice AI.';
+                    newFlashcards = [
+                        { question: 'Popular conversational AIs?', answer: 'ChatGPT, Claude, Google Gemini, Bing Chat' },
+                        { question: 'AI image generation tools?', answer: 'DALL-E, Midjourney, Stable Diffusion' },
+                        { question: 'AI coding assistants?', answer: 'GitHub Copilot, Cursor, Tabnine' }
+                    ];
+                    awardPoints(25);
+                    
+                } else if (matchedCategory === 'prompting') {
+                    response = "Great question! Prompt engineering is the art of communicating effectively with AI. Here are key techniques: 1) **Be Specific**: Instead of 'write about dogs', say 'write a 300-word article about golden retriever training for new owners'. 2) **Provide Context**: Tell the AI your goal and audience. 3) **Use Examples**: Show what you want (few-shot learning). 4) **Set Constraints**: Specify format, length, tone. 5) **Iterate**: Refine based on results. 6) **Role Playing**: 'Act as a Python expert...' Example: Bad: 'Help with code' vs Good: 'Write a Python function that validates email addresses using regex, with error handling and test cases'. Want to practice?";
+                    discussionTopic = 'Prompt Engineering';
+                    discussionSummary = 'Mastering the art of crafting effective prompts: specificity, context, examples, constraints, and iteration techniques.';
+                    newFlashcards = [
+                        { question: 'What is prompt engineering?', answer: 'The skill of crafting effective instructions to get optimal AI responses' },
+                        { question: '5 prompt engineering tips?', answer: 'Be specific, provide context, use examples, set constraints, iterate' },
+                        { question: 'Role playing prompts?', answer: 'Start with "Act as a [expert]..." to get specialized responses' }
+                    ];
+                    awardPoints(35);
+                    
+                } else if (matchedCategory === 'learning') {
+                    response = "Machine Learning (ML) is how AI systems learn from data without explicit programming. Here's the process: 1) **Data Collection**: Gather training data (images, text, numbers). 2) **Training**: The model finds patterns in data. 3) **Testing**: Validate accuracy. 4) **Deployment**: Use in real applications. **Deep Learning** uses neural networks with multiple layers, mimicking how human brains process information. Key concepts: supervised learning (labeled data), unsupervised learning (finds patterns), reinforcement learning (learns through rewards). Popular frameworks: TensorFlow, PyTorch. Want to know how to get started with ML?";
+                    discussionTopic = 'Machine Learning Explained';
+                    discussionSummary = 'Understanding machine learning fundamentals: how models learn from data, training process, and key ML concepts.';
+                    newFlashcards = [
+                        { question: 'What is Machine Learning?', answer: 'AI systems learning patterns from data without explicit programming' },
+                        { question: 'ML training steps?', answer: '1) Collect data 2) Train model 3) Test accuracy 4) Deploy' },
+                        { question: 'Types of ML?', answer: 'Supervised (labeled data), Unsupervised (patterns), Reinforcement (rewards)' }
+                    ];
+                    awardPoints(30);
+                    
+                } else if (matchedCategory === 'realWorld') {
+                    response = "AI is everywhere in our daily lives! Here are real-world examples: **Healthcare**: AI diagnoses diseases from X-rays, predicts patient outcomes, discovers new drugs. **Finance**: Fraud detection, algorithmic trading, credit scoring. **Retail**: Product recommendations, inventory management, chatbots. **Transportation**: Self-driving cars, traffic optimization, route planning. **Entertainment**: Netflix recommendations, music generation, video game NPCs. **Education**: Personalized learning, automated grading, tutoring systems. **Work**: Email filtering, scheduling, document analysis, virtual assistants. Which industry interests you most?";
+                    discussionTopic = 'Real-World AI Applications';
+                    discussionSummary = 'Exploring how AI is used across industries: healthcare, finance, retail, transportation, entertainment, education, and workplace.';
+                    newFlashcards = [
+                        { question: 'AI in healthcare?', answer: 'Disease diagnosis, patient predictions, drug discovery' },
+                        { question: 'AI in finance?', answer: 'Fraud detection, trading algorithms, credit scoring' },
+                        { question: 'AI in daily life?', answer: 'Recommendations, spam filters, voice assistants, smart home devices' }
+                    ];
+                    awardPoints(25);
+                    
+                } else if (matchedCategory === 'business') {
+                    response = "AI is transforming business operations! Key applications: 1) **Automation**: Automate repetitive tasks (data entry, email responses, scheduling). 2) **Analytics**: Predict trends, customer behavior, sales forecasts. 3) **Customer Service**: AI chatbots handle 24/7 support. 4) **Marketing**: Personalized campaigns, content generation, ad targeting. 5) **Operations**: Supply chain optimization, quality control, resource allocation. 6) **HR**: Resume screening, employee onboarding, training. Tools to use: Zapier (automation), Salesforce Einstein (CRM AI), HubSpot (marketing), DataRobot (analytics). ROI: Companies save 20-30% on operational costs. Want specific use cases for your industry?";
+                    discussionTopic = 'AI in Business';
+                    discussionSummary = 'How businesses use AI for automation, analytics, customer service, marketing, and operations to improve efficiency and reduce costs.';
+                    newFlashcards = [
+                        { question: 'AI business applications?', answer: 'Automation, analytics, customer service, marketing, operations, HR' },
+                        { question: 'Business AI tools?', answer: 'Zapier, Salesforce Einstein, HubSpot, DataRobot' },
+                        { question: 'AI business ROI?', answer: '20-30% savings on operational costs' }
+                    ];
+                    awardPoints(30);
+                    
+                } else if (matchedCategory === 'coding') {
+                    response = "AI is revolutionizing programming! Here's how: 1) **Code Assistants**: GitHub Copilot, Cursor, Tabnine suggest code as you type. 2) **Code Generation**: Describe what you want, AI writes the code. 3) **Debugging**: AI finds and fixes bugs. 4) **Documentation**: Auto-generates comments and docs. 5) **Code Review**: Identifies issues and improvements. **Popular APIs**: OpenAI API (GPT models), Google AI (Gemini), Anthropic (Claude), Hugging Face (ML models). **Getting Started**: Learn Python → Use AI APIs → Try Jupyter notebooks → Build projects. Want a simple code example?";
+                    discussionTopic = 'AI for Developers';
+                    discussionSummary = 'How AI assists with coding: code completion, generation, debugging, documentation, and working with AI APIs.';
+                    newFlashcards = [
+                        { question: 'AI coding tools?', answer: 'GitHub Copilot, Cursor, Tabnine, ChatGPT' },
+                        { question: 'Popular AI APIs?', answer: 'OpenAI (GPT), Google AI (Gemini), Anthropic (Claude)' },
+                        { question: 'Best language for AI?', answer: 'Python - rich ecosystem with TensorFlow, PyTorch, scikit-learn' }
+                    ];
+                    awardPoints(35);
+                    
+                } else if (matchedCategory === 'ethics') {
+                    response = "AI ethics is crucial! Key concerns: 1) **Bias**: AI can inherit biases from training data, leading to unfair outcomes (hiring, loans, justice). 2) **Privacy**: AI processes personal data - who has access? 3) **Transparency**: Can we understand AI decisions? ('Black box' problem). 4) **Job Displacement**: AI automation may replace jobs. 5) **Misinformation**: Deepfakes and AI-generated fake content. 6) **Safety**: Ensuring AI systems don't cause harm. **Solutions**: Diverse training data, regular audits, human oversight, clear regulations, ethical AI frameworks. Organizations working on this: Partnership on AI, AI Ethics Lab. Want to know how to use AI ethically?";
+                    discussionTopic = 'AI Ethics & Safety';
+                    discussionSummary = 'Understanding AI ethical challenges: bias, privacy, transparency, job impact, misinformation, and safety considerations.';
+                    newFlashcards = [
+                        { question: 'Main AI ethical concerns?', answer: 'Bias, privacy, transparency, job displacement, misinformation, safety' },
+                        { question: 'What is AI bias?', answer: 'Unfair outcomes when AI inherits biases from training data' },
+                        { question: 'AI ethical solutions?', answer: 'Diverse data, audits, oversight, regulations, ethical frameworks' }
+                    ];
+                    awardPoints(30);
+                    
+                } else if (matchedCategory === 'future') {
+                    response = "The future of AI is exciting! Emerging trends: 1) **AGI (Artificial General Intelligence)**: AI matching human intelligence across all tasks. 2) **Multimodal AI**: Systems processing text, images, audio, video together (like Gemini). 3) **AI Agents**: Autonomous AI that can complete complex tasks. 4) **Edge AI**: AI running on devices (phones, IoT) without cloud. 5) **Quantum AI**: Combining quantum computing with AI. 6) **Personalized AI**: AI assistants that truly understand you. Timeline: Experts predict AGI between 2030-2050. Near-term (2024-2027): Better reasoning, longer context, cheaper costs, more integration. What excites you most?";
+                    discussionTopic = 'Future of AI';
+                    discussionSummary = 'Exploring upcoming AI trends: AGI, multimodal systems, autonomous agents, edge AI, and predictions for the next decade.';
+                    newFlashcards = [
+                        { question: 'What is AGI?', answer: 'Artificial General Intelligence - AI matching human intelligence across all tasks' },
+                        { question: 'Future AI trends?', answer: 'AGI, multimodal AI, autonomous agents, edge AI, quantum AI' },
+                        { question: 'When is AGI predicted?', answer: 'Experts estimate between 2030-2050' }
+                    ];
+                    awardPoints(30);
+                    
+                } else if (matchedCategory === 'compare') {
+                    response = "Great question! Here are key AI comparisons: **ChatGPT vs Gemini**: ChatGPT (OpenAI) excels at creative writing and conversation; Gemini (Google) is stronger at multimodal tasks and reasoning. **GPT-4 vs Claude**: GPT-4 is more creative; Claude is better at following instructions precisely and handling long documents. **DALL-E vs Midjourney**: DALL-E integrates with ChatGPT and is easier; Midjourney produces more artistic results. **Free vs Paid**: Free versions have limits (slower, fewer features); paid versions ($20/month) offer faster responses, priority access, advanced features. Best choice depends on your specific needs. What are you trying to accomplish?";
+                    discussionTopic = 'Comparing AI Tools';
+                    discussionSummary = 'Detailed comparison of popular AI tools: strengths, weaknesses, and which to choose for specific use cases.';
+                    newFlashcards = [
+                        { question: 'ChatGPT vs Gemini?', answer: 'ChatGPT: better creative writing | Gemini: stronger multimodal & reasoning' },
+                        { question: 'DALL-E vs Midjourney?', answer: 'DALL-E: easier, ChatGPT integrated | Midjourney: more artistic' }
+                    ];
+                    awardPoints(25);
+                    
+                } else if (matchedCategory === 'howTo') {
+                    response = "I'd love to help you learn how to do that! Could you be more specific about what you want to learn? For example: How to use ChatGPT effectively? How to create AI images? How to integrate AI into your workflow? How to build an AI application? How to write better prompts? How to use Google Gemini API? Let me know and I'll give you step-by-step guidance!";
+                    discussionTopic = 'How-To Guidance';
+                    discussionSummary = 'Ready to provide practical, step-by-step instructions for implementing AI in various scenarios.';
+                    awardPoints(15);
+                    
+                } else if (matchedCategory === 'image') {
+                    response = "AI image generation is amazing! Here's how it works: You describe what you want in text (a 'prompt'), and AI creates an image. **Popular tools**: DALL-E 3 (integrated in ChatGPT), Midjourney (most artistic), Stable Diffusion (open-source, customizable), Adobe Firefly (commercial-safe). **Prompting tips**: Be specific (style, colors, mood, composition), use art terms ('oil painting', 'cinematic', '4K'), reference artists or styles, specify what you DON'T want (negative prompts). **Example**: Bad: 'a cat' | Good: 'a fluffy orange cat wearing a wizard hat, digital art, vibrant colors, magical forest background, trending on artstation'. Want to try writing an image prompt?";
+                    discussionTopic = 'AI Image Generation';
+                    discussionSummary = 'Understanding AI image generation tools, how they work, and techniques for writing effective image prompts.';
+                    newFlashcards = [
+                        { question: 'AI image generation tools?', answer: 'DALL-E 3, Midjourney, Stable Diffusion, Adobe Firefly' },
+                        { question: 'Good image prompt elements?', answer: 'Specific details, style/medium, colors, mood, composition, art terms' }
+                    ];
+                    awardPoints(30);
+                    
+                } else {
+                    // Catch-all for any other question
+                    response = `That's an interesting question about "${userMessage}"! While I may not have covered this exact topic, here's what I can tell you: AI is constantly evolving, and there's always more to learn. Your question touches on important aspects of artificial intelligence. Could you tell me more about what specifically you'd like to know? I can discuss: practical applications, technical details, how to get started, tools you can use, real-world examples, or help you understand the underlying concepts. What aspect interests you most?`;
+                    discussionTopic = 'Open Discussion';
+                    discussionSummary = `Exploring your question: "${userMessage.substring(0, 50)}..." and finding the best way to help you learn.`;
+                    awardPoints(15);
+                }
+
+                topicsExplored++;
+                document.getElementById('topicsValue').textContent = topicsExplored;
+            }
+
+            if (discussionTopic) {
+                addDiscussionItem(discussionTopic, discussionSummary);
+            }
+
+            if (newFlashcards.length > 0) {
+                addFlashcards(newFlashcards);
+            }
+
+            addMessage(response, false);
+            speak(response);
+            lastAIMessage = response;
+        }
+
+        function updateStage(title, description) {
+            document.getElementById('currentStage').textContent = title;
+            document.getElementById('stageDescription').textContent = description;
+        }
+
+        function addDiscussionItem(topic, summary) {
+            const container = document.getElementById('discussionContent');
+            
+            // Remove placeholder if exists
+            const placeholder = container.querySelector('.discussion-placeholder');
+            if (placeholder) {
+                placeholder.remove();
+            }
+
+            // Create new discussion item
+            const item = document.createElement('div');
+            item.className = 'discussion-item';
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            
+            item.innerHTML = `
+                <div class="discussion-topic">${topic}</div>
+                <div class="discussion-summary">${summary}</div>
+                <div class="discussion-timestamp">${timeString}</div>
+            `;
+            
+            container.appendChild(item);
+            
+            // Keep only last 5 discussion items
+            const items = container.querySelectorAll('.discussion-item');
+            if (items.length > 5) {
+                items[0].remove();
+            }
+
+            // Store in array
+            discussionTopics.push({ topic, summary, time: timeString });
+        }
+
+        function awardPoints(amount) {
+            points += amount;
+            document.getElementById('pointsValue').textContent = points;
+            
+            if (points >= 50) {
+                document.getElementById('badge1').classList.add('unlocked');
+            }
+            if (points >= 200) {
+                document.getElementById('badge2').classList.add('unlocked');
+            }
+            if (points >= 500) {
+                document.getElementById('badge3').classList.add('unlocked');
+            }
+        }
+
+        function addFlashcards(cards) {
+            const container = document.getElementById('flashcardContainer');
+            container.innerHTML = '';
+            
+            cards.forEach((card, index) => {
+                const flashcardDiv = document.createElement('div');
+                flashcardDiv.className = 'flashcard';
+                flashcardDiv.onclick = () => flipCard(index);
+                flashcardDiv.id = 'flashcard-' + index;
+                
+                flashcardDiv.innerHTML = `
+                    <div class="flashcard-question">${card.question}</div>
+                    <div class="flashcard-hint">Click to reveal answer</div>
+                `;
+                
+                flashcardDiv.dataset.answer = card.answer;
+                flashcardDiv.dataset.question = card.question;
+                flashcardDiv.dataset.flipped = 'false';
+                
+                container.appendChild(flashcardDiv);
+            });
+        }
+
+        function flipCard(index) {
+            const card = document.getElementById('flashcard-' + index);
+            const isFlipped = card.dataset.flipped === 'true';
+            
+            if (isFlipped) {
+                card.classList.remove('flipped');
+                card.innerHTML = `
+                    <div class="flashcard-question">${card.dataset.question}</div>
+                    <div class="flashcard-hint">Click to reveal answer</div>
+                `;
+                card.dataset.flipped = 'false';
+            } else {
+                card.classList.add('flipped');
+                card.innerHTML = `
+                    <div class="flashcard-answer">${card.dataset.answer}</div>
+                    <div class="flashcard-hint">Click to see question</div>
+                `;
+                card.dataset.flipped = 'true';
+            }
+        }
+
+        function quickAction(action) {
+            let message = '';
+            if (action === 'repeat') {
+                message = lastAIMessage;
+            } else if (action === 'hint') {
+                message = "💡 Try being specific with your questions. Ask about AI concepts, tools, or applications!";
+            } else if (action === 'examples') {
+                message = "📝 Example questions: 'What's machine learning?', 'How can I use AI at work?', 'What are the best AI tools?'";
+            }
+            addMessage(message, false);
+            speak(message);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        async function fetchAIContent() {
+            const container = document.getElementById('aiContentContainer');
+            container.innerHTML = '<div class="loading-spinner">Loading AI content...</div>';
+
+            try {
+                const topics = ['Artificial_intelligence', 'Machine_learning', 'ChatGPT'];
+                const topic = topics[Math.floor(Math.random() * topics.length)];
+                
+                const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${topic}`);
+                const data = await response.json();
+
+                let html = '';
+                if (data && data.extract) {
+                    html += `
+                        <div class="content-item" onclick="window.open('${data.content_urls.desktop.page}', '_blank')">
+                            <div class="content-title">📖 ${data.title}</div>
+                            <div class="content-description">${data.extract.substring(0, 150)}...</div>
+                            <div class="content-meta">
+                                <span class="content-source">Wikipedia</span>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                html += `
+                    <div class="content-item" onclick="window.open('https://www.deeplearning.ai/', '_blank')">
+                        <div class="content-title">🎓 DeepLearning.AI</div>
+                        <div class="content-description">Free AI courses by Andrew Ng</div>
+                        <div class="content-meta">
+                            <span class="content-source">Education</span>
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML = html;
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="content-item">
+                        <div class="content-title">📚 AI Learning Resources</div>
+                        <div class="content-description">Explore DeepLearning.AI and Hugging Face</div>
+                    </div>
+                `;
+            }
+        }
+
+        window.addEventListener('load', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                stream.getTracks().forEach(track => track.stop());
+                initializeSpeechRecognition();
+            } catch (error) {
+                console.log('Microphone not available');
+            }
+            
+            startWelcomeSequence();
+            fetchAIContent();
+        });
+    </script>
+</body>
+</html>

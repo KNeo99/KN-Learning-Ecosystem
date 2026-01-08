@@ -1,0 +1,274 @@
+```html
+past data\n• Generative AI: Creates new content\n\nNow, here's your first question: Which type of AI learns from past data to improve its performance?";
+                        userProgress = 20;
+                    } else if (currentLesson === 1) {
+                        intro = "Perfect! AI in Everyday Life. 🌟\n\nYou interact with AI more than you might realize! From voice assistants to recommendation algorithms, AI is everywhere.\n\nQuestion: Can you name three AI systems you use in your daily life?";
+                        userProgress = 20;
+                    } else if (currentLesson === 2) {
+                        intro = "Wonderful! Let's master AI Prompting. 💬\n\nPrompting is how we communicate with AI systems effectively. A good prompt is clear, specific, and provides context.\n\nQuestion: What makes a good prompt?";
+                        userProgress = 20;
+                    }
+                    
+                    updateProgress();
+                    addMessage('ai', intro, true);
+                }, 1000);
+                return;
+            }
+
+            // Learning content responses
+            setTimeout(function() {
+                var response = '';
+
+                if (lowerText.includes('limited memory') || lowerText.includes('memory')) {
+                    response = 'Perfect! 🎯 You\'re absolutely right! Limited Memory AI learns from historical data to make better decisions.\n\n+' + earnedPoints + ' points!\n\nLet\'s continue: Can you think of an example of AI you use in your everyday life?';
+                    userProgress = 40;
+                } else if (lowerText.includes('assistant') || lowerText.includes('siri') || lowerText.includes('alexa') || lowerText.includes('chatbot') || lowerText.includes('netflix') || lowerText.includes('spotify')) {
+                    response = 'Excellent example! 🌟 Voice assistants, streaming services, and chatbots are great examples of AI in daily life.\n\n+' + earnedPoints + ' points!\n\nYou\'re making great progress! Would you like to continue to the next topic, or would you like to review with flashcards?';
+                    userProgress = 60;
+                    streak++;
+                    updateStreak();
+                } else if (lowerText.includes('clear') || lowerText.includes('specific') || lowerText.includes('context')) {
+                    response = 'Great job! 🎉 You understand the key elements of good prompting!\n\n+' + earnedPoints + ' points!\n\nA good prompt is clear, specific, and provides context. Now try creating a prompt to ask an AI about tomorrow\'s weather!';
+                    userProgress = 80;
+                } else if (lowerText.includes('weather') || lowerText.includes('forecast')) {
+                    response = 'Excellent! 🎊 You\'re getting the hang of prompting!\n\n+' + earnedPoints + ' points!\n\nA good weather prompt might be: "What\'s the weather forecast for tomorrow in Seattle?"\n\nYou\'ve completed this lesson!';
+                    userProgress = 100;
+                    setTimeout(function() { offerNextTopic(); }, 2000);
+                } else if (lowerText.includes('help') || lowerText.includes('hint')) {
+                    response = "No problem! Think about the key concepts we just discussed. If you're stuck, try rephrasing your answer or ask me to repeat the question. You've got this! 💪";
+                } else {
+                    response = 'Interesting response! Let me give you some feedback: ' + (
+                        lowerText.length > 50 
+                            ? "You're being detailed, which is great! Try to focus on the key concept." 
+                            : "Good thinking! Can you elaborate a bit more?"
+                    ) + '\n\n+' + earnedPoints + ' points for participating!';
+                }
+
+                updateProgress();
+                addMessage('ai', response, true);
+            }, 1000);
+        }
+
+        function offerNextTopic() {
+            var nextLesson = currentLesson + 1;
+            if (nextLesson < lessons.length) {
+                var nextTopic = lessons[nextLesson];
+                addMessage('ai', 'Great! The next topic is "' + nextTopic.title + '" - ' + nextTopic.description + '. Would you like to learn about this? Say \'yes\' to continue, \'skip\' for the next option, or \'flashcards\' to review what you\'ve learned.', true);
+                topicOffered = true;
+            } else {
+                addMessage('ai', "You've completed all available lessons! 🎉 Try the flashcards to review, or we can revisit any topic.", true);
+            }
+        }
+
+        function repeatLastMessage() {
+            var lastAI = messages.filter(function(m) { return m.type === 'ai'; }).slice(-1)[0];
+            if (lastAI) {
+                addMessage('ai', "Let me repeat: " + lastAI.text, true);
+            }
+        }
+
+        function giveHint() {
+            addMessage('ai', "Here's a hint: Think about AI systems that remember your preferences or past interactions!", true);
+        }
+
+        function skipTopic() {
+            processUserInput('skip');
+        }
+
+        function showFlashcards() {
+            document.getElementById('flashcardSection').classList.remove('hidden');
+            currentFlashcardIndex = 0;
+            flashcardFlipped = false;
+            updateFlashcard();
+        }
+
+        function closeFlashcards() {
+            document.getElementById('flashcardSection').classList.add('hidden');
+        }
+
+        function flipCard() {
+            flashcardFlipped = !flashcardFlipped;
+            var container = document.getElementById('flashcardContainer');
+            if (flashcardFlipped) {
+                container.classList.add('flashcard-flipped');
+            } else {
+                container.classList.remove('flashcard-flipped');
+            }
+        }
+
+        function nextCard() {
+            var cards = lessons[currentLesson].flashcards;
+            if (currentFlashcardIndex < cards.length - 1) {
+                currentFlashcardIndex++;
+            } else {
+                currentFlashcardIndex = 0;
+            }
+            flashcardFlipped = false;
+            document.getElementById('flashcardContainer').classList.remove('flashcard-flipped');
+            updateFlashcard();
+        }
+
+        function previousCard() {
+            var cards = lessons[currentLesson].flashcards;
+            if (currentFlashcardIndex > 0) {
+                currentFlashcardIndex--;
+            } else {
+                currentFlashcardIndex = cards.length - 1;
+            }
+            flashcardFlipped = false;
+            document.getElementById('flashcardContainer').classList.remove('flashcard-flipped');
+            updateFlashcard();
+        }
+
+        function updateFlashcard() {
+            var cards = lessons[currentLesson].flashcards;
+            var card = cards[currentFlashcardIndex];
+            document.getElementById('flashcardFront').textContent = card.front;
+            document.getElementById('flashcardBack').textContent = card.back;
+            document.getElementById('cardCounter').textContent = (currentFlashcardIndex + 1) + ' / ' + cards.length;
+        }
+
+        function updateLessonDisplay() {
+            var lesson = lessons[currentLesson];
+            document.getElementById('currentLessonTitle').textContent = lesson.title;
+            document.getElementById('currentLessonConcept').textContent = lesson.concept;
+            updateLearningPath();
+        }
+
+        function updateReferences() {
+            var lesson = lessons[currentLesson];
+            document.getElementById('referencesDescription').textContent = 'Explore these curated resources for ' + lesson.title;
+            
+            var container = document.getElementById('referencesContainer');
+            container.innerHTML = '';
+            
+            lesson.references.forEach(function(ref) {
+                var refDiv = document.createElement('a');
+                refDiv.href = ref.url;
+                refDiv.target = '_blank';
+                refDiv.rel = 'noopener noreferrer';
+                refDiv.className = 'block p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl hover:shadow-md transition-all border border-blue-200';
+                refDiv.innerHTML = '<div class="flex items-start justify-between">' +
+                    '<div class="flex-1">' +
+                        '<h4 class="font-semibold text-gray-800 mb-1">' + ref.title + '</h4>' +
+                        '<span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">' + ref.type + '</span>' +
+                    '</div>' +
+                    '<svg class="w-5 h-5 text-blue-600 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>' +
+                    '</svg>' +
+                '</div>';
+                container.appendChild(refDiv);
+            });
+        }
+
+        function updateProgress() {
+            document.getElementById('progressPercent').textContent = userProgress + '%';
+            document.getElementById('progressBar').style.width = userProgress + '%';
+        }
+
+        function updateStreak() {
+            document.getElementById('streakCounter').textContent = streak + ' Day Streak! 🔥';
+        }
+
+        function updatePoints() {
+            document.getElementById('totalPoints').textContent = points;
+            checkBadges();
+        }
+
+        function checkBadges() {
+            badgesList.forEach(function(badge) {
+                if (points >= badge.points && !badges.find(function(b) { return b.id === badge.id; })) {
+                    badges.push(badge);
+                    updateBadges();
+                    addMessage('ai', '🎉 Congratulations! You\'ve earned the ' + badge.icon + ' ' + badge.name + ' badge!', true);
+                }
+            });
+        }
+
+        function updateBadges() {
+            var container = document.getElementById('badgesContainer');
+            
+            if (badges.length > 0) {
+                container.innerHTML = '';
+                badges.forEach(function(badge) {
+                    var badgeDiv = document.createElement('div');
+                    badgeDiv.className = 'bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl p-3 text-center';
+                    badgeDiv.innerHTML = '<span class="text-3xl">' + badge.icon + '</span>' +
+                        '<p class="text-xs font-semibold text-gray-800 mt-1">' + badge.name + '</p>';
+                    container.appendChild(badgeDiv);
+                });
+            } else {
+                container.innerHTML = '<p class="text-gray-500 text-sm col-span-2">Keep learning to earn badges!</p>';
+            }
+        }
+
+        function updateLearningPath() {
+            var container = document.getElementById('learningPath');
+            container.innerHTML = '';
+            
+            lessons.forEach(function(lesson, idx) {
+                var lessonDiv = document.createElement('div');
+                lessonDiv.className = 'p-4 rounded-xl border-2 transition-all ' + (
+                    idx === currentLesson 
+                        ? 'border-blue-500 bg-blue-50' 
+                        : idx < currentLesson 
+                        ? 'border-green-300 bg-green-50' 
+                        : 'border-gray-200 bg-gray-50'
+                );
+                
+                var icon = '';
+                if (idx < currentLesson) {
+                    icon = '<span class="text-green-600 font-bold">✓</span>';
+                } else if (idx === currentLesson) {
+                    icon = '<svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>';
+                } else {
+                    icon = '<span class="text-gray-400">🔒</span>';
+                }
+                
+                lessonDiv.innerHTML = '<div class="flex items-center justify-between">' +
+                    '<div>' +
+                        '<h4 class="font-semibold text-gray-800">' + lesson.title + '</h4>' +
+                        '<p class="text-xs text-gray-600 mt-1">' + lesson.description + '</p>' +
+                    '</div>' +
+                    icon +
+                '</div>';
+                container.appendChild(lessonDiv);
+            });
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            initSpeechRecognition();
+            updateLessonDisplay();
+            updateReferences();
+            updateProgress();
+            updateStreak();
+            updatePoints();
+            
+            addMessage('ai', "Welcome to your AI Learning Journey! 🎓 I'm your AI Instructor. I'd like to start with 'What is AI?' - this covers AI basics and types. Does this sound good, or would you like to explore a different topic? Say 'yes' to start, or 'skip' to see other options.", true);
+        };
+    </script>
+</body>
+</html>
+```
+
+**📥 How to Download and Use:**
+
+1. **Copy the entire code above** (from `<!DOCTYPE html>` to `</html>`)
+2. **Open a text editor** (Notepad, TextEdit, VS Code, etc.)
+3. **Paste the code**
+4. **Save as:** `ai-learning-ecosystem.html`
+5. **Open the file** in Chrome, Edge, or Safari
+
+**✅ All Features Included:**
+- 🎤 Voice input (speech recognition)
+- 🔊 Voice output (text-to-speech)
+- 💬 Interactive chat with AI instructor
+- 🃏 Flashcards with flip animation
+- 🔗 Dynamic learning resources (3 per topic)
+- 📊 Progress tracking with visual bars
+- 🏆 Gamification (points, badges, streaks)
+- 🗺️ Learning path visualization
+- ⚡ Quick action buttons
+
+The file is completely self-contained and works offline (except for Tailwind CSS which loads from CDN). Enjoy your learning ecosystem! 🚀

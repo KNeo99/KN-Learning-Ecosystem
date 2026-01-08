@@ -1,0 +1,74 @@
+🚀 Excited to share my experience using Claude to create this education tool called “KN Learning” – using AI to learn AI. I genuinely believe anyone can learn AI, and my goal is to create a continuous learning mindset and invite more people to upskill by making AI learning accessible for all ages, starting at a very simple level with guided practice.  
+
+Here’s how you can try it out:
+
+• 🤖 “KN Learning – Prompt Engineering Mastery” lessons- [link - https://kneo99.github.io/KN-Learning-Ecosystem/prompt-engineering-mastery-standalone_v1.html ]
+
+• 📚 Beginner & Advanced Reading Practice - [link https://kneo99.github.io/KN-Learning-Ecosystem/read-it-practice_g]– a bonus reading practice tool (for young audience) that was my first step in using simple prompts to create and measure reading accuracy.
+
+These lessons are based on user centric-designed to show that anyone can begin learning Artificial Intelligence—and explore LLMs by comparing their features.   For the reading practice tool, I am introducing a fun reading contents with “gamification,”  so anyone can gently practise and check their reading accuracy.  
+
+If you do try it, I’d love to hear your feedback and see how you might use it for yourself, your teams, or young learners around you. 🙌
+
+
+
+P.S. You can explore the project overview here: https://kneo99.github.io/KN-Learning-Ecosystem/.
+
+
+
+Here are some hashtag ideas you can mix and match (aim for 5–10 total on LinkedIn):
+
+• #ArtificialIntelligence
+
+• #AIForEveryone
+
+• #AIinEducation
+
+• #EdTech
+
+• #LifelongLearning
+
+• #DigitalUpskilling
+
+• #PromptEngineering
+
+• #ClaudeAI
+
+• #ReadingPractice
+
+• #Literacy
+
+• #K12Education
+
+• #LearningEcosystem
+
+• #ContinuousLearning
+
+• #FutureOfWork
+
+• #StudentSuccess
+
+For your specific post, a strong set could be:  
+
+#ArtificialIntelligence #AIForEveryone #AIinEducation #EdTech #PromptEngineering #ClaudeAI #ReadingPractice #LifelongLearning #K12Education #DigitalUpskilling
+0
+
+*****************************
+🚀 Excited to share my journey building “KN Learning” — an education tool created with Claude, designed to make learning AI accessible for everyone.
+
+I truly believe that anyone can learn AI. My mission is to inspire a continuous learning mindset and invite more people to upskill — starting with simple, guided practice that grows into advanced exploration.
+
+✨ Try it out here:
+
+🤖 KN Learning – Prompt Engineering Mastery Hands-on lessons to explore prompt engineering and understand how LLMs work.
+
+📚 Beginner & Advanced Reading Practice A bonus tool (originally built for young learners) that uses gamified reading content to gently practice and measure reading accuracy.
+
+These lessons are user‑centric by design — showing that anyone can begin learning Artificial Intelligence, compare LLM features, and build confidence step by step. The reading practice tool adds a playful layer of gamification, making literacy and comprehension both fun and measurable.
+
+🙌 If you give it a try, I’d love to hear your feedback — whether you see it helping yourself, your teams, or young learners around you.
+
+📌 Explore the full project overview here: KN Learning Ecosystem
+
+
+
