@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Skills Academy - Your Path to Excellence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0A4D68;
+            --primary-light: #088395;
+            --accent: #05BFDB;
+            --accent-warm: #00D9FF;
+            --bg-dark: #001F3F;
+            --bg-panel: #FFFFFF;
+            --text-dark: #1A2332;
+            --text-light: #5A6C7D;
+            --text-inverse: #FFFFFF;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --progress-bg: #E0F2FE;
+            --shadow-sm: 0 2px 8px rgba(10, 77, 104, 0.08);
+            --shadow-md: 0 4px 16px rgba(10, 77, 104, 0.12);
+            --shadow-lg: 0 8px 32px rgba(10, 77, 104, 0.16);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Spline Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #001F3F 0%, #0A4D68 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--text-inverse);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            color: var(--accent-warm);
+            font-weight: 500;
+        }
+
+        .dual-panel-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .panel {
+            background: var(--bg-panel);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            min-height: 800px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+        }
+
+        .panel-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--progress-bg);
+        }
+
+        .panel-header h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .panel-header p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        /* AI Coach Panel */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .progress-overview {
+            background: linear-gradient(135deg, var(--progress-bg) 0%, #DBEAFE 100%);
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+        }
+
+        .skill-meters {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .skill-meter {
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .skill-meter-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .skill-meter-bar {
+            height: 8px;
+            background: var(--progress-bg);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .skill-meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+            transition: width 1s ease-out;
+            border-radius: 4px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background: #F8FAFC;
+            border-radius: 16px;
+            max-height: 400px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            margin-bottom: 1.25rem;
+            animation: slideIn 0.3s ease-out;
+            max-width: 85%;
+        }
+
+        .message.bot {
+            margin-right: auto;
+        }
+
+        .message.user {
+            margin-left: auto;
+        }
+
+        .message-content {
+            padding: 1rem 1.25rem;
+            border-radius: 16px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .message.bot .message-content {
+            background: white;
+            color: var(--text-dark);
+            box-shadow: var(--shadow-sm);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-avatar {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--progress-bg);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(5, 191, 219, 0.1);
+        }
+
+        .btn {
+            padding: 1rem 1.75rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--progress-bg);
+        }
+
+        .btn-icon {
+            padding: 0.75rem;
+            width: 48px;
+            height: 48px;
+        }
+
+        .voice-btn {
+            background: var(--accent);
+            color: white;
+        }
+
+        .voice-btn:hover {
+            background: var(--accent-warm);
+        }
+
+        .voice-btn.recording {
+            animation: pulse 1.5s infinite;
+            background: var(--warning);
+        }
+
+        /* Learning Path Panel */
+        .learning-path-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .skill-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .skill-card {
+            background: linear-gradient(135deg, var(--progress-bg) 0%, white 100%);
+            padding: 1.5rem;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent);
+        }
+
+        .skill-card.selected {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border-color: var(--accent-warm);
+        }
+
+        .skill-card h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .skill-card p {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .learning-modules {
+            margin-top: 2rem;
+        }
+
+        .module {
+            background: white;
+            border: 2px solid var(--progress-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .module:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .module-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .module-badge {
+            background: var(--accent);
+            color: white;
+            padding: 0.375rem 0.875rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .module-description {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .module-resources {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .resource-link {
+            background: var(--progress-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .resource-link:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Flashcard Section */
+        .flashcard-container {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .flashcard-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .flashcard {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+        }
+
+        .flashcard-back {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-question {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .flashcard-answer {
+            font-size: 1.125rem;
+            color: var(--text-dark);
+            line-height: 1.8;
+        }
+
+        .flashcard-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+
+        /* Gamification Elements */
+        .achievements-bar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .achievements-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .badges {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .badge.locked {
+            background: #E5E7EB;
+            opacity: 0.5;
+        }
+
+        .badge-tooltip {
+            position: absolute;
+            bottom: -35px;
+            background: var(--text-dark);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .badge:hover .badge-tooltip {
+            opacity: 1;
+        }
+
+        .points-display {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dual-panel-container {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .skill-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .skill-meters {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .panel {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Professional Skills Academy</h1>
+            <p>Your personalized journey to mastering leadership, communication, and collaboration</p>
+        </div>
+
+        <div class="dual-panel-container">
+            <!-- Left Panel: AI Coach & Assessment -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>🤖 Your AI Skills Coach</h2>
+                    <p>I'm here to understand your goals and guide your development journey</p>
+                </div>
+
+                <div class="progress-overview">
+                    <div class="points-display">
+                        <span>⭐</span>
+                        <span id="totalPoints">0 Points</span>
+                    </div>
+                    <h3 style="margin-bottom: 1rem; color: var(--primary);">Your Skill Progress</h3>
+                    <div class="skill-meters">
+                        <div class="skill-meter">
+                            <div class="skill-meter-label">
+                                <span>Communication</span>
+                                <span id="commScore">0%</span>
+                            </div>
+                            <div class="skill-meter-bar">
+                                <div class="skill-meter-fill" id="commBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-meter">
+                            <div class="skill-meter-label">
+                                <span>Leadership</span>
+                                <span id="leadScore">0%</span>
+                            </div>
+                            <div class="skill-meter-bar">
+                                <div class="skill-meter-fill" id="leadBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-meter">
+                            <div class="skill-meter-label">
+                                <span>Collaboration</span>
+                                <span id="collabScore">0%</span>
+                            </div>
+                            <div class="skill-meter-bar">
+                                <div class="skill-meter-fill" id="collabBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-meter">
+                            <div class="skill-meter-label">
+                                <span>Adaptive Learning</span>
+                                <span id="adaptScore">0%</span>
+                            </div>
+                            <div class="skill-meter-bar">
+                                <div class="skill-meter-fill" id="adaptBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message bot">
+                            <div class="message-avatar">AI Coach</div>
+                            <div class="message-content">
+                                Welcome! I'm your professional development coach. I'm here to help you identify your strengths and areas for growth. Let's start by understanding where you are in your career journey.
+                                <br><br>
+                                Tell me: What professional skills would you like to develop, and what challenges are you currently facing in your work?
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-area">
+                        <input 
+                            type="text" 
+                            class="chat-input" 
+                            id="userInput" 
+                            placeholder="Share your goals and challenges..."
+                            onkeypress="handleKeyPress(event)"
+                        >
+                        <button class="btn btn-icon voice-btn" id="voiceBtn" onclick="toggleVoice()" title="Voice Input">
+                            🎤
+                        </button>
+                        <button class="btn btn-primary" onclick="sendMessage()">
+                            Send
+                        </button>
+                    </div>
+                </div>
+
+                <div class="achievements-bar">
+                    <div class="achievements-title">🏆 Your Achievements</div>
+                    <div class="badges">
+                        <div class="badge locked" id="badge1">
+                            🎯
+                            <div class="badge-tooltip">First Steps</div>
+                        </div>
+                        <div class="badge locked" id="badge2">
+                            💬
+                            <div class="badge-tooltip">Communicator</div>
+                        </div>
+                        <div class="badge locked" id="badge3">
+                            👑
+                            <div class="badge-tooltip">Leader</div>
+                        </div>
+                        <div class="badge locked" id="badge4">
+                            🤝
+                            <div class="badge-tooltip">Collaborator</div>
+                        </div>
+                        <div class="badge locked" id="badge5">
+                            🎓
+                            <div class="badge-tooltip">Adaptive Learner</div>
+                        </div>
+                        <div class="badge locked" id="badge6">
+                            ⭐
+                            <div class="badge-tooltip">Master</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Learning Path & Resources -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>📚 Your Learning Path</h2>
+                    <p>Personalized resources and practice activities based on your goals</p>
+                </div>
+
+                <div class="learning-path-content">
+                    <h3 style="margin-bottom: 1rem; color: var(--primary);">Select a Skill to Explore</h3>
+                    
+                    <div class="skill-selector">
+                        <div class="skill-card" onclick="selectSkill('communication')">
+                            <h3>💬 Communication</h3>
+                            <p>Master clear, persuasive, and empathetic communication</p>
+                        </div>
+                        <div class="skill-card" onclick="selectSkill('leadership')">
+                            <h3>👑 Leadership</h3>
+                            <p>Inspire teams and drive organizational success</p>
+                        </div>
+                        <div class="skill-card" onclick="selectSkill('collaboration')">
+                            <h3>🤝 Collaboration</h3>
+                            <p>Excel at cross-functional teamwork and partnerships</p>
+                        </div>
+                        <div class="skill-card" onclick="selectSkill('adaptive')">
+                            <h3>🎓 Adaptive Learning</h3>
+                            <p>Develop resilience and continuous growth mindset</p>
+                        </div>
+                    </div>
+
+                    <div class="learning-modules" id="learningModules">
+                        <p style="text-align: center; color: var(--text-light); padding: 2rem;">
+                            Select a skill above to see recommended learning modules and resources
+                        </p>
+                    </div>
+
+                    <div class="flashcard-container" id="flashcardContainer">
+                        <h3 style="margin-bottom: 1rem; color: var(--primary);">💡 Practice Flashcards</h3>
+                        <div class="flashcard" id="flashcard" onclick="flipCard()">
+                            <div class="flashcard-front">
+                                <div class="flashcard-question" id="flashcardQuestion">Click to start</div>
+                                <p style="color: var(--text-light); margin-top: 1rem;">Tap to reveal answer</p>
+                            </div>
+                            <div class="flashcard-back">
+                                <div class="flashcard-answer" id="flashcardAnswer">Answer will appear here</div>
+                            </div>
+                        </div>
+                        <div class="flashcard-controls">
+                            <button class="btn btn-secondary" onclick="previousCard()">← Previous</button>
+                            <button class="btn btn-primary" onclick="nextCard()">Next →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let state = {
+            points: 0,
+            skills: {
+                communication: 0,
+                leadership: 0,
+                collaboration: 0,
+                adaptive: 0
+            },
+            badges: [],
+            currentSkill: null,
+            currentCardIndex: 0,
+            isRecording: false,
+            recognition: null
+        };
+
+        // Learning Modules Database
+        const learningModules = {
+            communication: [
+                {
+                    title: "Active Listening Fundamentals",
+                    badge: "Beginner",
+                    description: "Learn to truly hear and understand your colleagues and stakeholders through proven active listening techniques.",
+                    resources: [
+                        { name: "Coursera: Communication Skills", url: "https://www.coursera.org/learn/communication-skills" },
+                        { name: "edX: Professional Communication", url: "https://www.edx.org/learn/communication-skills" }
+                    ]
+                },
+                {
+                    title: "Persuasive Business Writing",
+                    badge: "Intermediate",
+                    description: "Craft compelling emails, reports, and proposals that drive action and influence decisions.",
+                    resources: [
+                        { name: "LinkedIn Learning: Business Writing", url: "https://www.linkedin.com/learning/topics/business-writing" },
+                        { name: "Udemy: Professional Writing", url: "https://www.udemy.com/topic/business-writing/" }
+                    ]
+                },
+                {
+                    title: "Public Speaking Mastery",
+                    badge: "Advanced",
+                    description: "Present with confidence, engage audiences, and deliver memorable presentations.",
+                    resources: [
+                        { name: "Toastmasters International", url: "https://www.toastmasters.org/" },
+                        { name: "TED Masterclass", url: "https://www.ted.com/about/programs-initiatives/ted-talks" }
+                    ]
+                }
+            ],
+            leadership: [
+                {
+                    title: "Emotional Intelligence for Leaders",
+                    badge: "Essential",
+                    description: "Develop self-awareness and empathy to lead with authenticity and build stronger team connections.",
+                    resources: [
+                        { name: "Coursera: Inspiring Leadership", url: "https://www.coursera.org/learn/emotional-intelligence-leadership" },
+                        { name: "Yale: Emotional Intelligence", url: "https://www.coursera.org/learn/the-science-of-well-being" }
+                    ]
+                },
+                {
+                    title: "Strategic Decision Making",
+                    badge: "Intermediate",
+                    description: "Master frameworks for making high-impact decisions under uncertainty and pressure.",
+                    resources: [
+                        { name: "HBR: Decision Making", url: "https://hbr.org/topic/decision-making" },
+                        { name: "MIT Sloan: Strategy & Innovation", url: "https://executive.mit.edu/course/strategy-and-innovation/a056g00000URaa7AAD.html" }
+                    ]
+                },
+                {
+                    title: "Building High-Performance Teams",
+                    badge: "Advanced",
+                    description: "Create team culture, delegate effectively, and unlock collective potential.",
+                    resources: [
+                        { name: "Google: Project Aristotle", url: "https://rework.withgoogle.com/print/guides/5721312655835136/" },
+                        { name: "Coursera: Leading Teams", url: "https://www.coursera.org/learn/leading-teams" }
+                    ]
+                }
+            ],
+            collaboration: [
+                {
+                    title: "Cross-Functional Partnership",
+                    badge: "Core",
+                    description: "Navigate organizational silos and build productive relationships across departments.",
+                    resources: [
+                        { name: "LinkedIn: Collaboration Skills", url: "https://www.linkedin.com/learning/topics/collaboration" },
+                        { name: "Harvard: Collaboration Skills", url: "https://www.extension.harvard.edu/professional-development/programs/leadership-management" }
+                    ]
+                },
+                {
+                    title: "Conflict Resolution & Negotiation",
+                    badge: "Intermediate",
+                    description: "Turn disagreements into opportunities and negotiate win-win outcomes.",
+                    resources: [
+                        { name: "Coursera: Negotiation", url: "https://www.coursera.org/learn/negotiation" },
+                        { name: "PON: Harvard Program", url: "https://www.pon.harvard.edu/" }
+                    ]
+                },
+                {
+                    title: "Remote Team Collaboration",
+                    badge: "Modern",
+                    description: "Excel at virtual collaboration and build cohesive distributed teams.",
+                    resources: [
+                        { name: "Coursera: Remote Work", url: "https://www.coursera.org/learn/remote-team-management" },
+                        { name: "GitLab: Remote Playbook", url: "https://about.gitlab.com/company/culture/all-remote/" }
+                    ]
+                }
+            ],
+            adaptive: [
+                {
+                    title: "Growth Mindset Development",
+                    badge: "Foundation",
+                    description: "Cultivate resilience, embrace challenges, and see failures as learning opportunities.",
+                    resources: [
+                        { name: "Coursera: Learning to Learn", url: "https://www.coursera.org/learn/learning-how-to-learn" },
+                        { name: "Carol Dweck: Mindset", url: "https://www.mindsetworks.com/" }
+                    ]
+                },
+                {
+                    title: "Continuous Learning Strategies",
+                    badge: "Intermediate",
+                    description: "Build sustainable learning habits and stay current in a rapidly changing world.",
+                    resources: [
+                        { name: "LinkedIn Learning: Learning Paths", url: "https://www.linkedin.com/learning/" },
+                        { name: "Coursera: Career Development", url: "https://www.coursera.org/learn/wharton-success" }
+                    ]
+                },
+                {
+                    title: "Change Management",
+                    badge: "Advanced",
+                    description: "Lead through transformation and help others navigate organizational change.",
+                    resources: [
+                        { name: "Prosci: Change Management", url: "https://www.prosci.com/resources/articles/what-is-change-management" },
+                        { name: "Kotter: Leading Change", url: "https://www.kotterinc.com/methodology/8-steps/" }
+                    ]
+                }
+            ]
+        };
+
+        // Flashcard Database
+        const flashcards = {
+            communication: [
+                { 
+                    question: "What are the four levels of active listening?",
+                    answer: "1) Receiving (hearing), 2) Understanding (comprehending), 3) Evaluating (analyzing), and 4) Responding (providing feedback)"
+                },
+                {
+                    question: "How can you demonstrate empathy in professional communication?",
+                    answer: "Acknowledge emotions, validate feelings, ask clarifying questions, avoid judgment, and mirror body language to show understanding"
+                },
+                {
+                    question: "What's the 'inverted pyramid' structure in business writing?",
+                    answer: "Start with the most important information (conclusion/recommendation), then supporting details, and end with background context"
+                }
+            ],
+            leadership: [
+                {
+                    question: "What are the five components of emotional intelligence (Daniel Goleman)?",
+                    answer: "1) Self-awareness, 2) Self-regulation, 3) Motivation, 4) Empathy, and 5) Social skills"
+                },
+                {
+                    question: "Describe the difference between a manager and a leader.",
+                    answer: "Managers focus on processes, stability, and maintaining systems. Leaders focus on vision, change, and inspiring people toward a shared goal"
+                },
+                {
+                    question: "What is servant leadership?",
+                    answer: "A leadership philosophy where the leader prioritizes the growth and wellbeing of team members and communities, putting others' needs first to empower and develop them"
+                }
+            ],
+            collaboration: [
+                {
+                    question: "What is the Thomas-Kilmann Conflict Model?",
+                    answer: "Five conflict-handling modes: Competing (assertive/uncooperative), Collaborating (assertive/cooperative), Compromising (moderate both), Avoiding (unassertive/uncooperative), Accommodating (unassertive/cooperative)"
+                },
+                {
+                    question: "How do you build trust in cross-functional teams?",
+                    answer: "Demonstrate reliability, communicate transparently, show respect for others' expertise, follow through on commitments, and actively seek diverse perspectives"
+                },
+                {
+                    question: "What is psychological safety in teams?",
+                    answer: "A shared belief that the team is safe for interpersonal risk-taking - members feel comfortable being vulnerable, asking questions, admitting mistakes, and proposing ideas"
+                }
+            ],
+            adaptive: [
+                {
+                    question: "What's the difference between fixed and growth mindset?",
+                    answer: "Fixed mindset believes abilities are static. Growth mindset believes abilities can be developed through dedication, effort, and learning from failures"
+                },
+                {
+                    question: "What is the '70-20-10' learning model?",
+                    answer: "70% learning from challenging experiences and assignments, 20% from developmental relationships (mentors, coaches), 10% from formal coursework and training"
+                },
+                {
+                    question: "How can you practice adaptive learning daily?",
+                    answer: "Seek feedback regularly, reflect on experiences, ask 'what can I learn?', embrace challenges outside your comfort zone, and share learnings with others"
+                }
+            ]
+        };
+
+        // AI Coach Responses
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // Simulate AI processing
+            setTimeout(() => {
+                const response = generateAIResponse(message);
+                addMessage(response, 'bot');
+                updateProgress(message);
+            }, 1000);
+        }
+
+        function addMessage(text, type) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = type === 'bot' ? 'AI Coach' : 'You';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.textContent = text;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            messagesContainer.appendChild(messageDiv);
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function generateAIResponse(userMessage) {
+            const lowerMessage = userMessage.toLowerCase();
+            
+            // Identify skill areas mentioned
+            if (lowerMessage.includes('communication') || lowerMessage.includes('speaking') || lowerMessage.includes('presenting')) {
+                return "Great! Communication skills are foundational to professional success. I notice you're interested in improving how you express ideas and connect with others. I recommend starting with Active Listening Fundamentals - it's the cornerstone of all effective communication. Would you like me to suggest a specific learning path?";
+            } else if (lowerMessage.includes('leadership') || lowerMessage.includes('lead') || lowerMessage.includes('manage')) {
+                return "Leadership development is an excellent focus area! Strong leaders combine emotional intelligence with strategic thinking. I'd suggest beginning with Emotional Intelligence for Leaders - understanding yourself and others is key to inspiring teams. Click on the Leadership card in the right panel to explore your personalized modules.";
+            } else if (lowerMessage.includes('team') || lowerMessage.includes('collaboration') || lowerMessage.includes('working with')) {
+                return "Cross-functional collaboration is increasingly vital in today's workplace! Building bridges across departments and working effectively with diverse teams opens incredible opportunities. Check out the Collaboration skill modules - I've curated resources specifically for strengthening partnership and teamwork skills.";
+            } else if (lowerMessage.includes('learn') || lowerMessage.includes('adapt') || lowerMessage.includes('change')) {
+                return "Adaptive learning is your superpower in a rapidly evolving world! Professionals who continuously grow and embrace change thrive in any environment. I recommend exploring Growth Mindset Development first - it creates the foundation for all other learning. Your journey starts with how you think about challenges!";
+            } else {
+                return "Thank you for sharing! Based on what you've told me, I can help you create a personalized development plan. To give you the best recommendations, could you share: What specific situations or challenges prompted you to focus on professional development? Understanding your context helps me tailor the perfect learning path for you.";
+            }
+        }
+
+        function updateProgress(message) {
+            const lowerMessage = message.toLowerCase();
+            let pointsEarned = 10;
+            
+            // Update skill-specific progress based on conversation
+            if (lowerMessage.includes('communication')) {
+                updateSkillProgress('communication', 15);
+                pointsEarned += 5;
+            }
+            if (lowerMessage.includes('leadership') || lowerMessage.includes('lead')) {
+                updateSkillProgress('leadership', 15);
+                pointsEarned += 5;
+            }
+            if (lowerMessage.includes('team') || lowerMessage.includes('collaboration')) {
+                updateSkillProgress('collaboration', 15);
+                pointsEarned += 5;
+            }
+            if (lowerMessage.includes('learn') || lowerMessage.includes('adapt')) {
+                updateSkillProgress('adaptive', 15);
+                pointsEarned += 5;
+            }
+            
+            addPoints(pointsEarned);
+            checkBadges();
+        }
+
+        function updateSkillProgress(skill, amount) {
+            state.skills[skill] = Math.min(100, state.skills[skill] + amount);
+            
+            const skillMap = {
+                communication: { bar: 'commBar', score: 'commScore' },
+                leadership: { bar: 'leadBar', score: 'leadScore' },
+                collaboration: { bar: 'collabBar', score: 'collabScore' },
+                adaptive: { bar: 'adaptBar', score: 'adaptScore' }
+            };
+            
+            const elements = skillMap[skill];
+            if (elements) {
+                document.getElementById(elements.bar).style.width = state.skills[skill] + '%';
+                document.getElementById(elements.score).textContent = state.skills[skill] + '%';
+            }
+        }
+
+        function addPoints(points) {
+            state.points += points;
+            document.getElementById('totalPoints').textContent = state.points + ' Points';
+        }
+
+        function checkBadges() {
+            // Badge 1: First engagement
+            if (state.points >= 10 && !state.badges.includes(1)) {
+                unlockBadge(1);
+            }
+            // Badge 2: Communication focus
+            if (state.skills.communication >= 30 && !state.badges.includes(2)) {
+                unlockBadge(2);
+            }
+            // Badge 3: Leadership focus
+            if (state.skills.leadership >= 30 && !state.badges.includes(3)) {
+                unlockBadge(3);
+            }
+            // Badge 4: Collaboration focus
+            if (state.skills.collaboration >= 30 && !state.badges.includes(4)) {
+                unlockBadge(4);
+            }
+            // Badge 5: Adaptive learning focus
+            if (state.skills.adaptive >= 30 && !state.badges.includes(5)) {
+                unlockBadge(5);
+            }
+            // Badge 6: Master - all skills at 50%
+            if (Object.values(state.skills).every(s => s >= 50) && !state.badges.includes(6)) {
+                unlockBadge(6);
+            }
+        }
+
+        function unlockBadge(badgeNum) {
+            state.badges.push(badgeNum);
+            const badge = document.getElementById('badge' + badgeNum);
+            badge.classList.remove('locked');
+            addPoints(50);
+            
+            // Celebration animation
+            badge.style.animation = 'pulse 0.5s ease-out 3';
+        }
+
+        // Learning Path Functions
+        function selectSkill(skillName) {
+            state.currentSkill = skillName;
+            state.currentCardIndex = 0;
+            
+            // Update UI
+            document.querySelectorAll('.skill-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.target.closest('.skill-card').classList.add('selected');
+            
+            // Display modules
+            displayModules(skillName);
+            
+            // Show flashcards
+            document.getElementById('flashcardContainer').classList.add('active');
+            loadFlashcard();
+            
+            // Update progress
+            updateSkillProgress(skillName, 10);
+            addPoints(20);
+            checkBadges();
+        }
+
+        function displayModules(skillName) {
+            const container = document.getElementById('learningModules');
+            const modules = learningModules[skillName];
+            
+            let html = `<h3 style="margin-bottom: 1.5rem; color: var(--primary);">📖 Recommended Learning Path</h3>`;
+            
+            modules.forEach(module => {
+                html += `
+                    <div class="module">
+                        <div class="module-header">
+                            <div class="module-title">${module.title}</div>
+                            <div class="module-badge">${module.badge}</div>
+                        </div>
+                        <div class="module-description">${module.description}</div>
+                        <div class="module-resources">
+                            ${module.resources.map(r => `
+                                <a href="${r.url}" target="_blank" class="resource-link">${r.name}</a>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Flashcard Functions
+        function loadFlashcard() {
+            if (!state.currentSkill) return;
+            
+            const cards = flashcards[state.currentSkill];
+            const card = cards[state.currentCardIndex];
+            
+            document.getElementById('flashcardQuestion').textContent = card.question;
+            document.getElementById('flashcardAnswer').textContent = card.answer;
+            document.getElementById('flashcard').classList.remove('flipped');
+        }
+
+        function flipCard() {
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.toggle('flipped');
+            
+            if (flashcard.classList.contains('flipped')) {
+                addPoints(5);
+            }
+        }
+
+        function nextCard() {
+            if (!state.currentSkill) return;
+            
+            const cards = flashcards[state.currentSkill];
+            state.currentCardIndex = (state.currentCardIndex + 1) % cards.length;
+            loadFlashcard();
+            addPoints(10);
+        }
+
+        function previousCard() {
+            if (!state.currentSkill) return;
+            
+            const cards = flashcards[state.currentSkill];
+            state.currentCardIndex = (state.currentCardIndex - 1 + cards.length) % cards.length;
+            loadFlashcard();
+        }
+
+        // Voice Input
+        function toggleVoice() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert('Voice recognition is not supported in your browser. Please try Chrome or Edge.');
+                return;
+            }
+            
+            if (state.isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        function startRecording() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            state.recognition = new SpeechRecognition();
+            state.recognition.continuous = false;
+            state.recognition.interimResults = false;
+            
+            state.recognition.onstart = () => {
+                state.isRecording = true;
+                document.getElementById('voiceBtn').classList.add('recording');
+            };
+            
+            state.recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('userInput').value = transcript;
+            };
+            
+            state.recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                stopRecording();
+            };
+            
+            state.recognition.onend = () => {
+                stopRecording();
+            };
+            
+            state.recognition.start();
+        }
+
+        function stopRecording() {
+            if (state.recognition) {
+                state.recognition.stop();
+            }
+            state.isRecording = false;
+            document.getElementById('voiceBtn').classList.remove('recording');
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            console.log('Professional Skills Academy initialized');
+        });
+    </script>
+</body>
+</html>
