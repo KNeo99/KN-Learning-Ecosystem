@@ -1,5 +1,6 @@
 
 📘 KN Learning & Gap2Skill Introduction
+
 KN Learning is a public, browser-based learning ecosystem designed to support continuous education—from foundational English literacy to advanced topics in information technology, cloud computing, and artificial intelligence.
 
 On January 13, 2026, I launched a complementary initiative: https://www.gap2skill.com, home of Gap2Skill, a human-centric, AI-powered Career GPS ecosystem. Its mission is to bridge the gap between static education and the rapidly evolving demands of the AI era.
