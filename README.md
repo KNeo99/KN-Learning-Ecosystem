@@ -3,11 +3,18 @@
 
 KN Learning is a public, browser-based learning ecosystem designed to support continuous education—from foundational English literacy to advanced topics in information technology, cloud computing, and artificial intelligence.
 
-On January 13, 2026, I launched a complementary initiative: https://www.gap2skill.com, home of Gap2Skill, a human-centric, AI-powered Career GPS ecosystem. Its mission is to bridge the gap between static education and the rapidly evolving demands of the AI era.
+On January 13, 2026, I began building Gap2Skill — the Career GPS: https://www.gap2skill.com.
+It’s an AI‑driven, evidence‑based career guidance platform designed to bridge individual skill gaps while addressing the assimilation debt that often holds professionals back.
 
-By integrating real-time market data with Human-in-the-Loop (HITL) personalized coaching and feedback-loop assessments, Gap2Skill empowers individuals to navigate their unique journeys—from learning to earning—with confidence and empathy.
+By combining real‑time market data, skills‑gap analysis, guided reflection, and AI coaching, Gap2Skill helps individuals understand their current strengths, identify market‑aligned opportunities, and chart a clear path forward.
+Video overview: https://youtu.be/OkkOkIAmQIg
 
-I believe KN Learning will continue to evolve and complement upskilling efforts, helping individuals overcome learning challenges and build future-ready fluency.
+Built on a proven 6‑step process, Gap2Skill analyzes your resume and skills, highlights roles that match your capabilities (including adjacent roles you may not have considered), and provides personalized recommendations, interview practice, a learning pathway, and a clear roadmap.
+
+It also supports your job search with resume guidance, networking outreach scripts, and an upskilling action plan with curated learning resources.
+This Career GPS Platform will go Live! on 5-15-2026.
+
+I believe KN Learning will continue to evolve and strengthen upskilling efforts, helping individuals overcome learning challenges and build future‑ready fluency.
 
 ✍️ Mission Statements
 KN Learning Mission:  
