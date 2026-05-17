@@ -21,7 +21,7 @@ KN Learning Mission:
 To democratize education through an open, browser-based ecosystem that empowers learners from literacy to AI fluency.
 
 Gap2Skill Mission:  
-To guide individuals from learning to earning by fusing AI insights with human coaching in a personalized Career GPS.
+To guide individuals from learning to earning by fusing AI insights with AI coaching (based on all the expertise of Career Coaches in the LLMs) in a personalized Career GPS.
 
 🌟 KN Learning Overview:
 The KN Learning Ecosystem is a free, open initiative that encourages lifelong learning for all, with a special focus on non-native English speakers and beginners in technology.
