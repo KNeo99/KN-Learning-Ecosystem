@@ -57,6 +57,11 @@ There is no registration or payment required—only curiosity and commitment.
 - Effective AI use starts with the right question.
 - Turn curiosity into clarity: guiding AI with context.
 
+🧠 Think It Through With Me: Socratic AI Tutoring That Adapts to You: [Active Thinker](https://kneo99.github.io/KN-Learning-Ecosystem/active-thinker.html)
+- Paste in any lesson or concept — no lectures, just one guided question at a time.
+- Calibrates question difficulty to how you're actually doing, and remembers your depth on each topic between visits.
+- Tracks your progress with a visual "Thinking Trail" and a day streak to keep you coming back.
+
 🚀 Excited to launch KN Cloud Learning!
 ✨ Features:
 - 10 lessons covering AWS, GCP & Azure
