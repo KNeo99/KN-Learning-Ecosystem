@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Active Thinker — KN Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F6F1E7;
+    --cream-deep:#EFE8D8;
+    --ink:#26241F;
+    --ink-soft:#5A5648;
+    --teal:#1F4B43;
+    --teal-soft:#E4EDE9;
+    --ochre:#C08A3E;
+    --clay:#B5574B;
+    --line:#DCD4C0;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:740px;
+    margin:0 auto;
+    padding:48px 24px 80px;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    margin-bottom:14px;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:44px;
+    line-height:1.05;
+    margin:0 0 12px;
+    color:var(--ink);
+  }
+  .lede{
+    font-size:16px;
+    line-height:1.55;
+    color:var(--ink-soft);
+    max-width:52ch;
+    margin:0 0 34px;
+  }
+
+  /* ---------- setup screen ---------- */
+  #setup{display:flex; flex-direction:column; flex:1;}
+  .presets{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:18px;
+  }
+  .preset-chip{
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    font-weight:500;
+    padding:8px 14px;
+    border-radius:100px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--ink-soft);
+    cursor:pointer;
+    transition:.15s;
+  }
+  .preset-chip:hover{border-color:var(--teal); color:var(--teal);}
+  .preset-chip.active{background:var(--teal); border-color:var(--teal); color:#fff;}
+
+  .continue-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:18px;
+  }
+  .continue-chip{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    font-weight:500;
+    padding:7px 8px 7px 14px;
+    border-radius:100px;
+    border:1px solid var(--ochre);
+    background:#fff;
+    color:var(--ochre);
+    cursor:pointer;
+    transition:.15s;
+  }
+  .continue-chip:hover{background:var(--ochre); color:#fff;}
+  .continue-chip .depth-tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    opacity:.85;
+  }
+  .continue-chip .x-btn{
+    border:none;
+    background:rgba(0,0,0,.08);
+    color:inherit;
+    border-radius:50%;
+    width:16px;
+    height:16px;
+    line-height:16px;
+    font-size:11px;
+    cursor:pointer;
+    padding:0;
+  }
+
+  .drop-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  textarea#curriculumInput{
+    width:100%;
+    min-height:150px;
+    resize:vertical;
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    line-height:1.5;
+    padding:16px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--ink);
+    outline:none;
+  }
+  textarea#curriculumInput:focus{border-color:var(--teal);}
+
+  input#topicNameInput{
+    width:100%;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    padding:11px 14px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--ink);
+    outline:none;
+    margin-top:12px;
+  }
+  input#topicNameInput:focus{border-color:var(--teal);}
+
+  .begin-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:18px;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .btn-primary{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:15px;
+    background:var(--teal);
+    color:#fff;
+    border:none;
+    padding:14px 26px;
+    border-radius:100px;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .btn-primary:hover{background:#173a34;}
+  .btn-primary:disabled{background:#B9C4C0; cursor:not-allowed;}
+
+  .stat-inline{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  .stat-inline b{color:var(--ochre);}
+
+  .setup-footer{
+    margin-top:auto;
+    padding-top:40px;
+    border-top:1px solid var(--line);
+    font-size:13px;
+    color:var(--ink-soft);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .setup-footer a{color:var(--teal);}
+
+  .config-warning{
+    display:none;
+    background:#fff;
+    border:1px dashed var(--clay);
+    color:var(--clay);
+    border-radius:12px;
+    padding:12px 16px;
+    font-size:13px;
+    line-height:1.5;
+    margin-bottom:22px;
+  }
+  .config-warning code{
+    background:var(--cream-deep);
+    padding:1px 5px;
+    border-radius:4px;
+    font-family:'IBM Plex Mono',monospace;
+  }
+
+  /* ---------- session screen ---------- */
+  #session{display:none; flex:1; flex-direction:column;}
+  .session-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:20px;
+    gap:16px;
+  }
+  .topic-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--teal);
+    margin-bottom:4px;
+  }
+  .topic-title{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:24px;
+  }
+  .session-stats{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    text-align:right;
+    line-height:1.6;
+  }
+  .session-stats b{color:var(--ochre);}
+
+  /* thinking trail */
+  .trail{
+    display:flex;
+    align-items:center;
+    margin-bottom:10px;
+    padding:0 4px;
+  }
+  .stone{
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background:#fff;
+    border:2px solid var(--line);
+    flex-shrink:0;
+    transition:background .4s, border-color .4s, transform .3s;
+  }
+  .stone.filled{
+    background:var(--ochre);
+    border-color:var(--ochre);
+    transform:scale(1.1);
+  }
+  .stone-link{
+    flex:1;
+    height:2px;
+    background:var(--line);
+    margin:0 2px;
+    position:relative;
+    overflow:hidden;
+  }
+  .stone-link::after{
+    content:'';
+    position:absolute; left:0; top:0; bottom:0;
+    width:0%;
+    background:var(--ochre);
+    transition:width .5s;
+  }
+  .stone-link.filled::after{width:100%;}
+
+  .difficulty-meter{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-bottom:26px;
+    padding:0 4px;
+  }
+  .difficulty-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-right:2px;
+  }
+  .diff-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--line);
+    transition:background .4s;
+  }
+  .diff-dot.on{background:var(--teal);}
+
+  .chat{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    padding-bottom:20px;
+    min-height:260px;
+  }
+  .bubble{max-width:88%;}
+  .bubble.tutor{align-self:flex-start;}
+  .bubble.learner{align-self:flex-end;}
+  .bubble-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:5px;
+  }
+  .bubble.learner .bubble-label{text-align:right;}
+  .bubble-body{
+    padding:15px 18px;
+    border-radius:14px;
+    line-height:1.55;
+    white-space:pre-line;
+  }
+  .bubble.tutor .bubble-body{
+    background:var(--teal-soft);
+    color:var(--ink);
+    font-family:'Fraunces',serif;
+    font-size:17px;
+    font-weight:500;
+    border-bottom-left-radius:4px;
+  }
+  .bubble.learner .bubble-body{
+    background:var(--teal);
+    color:#fff;
+    font-size:15px;
+    border-bottom-right-radius:4px;
+  }
+  .bubble.system .bubble-body{
+    background:#fff;
+    border:1px dashed var(--clay);
+    color:var(--clay);
+    font-size:13px;
+  }
+  .typing{
+    align-self:flex-start;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+
+  .input-row{
+    display:flex;
+    gap:10px;
+    align-items:flex-end;
+    border-top:1px solid var(--line);
+    padding-top:16px;
+    margin-top:8px;
+  }
+  textarea#learnerInput{
+    flex:1;
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    padding:12px 14px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:#fff;
+    resize:none;
+    min-height:46px;
+    max-height:140px;
+    outline:none;
+  }
+  textarea#learnerInput:focus{border-color:var(--teal);}
+  .btn-send{
+    background:var(--teal);
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    padding:12px 18px;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    cursor:pointer;
+  }
+  .btn-send:disabled{background:#B9C4C0; cursor:not-allowed;}
+
+  .session-footer{
+    display:flex;
+    justify-content:center;
+    margin-top:14px;
+  }
+  .link-btn{
+    background:none;
+    border:none;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    text-decoration:underline;
+    cursor:pointer;
+    letter-spacing:.03em;
+  }
+  .link-btn:hover{color:var(--clay);}
+
+  /* ---------- summary screen ---------- */
+  #summary{display:none; flex:1; flex-direction:column; align-items:flex-start; justify-content:center;}
+  .summary-card{
+    width:100%;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:36px;
+  }
+  .summary-card .eyebrow{margin-bottom:10px;}
+  .summary-metrics{
+    display:flex;
+    gap:36px;
+    margin:26px 0 30px;
+    flex-wrap:wrap;
+  }
+  .metric-num{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:36px;
+    color:var(--ochre);
+    line-height:1;
+  }
+  .metric-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-top:6px;
+  }
+
+  @media (max-width:600px){
+    h1{font-size:32px;}
+    .wrap{padding:32px 18px 60px;}
+    .session-top{flex-direction:column;}
+    .session-stats{text-align:left;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ============ SETUP SCREEN ============ -->
+  <div id="setup">
+    <div class="eyebrow">KN Learning · Active Thinker</div>
+    <h1>Think it through with me.</h1>
+    <p class="lede">Drop in anything you're learning — a lesson, a concept, a paragraph from a course. I won't explain it to you. I'll ask you into it, one question at a time, and calibrate to how you're doing as we go.</p>
+
+    <div class="config-warning" id="configWarning">
+      <strong>Setup needed:</strong> this page hasn't been pointed at a tutor backend yet. Open <code>active-thinker.html</code> and set <code>PROXY_URL</code> near the top of the script to your deployed proxy endpoint (see <code>DEPLOYMENT.md</code>). Nothing will respond until that's set.
+    </div>
+
+    <div class="drop-label" id="continueLabel" style="display:none;">Continue where you left off</div>
+    <div class="continue-row" id="continueRow"></div>
+
+    <div class="drop-label">Try a KN Learning topic, or paste your own</div>
+    <div class="presets" id="presetRow"></div>
+
+    <div class="drop-label">Curriculum drop-in</div>
+    <textarea id="curriculumInput" placeholder="Paste a lesson, a definition, a paragraph — anything you want to actually understand, not just read."></textarea>
+    <input type="text" id="topicNameInput" placeholder="Name this topic (used to track your progress across visits) — e.g. &quot;AI Fundamentals&quot;" maxlength="60">
+
+    <div class="begin-row">
+      <button class="btn-primary" id="beginBtn" onclick="beginSession()">Begin session</button>
+      <span class="stat-inline" id="setupStats"></span>
+    </div>
+
+    <div class="setup-footer">
+      <span>Part of the <a href="https://kneo99.github.io/KN-Learning-Ecosystem/" target="_blank" rel="noopener">KN Learning Ecosystem</a></span>
+      <span id="footerSessions"></span>
+    </div>
+  </div>
+
+  <!-- ============ SESSION SCREEN ============ -->
+  <div id="session">
+    <div class="session-top">
+      <div>
+        <div class="topic-label">Session in progress</div>
+        <div class="topic-title" id="topicTitle">Topic</div>
+      </div>
+      <div class="session-stats">
+        streak <b id="statStreak">0</b><br>
+        exchanges <b id="statExchanges">0</b>
+      </div>
+    </div>
+
+    <div class="trail" id="trail"></div>
+    <div class="difficulty-meter" id="difficultyMeter">
+      <span class="difficulty-label">Challenge level</span>
+    </div>
+
+    <div class="chat" id="chat"></div>
+
+    <div class="input-row">
+      <textarea id="learnerInput" placeholder="Type your answer..." onkeydown="handleKey(event)"></textarea>
+      <button class="btn-send" id="sendBtn" onclick="sendMessage()">Send</button>
+    </div>
+
+    <div class="session-footer">
+      <button class="link-btn" onclick="endSession()">End session</button>
+    </div>
+  </div>
+
+  <!-- ============ SUMMARY SCREEN ============ -->
+  <div id="summary">
+    <div class="summary-card">
+      <div class="eyebrow">Session complete</div>
+      <h1 style="font-size:32px;" id="summaryTopic">Topic</h1>
+      <div class="summary-metrics">
+        <div>
+          <div class="metric-num" id="sumDepth">0/8</div>
+          <div class="metric-label">Depth reached</div>
+        </div>
+        <div>
+          <div class="metric-num" id="sumExchanges">0</div>
+          <div class="metric-label">Exchanges</div>
+        </div>
+        <div>
+          <div class="metric-num" id="sumStreak">0</div>
+          <div class="metric-label">Day streak</div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="resetToSetup()">Start a new session</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================================
+   CONFIGURATION — edit these two lines for your deployment
+   ========================================================================= */
+// Your deployed proxy endpoint (Cloudflare Worker or similar) that holds the
+// Anthropic API key server-side. See DEPLOYMENT.md. Browsers cannot call
+// api.anthropic.com directly (no CORS, and the key must never live in
+// client-side JS), so this MUST point at your own proxy, not Anthropic.
+const PROXY_URL = 'https://kn-active-thinker-proxy.kiat-neo.workers.dev/';
+
+// Update this monthly as Claude releases new models —
+// see https://docs.claude.com/en/docs/about-claude/models
+const MODEL = 'claude-sonnet-4-5-20250929';
+/* ========================================================================= */
+
+const MAX_DEPTH = 8;
+const STATS_KEY = 'active-thinker-stats';
+const PROGRESS_KEY = 'active-thinker-progress-v2';
+const MAX_SAVED_TOPICS = 8;
+
+// Adaptive-difficulty (lightweight RL-style) tuning.
+// This is a simple contextual-bandit heuristic, not a trained reward model:
+// each turn the tutor self-rates how the learner is doing (SIGNAL), we turn
+// that into a scalar reward, and nudge a persistent per-topic "difficulty"
+// knob that's fed back into the next system prompt. No training loop, no
+// gradient updates — just reward -> policy-parameter update, kept legible.
+const DIFFICULTY_MIN = 1;
+const DIFFICULTY_MAX = 5;
+const DIFFICULTY_START = 3;
+const DIFFICULTY_LEARNING_RATE = 0.4;
+const SIGNAL_REWARD = { struggling: -1, steady: 0, thriving: 1 };
+
+const PRESETS = [
+  {
+    label: 'AI Fundamentals',
+    topic: 'AI Fundamentals',
+    text: `Artificial Intelligence (AI) is technology that enables machines to perform tasks that typically require human intelligence. There are three common categories: Reactive AI, which responds to a current situation without any memory of the past; Limited Memory AI, which learns from historical data to improve its decisions over time; and Generative AI, which creates new content such as text, images, or code rather than just analyzing existing content.`
+  },
+  {
+    label: 'Prompt Engineering',
+    topic: 'Prompt Engineering',
+    text: `A good prompt to an AI system is clear, specific, and provides context. Instead of asking "weather?", a stronger prompt is "What's tomorrow's weather forecast in Seattle?" Context helps the AI understand your intent and give a relevant, useful answer, while vague prompts force the AI to guess what you actually want.`
+  },
+  {
+    label: 'Cloud Basics',
+    topic: 'Cloud Basics',
+    text: `Cloud computing offers three main service models. IaaS (Infrastructure as a Service) rents raw computing resources like servers and storage. PaaS (Platform as a Service) provides a ready-to-use environment for building and deploying applications without managing the underlying infrastructure. SaaS (Software as a Service) delivers a complete, ready-to-use application over the internet, like email or video conferencing.`
+  },
+  {
+    label: 'ESL: Present Perfect',
+    topic: 'ESL — Present Perfect',
+    text: `The present perfect tense connects the past to the present. It's formed with "have/has" plus a past participle, as in "I have finished my homework." We use it for an action that happened at an unspecified time before now, or an action that started in the past and continues today, unlike the simple past, which describes a completed action at a specific, finished time.`
+  }
+];
+
+let conversation = [];      // {role, content} sent to the API
+let currentDepth = 0;
+let exchangeCount = 0;
+let curriculumText = '';
+let topicLabel = '';
+let topicKey = '';
+let difficulty = DIFFICULTY_START;
+let stats = { streak: 0, totalSessions: 0, lastDate: null };
+let progressMap = {};       // { [topicKey]: {topicLabel, curriculumText, depth, exchanges, difficulty, completedSessions, lastVisited} }
+let awaitingResponse = false;
+
+// ---------- local storage helpers (per-browser; no account/backend needed) ----------
+function loadStats(){
+  try{
+    const raw = localStorage.getItem(STATS_KEY);
+    if(raw) stats = JSON.parse(raw);
+  }catch(e){
+    // no stats saved yet — use defaults
+  }
+  try{
+    const rawProgress = localStorage.getItem(PROGRESS_KEY);
+    if(rawProgress) progressMap = JSON.parse(rawProgress);
+  }catch(e){
+    progressMap = {};
+  }
+  renderSetupStats();
+  renderContinueRow();
+  checkConfig();
+}
+
+function saveStats(){
+  try{
+    localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+  }catch(e){
+    console.error('Could not save stats', e);
+  }
+}
+
+function saveProgress(){
+  try{
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(progressMap));
+  }catch(e){
+    console.error('Could not save topic progress', e);
+  }
+}
+
+function checkConfig(){
+  const notConfigured = !PROXY_URL || PROXY_URL.indexOf('YOUR-WORKER-SUBDOMAIN') !== -1;
+  document.getElementById('configWarning').style.display = notConfigured ? 'block' : 'none';
+}
+
+function renderSetupStats(){
+  document.getElementById('setupStats').innerHTML =
+    `<b>${stats.streak}</b> day streak`;
+  document.getElementById('footerSessions').textContent =
+    stats.totalSessions > 0 ? `${stats.totalSessions} session${stats.totalSessions === 1 ? '' : 's'} completed` : '';
+}
+
+function bumpStreak(){
+  const today = new Date().toDateString();
+  if(stats.lastDate === today){
+    // already counted today
+  } else {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    stats.streak = (stats.lastDate === yesterday) ? stats.streak + 1 : 1;
+    stats.lastDate = today;
+  }
+}
+
+// ---------- topic keys ----------
+function slugify(str){
+  return (str || '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 60) || 'topic';
+}
+
+// ---------- presets ----------
+function renderPresets(){
+  const row = document.getElementById('presetRow');
+  row.innerHTML = '';
+  PRESETS.forEach((p) => {
+    const chip = document.createElement('button');
+    chip.className = 'preset-chip';
+    chip.textContent = p.label;
+    chip.onclick = () => {
+      document.getElementById('curriculumInput').value = p.text;
+      document.getElementById('topicNameInput').value = p.topic;
+      document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    };
+    row.appendChild(chip);
+  });
+}
+
+// ---------- continue-where-you-left-off ----------
+function renderContinueRow(){
+  const row = document.getElementById('continueRow');
+  const label = document.getElementById('continueLabel');
+  row.innerHTML = '';
+  const entries = Object.entries(progressMap)
+    .sort((a, b) => (b[1].lastVisited || 0) - (a[1].lastVisited || 0))
+    .slice(0, MAX_SAVED_TOPICS);
+
+  if(entries.length === 0){
+    label.style.display = 'none';
+    return;
+  }
+  label.style.display = 'block';
+
+  entries.forEach(([key, p]) => {
+    const chip = document.createElement('div');
+    chip.className = 'continue-chip';
+    chip.innerHTML = `<span>${escapeHtml(p.topicLabel)}</span><span class="depth-tag">${p.depth || 0}/${MAX_DEPTH}</span>`;
+    chip.onclick = (e) => {
+      if(e.target.classList.contains('x-btn')) return;
+      document.getElementById('curriculumInput').value = p.curriculumText || '';
+      document.getElementById('topicNameInput').value = p.topicLabel || '';
+      document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+    };
+    const xBtn = document.createElement('button');
+    xBtn.className = 'x-btn';
+    xBtn.textContent = '×';
+    xBtn.title = 'Remove saved progress for this topic';
+    xBtn.onclick = (e) => {
+      e.stopPropagation();
+      delete progressMap[key];
+      saveProgress();
+      renderContinueRow();
+    };
+    chip.appendChild(xBtn);
+    row.appendChild(chip);
+  });
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+// ---------- trail ----------
+function renderTrail(){
+  const trail = document.getElementById('trail');
+  trail.innerHTML = '';
+  for(let i = 1; i <= MAX_DEPTH; i++){
+    const stone = document.createElement('div');
+    stone.className = 'stone' + (i <= currentDepth ? ' filled' : '');
+    trail.appendChild(stone);
+    if(i < MAX_DEPTH){
+      const link = document.createElement('div');
+      link.className = 'stone-link' + (i < currentDepth ? ' filled' : '');
+      trail.appendChild(link);
+    }
+  }
+}
+
+function renderDifficultyMeter(){
+  const meter = document.getElementById('difficultyMeter');
+  meter.querySelectorAll('.diff-dot').forEach(d => d.remove());
+  const rounded = Math.round(difficulty);
+  for(let i = 1; i <= DIFFICULTY_MAX; i++){
+    const dot = document.createElement('div');
+    dot.className = 'diff-dot' + (i <= rounded ? ' on' : '');
+    meter.appendChild(dot);
+  }
+}
+
+// ---------- session flow ----------
+async function beginSession(){
+  const text = document.getElementById('curriculumInput').value.trim();
+  if(!text){
+    document.getElementById('curriculumInput').focus();
+    document.getElementById('curriculumInput').style.borderColor = 'var(--clay)';
+    setTimeout(() => { document.getElementById('curriculumInput').style.borderColor = ''; }, 900);
+    return;
+  }
+  curriculumText = text;
+  const typedName = document.getElementById('topicNameInput').value.trim();
+  topicLabel = typedName || 'Custom topic';
+  topicKey = slugify(typedName || text.slice(0, 40));
+
+  bumpStreak();
+  saveStats();
+
+  // Resume saved mastery for this topic, if any.
+  const existing = progressMap[topicKey];
+  conversation = [];
+  currentDepth = existing ? (existing.depth || 0) : 0;
+  exchangeCount = 0; // exchanges are counted per-session; lifetime total lives in the summary if you want to extend it
+  difficulty = existing ? (existing.difficulty || DIFFICULTY_START) : DIFFICULTY_START;
+
+  document.getElementById('setup').style.display = 'none';
+  document.getElementById('summary').style.display = 'none';
+  document.getElementById('session').style.display = 'flex';
+  document.getElementById('topicTitle').textContent = topicLabel;
+  document.getElementById('chat').innerHTML = '';
+  renderTrail();
+  renderDifficultyMeter();
+  updateSessionStats();
+
+  if(existing && existing.depth > 0){
+    addBubble('system', `Resuming "${topicLabel}" — you were at depth ${existing.depth}/${MAX_DEPTH}. Let's pick up from there.`);
+  }
+
+  await callTutor(null);
+}
+
+function updateSessionStats(){
+  document.getElementById('statStreak').textContent = stats.streak;
+  document.getElementById('statExchanges').textContent = exchangeCount;
+}
+
+function addBubble(role, text){
+  const chat = document.getElementById('chat');
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble ' + role;
+  const label = role === 'tutor' ? 'Active Thinker' : (role === 'learner' ? 'You' : 'Note');
+  bubble.innerHTML = `<div class="bubble-label">${label}</div><div class="bubble-body"></div>`;
+  bubble.querySelector('.bubble-body').textContent = text;
+  chat.appendChild(bubble);
+  chat.scrollTop = chat.scrollHeight;
+  return bubble;
+}
+
+function setTyping(on){
+  let el = document.getElementById('typingIndicator');
+  if(on){
+    if(!el){
+      el = document.createElement('div');
+      el.id = 'typingIndicator';
+      el.className = 'typing';
+      el.textContent = 'thinking…';
+      document.getElementById('chat').appendChild(el);
+      document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
+    }
+  } else if(el){
+    el.remove();
+  }
+}
+
+function handleKey(e){
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+async function sendMessage(){
+  if(awaitingResponse) return;
+  const input = document.getElementById('learnerInput');
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+  addBubble('learner', text);
+  exchangeCount++;
+  updateSessionStats();
+  await callTutor(text);
+}
+
+const SYSTEM_PROMPT_TEMPLATE = (curriculum, difficultyLevel) => `You are the Active Thinker, a Socratic tutor for KN Learning, a free learning ecosystem. Your only material for this session is the curriculum below. Never lecture and never hand over the answer directly, even if asked outright — your job is to ask the learner into their own understanding.
+
+<curriculum>
+${curriculum}</curriculum>
+
+The learner's current calibrated challenge level is ${difficultyLevel}/5 (1 = foundational review with lots of support, 3 = grade-level application, 5 = advanced applied challenge with minimal scaffolding). Calibrate the difficulty, vocabulary, and expectations of your next question to this level.
+
+Rules:
+- Ask exactly one focused question at a time. Keep your response to 2-4 sentences, always ending on a question.
+- If the learner answers well, give brief genuine encouragement (one short line), then ask a deeper or applied follow-up question that pushes past the curriculum's literal wording.
+- If the learner shows a misconception, don't correct them flatly. Ask a question that leads them to notice the gap themselves.
+- If the learner explicitly asks for a hint or seems stuck, offer a smaller, easier sub-question rather than the answer.
+- Be warm, direct, and conversational. No headers, no bullet points, no markdown formatting.
+- On your very first turn, open with a concrete, curiosity-sparking question drawn from the curriculum — don't summarize the material first. On the first turn only, output SIGNAL: steady since there is no learner answer yet to judge.
+- After every response, on its own line, output exactly: DEPTH: <integer 1-8> representing how far the learner's understanding has progressed cumulatively this session so far. Start around 1-2 on the opening question. Only increase this number as real understanding deepens — never decrease it. Reserve 7-8 for genuine applied mastery, not just a correct first answer.
+- On the final line after DEPTH, output exactly: SIGNAL: <struggling|steady|thriving> reflecting how the learner's most recent answer went — struggling if they showed a real misconception or missed the point, steady if they answered adequately, thriving if their answer showed genuine insight or went beyond what was asked. This drives how hard the next question will be, so judge honestly, not generously.`;
+
+function updateDifficulty(signal){
+  const reward = Object.prototype.hasOwnProperty.call(SIGNAL_REWARD, signal) ? SIGNAL_REWARD[signal] : 0;
+  difficulty = difficulty + DIFFICULTY_LEARNING_RATE * reward;
+  difficulty = Math.max(DIFFICULTY_MIN, Math.min(DIFFICULTY_MAX, difficulty));
+}
+
+function persistTopicProgress(){
+  if(!topicKey) return;
+  progressMap[topicKey] = {
+    topicLabel,
+    curriculumText,
+    depth: currentDepth,
+    exchanges: (progressMap[topicKey] && progressMap[topicKey].exchanges || 0) + 1,
+    difficulty,
+    completedSessions: (progressMap[topicKey] && progressMap[topicKey].completedSessions) || 0,
+    lastVisited: Date.now()
+  };
+  saveProgress();
+}
+
+async function callTutor(userText){
+  awaitingResponse = true;
+  document.getElementById('sendBtn').disabled = true;
+  document.getElementById('learnerInput').disabled = true;
+
+  if(userText !== null){
+    conversation.push({ role: 'user', content: userText });
+  } else {
+    conversation.push({ role: 'user', content: 'Begin the session.' });
+  }
+
+  setTyping(true);
+
+  if(!PROXY_URL || PROXY_URL.indexOf('YOUR-WORKER-SUBDOMAIN') !== -1){
+    setTyping(false);
+    addBubble('system', 'This page has not been configured with a tutor backend yet. Set PROXY_URL near the top of the script (see DEPLOYMENT.md) and reload.');
+    conversation.pop();
+    awaitingResponse = false;
+    document.getElementById('sendBtn').disabled = false;
+    document.getElementById('learnerInput').disabled = false;
+    return;
+  }
+
+  try{
+    const response = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT_TEMPLATE(curriculumText, difficulty.toFixed(1)),
+        messages: conversation
+      })
+    });
+
+    if(!response.ok){
+      const errText = await response.text().catch(() => '');
+      throw new Error(`Proxy returned ${response.status}: ${errText.slice(0, 200)}`);
+    }
+
+    const data = await response.json();
+    const textBlocks = (data.content || []).filter(b => b.type === 'text').map(b => b.text);
+    let raw = textBlocks.join('\n').trim();
+
+    if(!raw){
+      throw new Error('Empty response');
+    }
+
+    // pull out DEPTH marker
+    const depthMatch = raw.match(/DEPTH:\s*(\d+)/i);
+    if(depthMatch){
+      const parsed = Math.max(1, Math.min(MAX_DEPTH, parseInt(depthMatch[1], 10)));
+      currentDepth = Math.max(currentDepth, parsed);
+      raw = raw.replace(/DEPTH:\s*\d+/i, '').trim();
+    } else {
+      currentDepth = Math.min(MAX_DEPTH, currentDepth + 1);
+    }
+
+    // pull out SIGNAL marker and feed the adaptive-difficulty heuristic
+    const signalMatch = raw.match(/SIGNAL:\s*(struggling|steady|thriving)/i);
+    if(signalMatch){
+      updateDifficulty(signalMatch[1].toLowerCase());
+      raw = raw.replace(/SIGNAL:\s*(struggling|steady|thriving)/i, '').trim();
+    }
+
+    setTyping(false);
+    addBubble('tutor', raw);
+    conversation.push({ role: 'assistant', content: raw });
+    renderTrail();
+    renderDifficultyMeter();
+    persistTopicProgress();
+  }catch(err){
+    setTyping(false);
+    console.error(err);
+    addBubble('system', "I couldn't reach the tutor just now. Check your connection (and, if you're the site owner, your proxy configuration) and try sending your answer again.");
+    conversation.pop(); // remove the unanswered user turn so retry doesn't duplicate
+  }finally{
+    awaitingResponse = false;
+    document.getElementById('sendBtn').disabled = false;
+    document.getElementById('learnerInput').disabled = false;
+    document.getElementById('learnerInput').focus();
+  }
+}
+
+function endSession(){
+  stats.totalSessions += 1;
+  saveStats();
+
+  if(topicKey && progressMap[topicKey]){
+    progressMap[topicKey].completedSessions = (progressMap[topicKey].completedSessions || 0) + 1;
+    saveProgress();
+  }
+
+  document.getElementById('session').style.display = 'none';
+  document.getElementById('summary').style.display = 'flex';
+  document.getElementById('summaryTopic').textContent = topicLabel;
+  document.getElementById('sumDepth').textContent = `${currentDepth}/${MAX_DEPTH}`;
+  document.getElementById('sumExchanges').textContent = exchangeCount;
+  document.getElementById('sumStreak').textContent = stats.streak;
+}
+
+function resetToSetup(){
+  document.getElementById('summary').style.display = 'none';
+  document.getElementById('setup').style.display = 'flex';
+  document.getElementById('curriculumInput').value = '';
+  document.getElementById('topicNameInput').value = '';
+  topicLabel = '';
+  topicKey = '';
+  document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+  renderSetupStats();
+  renderContinueRow();
+}
+
+// ---------- init ----------
+renderPresets();
+loadStats();
+</script>
+
+</body>
+</html>
