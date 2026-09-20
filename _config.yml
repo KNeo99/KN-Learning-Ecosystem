@@ -12,6 +12,7 @@ exclude:
   - "*.pkg"
   - "*.deb"
   - "*.rpm"
-
+include:
+  - README.md
 # Don't show file listings
 show_downloads: false
