@@ -3,10 +3,15 @@ description: Lifelong learning from English literacy to AI & Cloud Computing
 theme: minima
 markdown: kramdown
 exclude:
+  exclude:
   - CLAUDE.md
-  - "*.md"  # Exclude all markdown files except README
-include:
-  - README.md
+  - "*.md"
+  - "*.msi"
+  - "*.exe"
+  - "*.dmg"
+  - "*.pkg"
+  - "*.deb"
+  - "*.rpm"
 
 # Don't show file listings
 show_downloads: false
